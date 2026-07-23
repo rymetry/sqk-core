@@ -1,0 +1,13 @@
+{
+  "id": "TAE-inline-001",
+  "name": "インライン合成した決済機能のシステムテスト",
+  "element_type": "function_responsibility_group",
+  "test_level": "system",
+  "test_type": "functional",
+  "test_cycle": "new_feature_test",
+  "risk_level": "high",
+  "thickness": "thick",
+  "assigned_conditions": ["DTC-001", "DTC-002"],
+  "delegated_to": null,
+  "rationale": "旧形式のインライン合成 ID が拒否されることを確認する"
+}

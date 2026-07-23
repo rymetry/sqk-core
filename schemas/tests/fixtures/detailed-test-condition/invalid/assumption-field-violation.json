@@ -1,0 +1,14 @@
+{
+  "id": "DTC-001",
+  "title": "決済金額の上限境界で注文が一度だけ確定する",
+  "source_refs": ["REQ-012"],
+  "high_level_condition_id": "HTC-003",
+  "risk_refs": ["RISK-007"],
+  "precondition_hint": "有効な購入者アカウントと商品を用意する",
+  "action_hint": "上限金額で決済を確定する",
+  "expected_behavior_hint": "注文と決済がそれぞれ一度だけ確定する",
+  "postcondition_hint": "注文履歴と決済記録が一致する",
+  "unknowns": [],
+  "status": "draft",
+  "assumption": true
+}
