@@ -23,6 +23,7 @@
 - platform-neutral な skill blueprints
 - canonical docs から導出する索引・用語表・mapping
 - skill I/O の repo-local schemas
+- 将来の下流 runtime consumer へ提供しうる export candidates（stable knowledge、blueprint、taxonomy、schema。runtime artifacts への mapping は consumer 側）
 - source verification 前の候補を隔離する research intake
 
 ## 担わないこと

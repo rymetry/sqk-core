@@ -16,6 +16,7 @@ v1（`software-quality-knowledge-base`）では、ガバナンス機構が約57,
 | drop | governance schema 5件 | `architecture-trace-link`、`artifact-registry`、`dependency-registry`、`g0-activation-config`、`section-registry` を移植しない |
 | drop | `docs/agent-ecosystem/` の上記7文書以外、v1 の `docs/README.md` | v2 の最小ガバナンスに不要、または後続 Task で新規作成するため移植しない |
 | drop | `provenance/`、v1 由来の `scripts/` と `tests/` | v1 の重いガバナンス実装を移植しない |
+| drop | 将来の `research/` 独立 source root への移行構想 | v1 Evolution Plan の migration stage に属する構想であり、Plan と共に移植しない。必要になれば [ROADMAP.md](./ROADMAP.md) で再提案する |
 
 ## 移植の完全性
 
