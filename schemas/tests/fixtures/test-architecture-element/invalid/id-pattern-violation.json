@@ -1,0 +1,6 @@
+{
+  "id": "ARCH-001",
+  "name": "決済機能のシステムテスト",
+  "test_level": "system",
+  "risk_level": "high"
+}

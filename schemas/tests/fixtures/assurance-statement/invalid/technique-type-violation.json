@@ -1,0 +1,34 @@
+{
+  "assurance_statement": {
+    "target": "決済金額入力",
+    "claim": "許容範囲の入力を処理できる",
+    "test_level": "システム",
+    "test_type": "機能",
+    "technique": true,
+    "risk_link": {
+      "risk_item": "RISK-007",
+      "risk_level": "高",
+      "depth_policy": "高リスク機能を深く検証する"
+    },
+    "oracle": {
+      "kind": "specified",
+      "description": "決済API仕様",
+      "strength": "完全",
+      "known_blind_spots": "外部事業者の内部処理"
+    },
+    "coverage": {
+      "model": "境界値",
+      "achieved": "上下限を網羅",
+      "not_covered": "外貨"
+    },
+    "fault_detection_evidence": "未測定",
+    "assumptions": [
+      "通貨は日本円"
+    ],
+    "limitations": [
+      "外部通信は対象外"
+    ],
+    "flakiness_controls": "外部依存をスタブ化する",
+    "decay_conditions": "金額制約が変更されたとき"
+  }
+}

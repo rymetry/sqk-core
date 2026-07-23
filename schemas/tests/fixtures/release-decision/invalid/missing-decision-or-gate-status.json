@@ -1,0 +1,8 @@
+{
+  "id": "REL-001",
+  "scope": "決済API v2.3.0",
+  "summary": "判定値が欠落している",
+  "evidence_refs": [
+    "EV-101"
+  ]
+}

@@ -30,3 +30,7 @@
 - schema はこのリポジトリの skills に必要なものか。veridia runtime concern ではないか。
 - product-specific data を避けているか。
 - research-only claim を source verification なしに promote していないか。
+
+## 検証ハーネス
+
+リポジトリルートで `bash scripts/validate-schemas.sh` を実行する。fixture の構成と strict 警告ポリシーは [tests/README.md](tests/README.md) を参照する。

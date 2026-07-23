@@ -1,0 +1,8 @@
+{
+  "id": "RISK-007",
+  "statement": "決済が重複し、利用者が二重請求の不利益を受ける",
+  "category": "business",
+  "likelihood": "medium",
+  "impact": "critical",
+  "treatment": "mitigate"
+}

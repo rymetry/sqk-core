@@ -1,0 +1,31 @@
+{
+  "source_skill": "risk-analysis",
+  "phase": "risk-analysis",
+  "artifacts": [
+    {
+      "type": "RiskItemList",
+      "schema_ref": "schemas/risk-item.schema.json",
+      "items": [
+        {
+          "id": "RISK-007",
+          "statement": "決済の重複実行により利用者が二重請求を受ける"
+        }
+      ]
+    }
+  ],
+  "trace_ids": [
+    "REQ-012",
+    "RISK-007"
+  ],
+  "assumptions": [
+    {
+      "field": "likelihood",
+      "value": "medium",
+      "reason": "本番障害履歴が未提供のため、設計上の発生可能性から暫定評価した"
+    }
+  ],
+  "open_questions": [
+    "決済事業者側の冪等性保証範囲を確認する"
+  ],
+  "gate_status": "passed-with-risks"
+}

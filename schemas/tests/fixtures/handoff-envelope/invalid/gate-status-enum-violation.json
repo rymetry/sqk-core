@@ -1,0 +1,11 @@
+{
+  "source_skill": "risk-analysis",
+  "phase": "risk-analysis",
+  "artifacts": [],
+  "trace_ids": [
+    "RISK-007"
+  ],
+  "assumptions": [],
+  "open_questions": [],
+  "gate_status": "pending"
+}

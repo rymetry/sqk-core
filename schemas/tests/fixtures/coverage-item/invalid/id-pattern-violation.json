@@ -1,0 +1,10 @@
+{
+  "id": "COVERAGE-001",
+  "condition_id": "DTC-001",
+  "architecture_element_id": "TAE-001",
+  "parameters": {
+    "purchase_amount": 1000000
+  },
+  "expected_result": "上限金額の決済が受理される",
+  "coverage_rationale": "決済上限境界を確認する"
+}
