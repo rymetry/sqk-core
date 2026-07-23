@@ -155,7 +155,7 @@ def _github_slug(heading: str) -> str:
         or character in {"-", "_"}
         or unicodedata.category(character)[0] in {"L", "M", "N"}
     )
-    return re.sub(r"\s+", "-", "".join(kept)).strip("-")
+    return re.sub(r"\s", "-", "".join(kept)).strip("-")
 
 
 def _heading_anchors(text: str) -> frozenset[str]:
