@@ -1,0 +1,55 @@
+# knowledge/test-space/matrix-template.yaml
+# セル形式: {status: covered|partial|none, evidence: [ID, ...], notes: string}
+axes:
+  test_level:
+    - component
+    - integration
+    - system
+    - acceptance
+  test_type:
+    # ISO/IEC 25010:2023 の9特性 + 機能 + 変更関連
+    - functional-suitability
+    - performance-efficiency
+    - compatibility
+    - interaction-capability     # 旧: usability
+    - reliability
+    - security
+    - maintainability
+    - flexibility                # 旧: portability
+    - safety                     # 2023年新設
+    - change-related             # リグレッション等
+  test_process:
+    - TRA
+    - TAD
+    - TDD-TI
+    - TE
+    - MON
+
+matrix: []
+  # 記入例
+  # - test_level: system
+  #   test_type: security
+  #   test_process: TDD-TI
+  #   status: covered
+  #   evidence: ["TC-0142", "TC-0143"]
+  #   notes: "OWASP ASVS 5.0 レベル2準拠のテストケースで充足。"
+
+  # 記入例
+  # - test_level: system
+  #   test_type: safety
+  #   test_process: TRA
+  #   status: none
+  #   evidence: []
+  #   notes: >
+  #     安全性（2023年新設特性）に対応するテスト条件が未識別。
+  #     TRA スキル再実行時に要求分析へ安全性観点を追加する必要あり。
+
+  # 記入例
+  # - test_level: integration
+  #   test_type: interaction-capability
+  #   test_process: TE
+  #   status: partial
+  #   evidence: ["CHT-C07"]
+  #   notes: >
+  #     探索的テストチャーター C07（探索的テストチャーターカタログ参照）で
+  #     部分的にカバー。自動テストケースへの落とし込みは未実施。

@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/assurance-statement.schema.json",
+  "title": "AssuranceStatement",
+  "description": "正規出典: docs/test-techniques/testing-standards-and-assurance-concepts.md §9「このテストは何を保証するか」説明テンプレートの YAML テンプレート・記入例。フィールド: target / claim / test_level / test_type / technique / risk_link（risk_item, risk_level, depth_policy） / oracle（kind, description, strength, known_blind_spots） / coverage（model, achieved, not_covered） / fault_detection_evidence / assumptions[] / limitations[] / flakiness_controls / decay_conditions。",
+  "type": "object",
+  "properties": {
+    "assurance_statement": {
+      "type": "object",
+      "description": "保証ステートメント本体。出典: §9 YAMLテンプレートのトップレベルキー。",
+      "properties": {
+        "target": {
+          "type": "string",
+          "description": "対象（機能／コンポーネント／品質特性）。出典: §9 テンプレート。"
+        },
+        "claim": {
+          "type": "string",
+          "description": "このテスト群が合格した場合に成立する品質主張。範囲を必ず含める。出典: §9 テンプレート。"
+        },
+        "test_level": {
+          "type": "string",
+          "description": "コンポーネント / コンポーネント統合 / システム / システム統合 / 受け入れ。出典: §9 テンプレート。"
+        },
+        "test_type": {
+          "type": "string",
+          "description": "機能 / 非機能 / ブラックボックス / ホワイトボックス。出典: §9 テンプレート。"
+        },
+        "technique": {
+          "type": ["string", "array"],
+          "description": "使用技法（テスト技法スキルカタログの skill_id）。出典: §9 テンプレート。記入例では複数技法をカンマ区切りの文字列（boundary-value-analysis, decision-table）で記載しているため、文字列・配列のいずれも許容する。",
+          "items": { "type": "string" }
+        },
+        "risk_link": {
+          "type": "object",
+          "description": "なぜこの深さかを示すリスク連携。出典: §9 テンプレート。",
+          "properties": {
+            "risk_item": {
+              "type": "string",
+              "description": "対応するプロダクトリスクID。出典: §9 テンプレート・記入例（R-07）。"
+            },
+            "risk_level": {
+              "type": "string",
+              "description": "高 / 中 / 低。出典: §9 テンプレート。"
+            },
+            "depth_policy": {
+              "type": "string",
+              "description": "適用した深度ポリシー（第4章の表の行）。出典: §9 テンプレート。"
+            }
+          },
+          "required": ["risk_item", "risk_level", "depth_policy"],
+          "additionalProperties": false
+        },
+        "oracle": {
+          "type": "object",
+          "description": "合否判定の根拠。出典: §9 テンプレート。",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": ["specified", "derived", "implicit", "human"],
+              "description": "オラクル種別。出典: §9 テンプレート。"
+            },
+            "description": {
+              "type": "string",
+              "description": "期待結果の出どころ（仕様条項／参照実装／メタモルフィック関係 等）。出典: §9 テンプレート。"
+            },
+            "strength": {
+              "type": "string",
+              "description": "完全 / 部分 / 頑健性のみ。出典: §9 テンプレート。"
+            },
+            "known_blind_spots": {
+              "type": "string",
+              "description": "このオラクルでは検出できない誤りの種類。出典: §9 テンプレート。"
+            }
+          },
+          "required": ["kind", "description", "strength", "known_blind_spots"],
+          "additionalProperties": false
+        },
+        "coverage": {
+          "type": "object",
+          "description": "網羅と検出力。出典: §9 テンプレート。",
+          "properties": {
+            "model": {
+              "type": "string",
+              "description": "網羅モデル（同値クラス／分岐／状態遷移0-switch 等）。出典: §9 テンプレート。"
+            },
+            "achieved": {
+              "type": "string",
+              "description": "実測値。出典: §9 テンプレート。"
+            },
+            "not_covered": {
+              "type": "string",
+              "description": "意図的に網羅しなかった範囲とその理由。出典: §9 テンプレート。"
+            }
+          },
+          "required": ["model", "achieved", "not_covered"],
+          "additionalProperties": false
+        },
+        "fault_detection_evidence": {
+          "type": "string",
+          "description": "ミューテーションスコア等の検出力の根拠（無ければ「未測定」と明記）。出典: §9 テンプレート。"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "実行環境・テストデータ・スタブ化した依存などの前提。出典: §9 テンプレート。"
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "このテストが保証しないこと（上位レベル・他タイプへの委譲を含む）。出典: §9 テンプレート。"
+        },
+        "flakiness_controls": {
+          "type": "string",
+          "description": "時刻固定／乱数シード固定／外部依存スタブ化／状態分離 の実施状況。出典: §9 テンプレート。"
+        },
+        "decay_conditions": {
+          "type": "string",
+          "description": "このテストを見直すべき条件（仕様変更、依存更新、flake rate閾値超過 等）。出典: §9 テンプレート。"
+        }
+      },
+      "required": [
+        "target",
+        "claim",
+        "test_level",
+        "test_type",
+        "technique",
+        "risk_link",
+        "oracle",
+        "coverage",
+        "fault_detection_evidence",
+        "assumptions",
+        "limitations",
+        "flakiness_controls",
+        "decay_conditions"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": ["assurance_statement"],
+  "additionalProperties": false
+}

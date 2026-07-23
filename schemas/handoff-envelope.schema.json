@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/handoff-envelope.schema.json",
+  "title": "HandoffEnvelope",
+  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §4「ハンドオフエンベロープ」の JSON例、および docs/agent-ecosystem/portability-design.md §3 quality-gate-release-judgment の「出力エンベロープ」JSON例。フィールド: source_skill / phase / artifacts[]（type, schema_ref, items または content） / trace_ids[] / assumptions[] / open_questions[] / gate_status（passed/passed-with-risks/blocked の3値）。両出典の実例では artifacts[] の要素形状が異なる（ハブ§4の例は items、portability-design §3 の例は content）。そのため artifacts[] の要素は type と schema_ref を必須とし、items（配列）・content（オブジェクト）はどちらも任意項目として許容する最小限の正規化を行った。これは両出典の実例をそのままバリデート可能にするための構造統合であり、新規フィールドの発明ではない。",
+  "type": "object",
+  "properties": {
+    "source_skill": {
+      "type": "string",
+      "description": "出力元スキル名（例: test-requirement-analysis, quality-gate-release-judgment）。出典: ハブ§4 JSON例。"
+    },
+    "phase": {
+      "type": "string",
+      "description": "出力元フェーズ名（例: TRA, release-judgment）。出典: ハブ§4 JSON例、portability-design §3 JSON例。"
+    },
+    "artifacts": {
+      "type": "array",
+      "description": "成果物一覧。出典: ハブ§4 JSON例、portability-design §3 JSON例。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "成果物種別名（例: DetailedTestConditionList, release_decision）。"
+          },
+          "schema_ref": {
+            "type": "string",
+            "description": "この成果物が準拠するスキーマファイルへの参照パス。"
+          },
+          "items": {
+            "type": "array",
+            "description": "成果物本体（配列形式）。ハブ§4の例で使用される形状。"
+          },
+          "content": {
+            "type": "object",
+            "description": "成果物本体（オブジェクト形式）。portability-design §3 の例で使用される形状。"
+          }
+        },
+        "required": ["type", "schema_ref"],
+        "additionalProperties": false
+      }
+    },
+    "trace_ids": {
+      "type": "array",
+      "description": "既存ID体系（REQ-, RISK-, DTC-, TC- 等）をそのまま使い回すトレースID一覧。出典: ハブ§4 JSON例・根拠説明。",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "description": "単体利用時に上流成果物が欠けている場合の仮定事項一覧。出典: ハブ§4 JSON例（{field, value, reason} 形式）、portability-design §3 JSON例（文字列形式）。両出典の実例をそのまま許容するため、要素はオブジェクト形式・文字列形式のいずれかとする。",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string" },
+              "value": {},
+              "reason": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "description": "未解決の確認事項一覧（文字列）。出典: ハブ§4 JSON例、portability-design §3 JSON例。",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gate_status": {
+      "type": "string",
+      "enum": ["passed", "passed-with-risks", "blocked"],
+      "description": "次段階への引き渡し可否をオーケストレーターが機械的に判定するための3値。出典: ハブ§4 根拠説明「gate_status は passed / passed-with-risks / blocked の3値」。"
+    }
+  },
+  "required": ["source_skill", "phase", "artifacts", "trace_ids", "assumptions", "open_questions", "gate_status"],
+  "additionalProperties": false
+}

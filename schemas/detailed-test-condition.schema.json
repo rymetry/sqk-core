@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/detailed-test-condition.schema.json",
+  "title": "DetailedTestCondition",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §6.2 DetailedTestCondition の JSON例。フィールド: id / title / source_refs[] / high_level_condition_id / risk_refs[] / precondition_hint / action_hint / expected_behavior_hint / postcondition_hint / unknowns[] / status。id の桁数規約は §6.1（`DTC-001`のような3桁例のみ、桁数の明記なし）と docs/quality-models/quality-knowledge-schema.md §1.2（`nnn`表記のみで桁数不特定）の両方を確認し、いずれも厳密な桁数を規定していないため、緩い方（1桁以上の可変桁数）を採用した。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DTC-[0-9]+$",
+      "description": "詳細テスト条件の一意ID。出典: §6.1 基本ID体系表・§6.2 JSON例（`DTC-001`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "title": {
+      "type": "string",
+      "description": "具体的に確認したい振る舞いの見出し。出典: §6.2 JSON例。"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "出所となる要求ID一覧（例: REQ-012）。出典: §6.2 JSON例。"
+    },
+    "high_level_condition_id": {
+      "type": ["string", "null"],
+      "description": "上位のハイレベルテスト条件ID（例: HTC-003）。出典: §6.2 JSON例。"
+    },
+    "risk_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "関連するリスクID一覧（例: RISK-004）。出典: §6.2 JSON例。"
+    },
+    "precondition_hint": {
+      "type": "string",
+      "description": "前提条件のヒント。出典: §6.2 JSON例。"
+    },
+    "action_hint": {
+      "type": "string",
+      "description": "操作・アクションのヒント。出典: §6.2 JSON例。"
+    },
+    "expected_behavior_hint": {
+      "type": "string",
+      "description": "期待される振る舞いのヒント。出典: §6.2 JSON例。"
+    },
+    "postcondition_hint": {
+      "type": "string",
+      "description": "事後条件のヒント。出典: §6.2 JSON例。"
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "未確認・不明点の一覧。出典: §6.2 JSON例。"
+    },
+    "status": {
+      "type": "string",
+      "description": "状態（例: draft）。出典: §6.2 JSON例。列挙値は出典に明記がないため自由文字列とした。"
+    }
+  },
+  "required": ["id", "title"],
+  "additionalProperties": false
+}

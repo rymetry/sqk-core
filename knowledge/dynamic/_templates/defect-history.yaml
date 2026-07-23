@@ -1,0 +1,24 @@
+# _templates/defect-history.yaml
+#
+# 空スキーマテンプレート。実データはコミットしないこと。
+# 使い方: このファイルを knowledge/dynamic/defect-history.yaml にコピーし、
+#         実データを記入する（コピー先は .gitignore 対象）。
+#
+# 過去の不具合履歴を記録する。risk-analysis スキル等が、既知リスクパターンの
+# 仮説提示（assumption: true）を裏付ける実データとして参照する想定。
+#
+# 構造例（コメントのみ・実データではない）:
+#
+# defects:
+#   - id: "<欠陥ID。例: DEF-0001>"
+#     summary: "<欠陥の概要>"
+#     detected_phase: "<検出フェーズ。例: system-test / production>"
+#     severity: "<重大度>"
+#     root_cause: "<根本原因の要約>"
+#     related_risk_ids: []
+#     related_test_case_ids: []
+#     detected_date: "<YYYY-MM-DD>"
+#     source_refs:
+#       - "<社内欠陥管理システムのチケットID等>"
+
+defects: []

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/test-architecture-element.schema.json",
+  "title": "TestArchitectureElement",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §6.3 TestArchitectureElement の JSON例。フィールド: id / name / element_type / test_level / test_type / test_cycle / risk_level / thickness / assigned_conditions[] / delegated_to / rationale。id の桁数規約は §6.1 と docs/quality-models/quality-knowledge-schema.md §1.2 のいずれも厳密に規定していないため、緩い方（可変桁数）を採用した。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^TAE-[0-9]+$",
+      "description": "テストアーキテクチャ要素の一意ID。出典: §6.1 基本ID体系表・§6.3 JSON例（`TAE-001`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "name": {
+      "type": "string",
+      "description": "テスト構造上の整理単位の名称。出典: §6.3 JSON例。"
+    },
+    "element_type": {
+      "type": "string",
+      "description": "要素種別（例: function_responsibility_group）。出典: §6.3 JSON例。列挙値は出典に明記がないため自由文字列とした。"
+    },
+    "test_level": {
+      "type": "string",
+      "description": "テストレベル（例: system）。出典: §6.3 JSON例。"
+    },
+    "test_type": {
+      "type": "string",
+      "description": "テストタイプ（例: functional）。出典: §6.3 JSON例。"
+    },
+    "test_cycle": {
+      "type": "string",
+      "description": "テストサイクル（例: new_feature_test）。出典: §6.3 JSON例。"
+    },
+    "risk_level": {
+      "type": "string",
+      "description": "リスクレベル（例: high）。出典: §6.3 JSON例。"
+    },
+    "thickness": {
+      "type": "string",
+      "description": "テストの厚み（例: deep）。出典: §6.3 JSON例。"
+    },
+    "assigned_conditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "割り当てられた詳細テスト条件ID一覧（例: DTC-001）。出典: §6.3 JSON例。"
+    },
+    "delegated_to": {
+      "type": ["string", "null"],
+      "description": "委譲先（他アーキテクチャ要素等）。出典: §6.3 JSON例（値は null）。"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "この整理・割り当ての根拠。出典: §6.3 JSON例。"
+    }
+  },
+  "required": ["id", "name"],
+  "additionalProperties": false
+}

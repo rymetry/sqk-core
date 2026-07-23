@@ -1,0 +1,23 @@
+# _templates/company-terms.yaml
+#
+# 空スキーマテンプレート。実データはコミットしないこと。
+# 使い方: このファイルを knowledge/dynamic/company-terms.yaml にコピーし、
+#         実データを記入する（コピー先は .gitignore 対象）。
+#
+# knowledge/terminology/term-map.yaml の各エントリの definitions.inhouse は
+# このファイルを参照する（例: term-map.yaml の test-condition エントリの
+# inhouse.source_refs: "knowledge/dynamic/company-terms.yaml 参照"）。
+#
+# 構造例（コメントのみ・実データではない）:
+#
+# terms:
+#   - id: <term-map.yaml の id と一致させる canonical ID>
+#     ja: "<社内での日本語表記>"
+#     en: "<社内での英語表記>"
+#     definition:
+#       summary: "<社内固有の定義・注釈>"
+#       source_refs:
+#         - "<社内文書名・章番号など>"
+#     divergence_from_standard: "<標準（JSTQB/29119等）の定義とどう異なるか>"
+
+terms: []

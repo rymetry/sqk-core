@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/coverage-item.schema.json",
+  "title": "CoverageItem",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §6.4 CoverageItem の JSON例。フィールド: id / condition_id / architecture_element_id / parameters（オブジェクト） / expected_result / coverage_rationale。id の桁数規約は §6.1 と docs/quality-models/quality-knowledge-schema.md §1.2 のいずれも厳密に規定していないため、緩い方（可変桁数）を採用した。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^COV-[0-9]+$",
+      "description": "カバレッジアイテムの一意ID。出典: §6.1 基本ID体系表・§6.4 JSON例（`COV-001`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "condition_id": {
+      "type": "string",
+      "description": "対応する詳細テスト条件ID（例: DTC-001）。出典: §6.4 JSON例。"
+    },
+    "architecture_element_id": {
+      "type": "string",
+      "description": "対応するテストアーキテクチャ要素ID（例: TAE-001）。出典: §6.4 JSON例。"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "網羅すべき具体的な組合せ・条件を表すパラメーター群。出典: §6.4 JSON例（card_number_length, expiration_status, brand, submit_count 等、プロジェクト・テスト対象ごとに内容が変わるためキーを固定しない）。"
+    },
+    "expected_result": {
+      "type": "string",
+      "description": "このパラメーター組合せに対する期待結果。出典: §6.4 JSON例。"
+    },
+    "coverage_rationale": {
+      "type": "string",
+      "description": "この組合せを網羅対象とする根拠。出典: §6.4 JSON例。"
+    }
+  },
+  "required": ["id", "condition_id", "architecture_element_id"],
+  "additionalProperties": false
+}

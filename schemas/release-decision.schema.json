@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/release-decision.schema.json",
+  "title": "ReleaseDecision",
+  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #6 quality-gate-release-judgment の入出力定義（`ReleaseDecision`：`REL-nnn`、`go`/`no_go`/`conditional_go`、根拠証跡リンク・残存リスク・例外事項）＋ docs/agent-ecosystem/portability-design.md §3 の出力エンベロープ例における artifacts[].content 構造（gate_status/summary/evidence_used/residual_risks）。両出典は語彙が異なる（ハブ§3・quality-knowledge-schema.md §1.3 REL属性表は decision/evidence_refs/residual_risk_refs/exceptions、portability-design §3 の実例は gate_status/summary/evidence_used/residual_risks）ため、両方の実例をそのままバリデートできるよう、各フィールドを任意項目とした上で両語彙を並記した。フィールド発明ではなく、2つの正規出典の実例を包含する最小の統合である。ただし2出典のどちらの実例にも判定値（ハブ§3 #6 語彙なら decision、portability-design §3 実例語彙なら gate_status）が必ず存在するため、anyOf でいずれか一方の判定値を必須とし、判定値のないリリース判断を拒否する。id の桁数規約は docs/quality-models/quality-knowledge-schema.md §1.2（`REL-nnn`、桁数不特定）を確認し、桁数を規定していないため可変桁数を採用した。",
+  "type": "object",
+  "anyOf": [
+    { "required": ["decision"] },
+    { "required": ["gate_status"] }
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^REL-[0-9]+$",
+      "description": "リリース判断の一意ID。出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #6「`ReleaseDecision`（`REL-nnn`）」、docs/quality-models/quality-knowledge-schema.md §1.2 ID体系表・§1.3 REL属性表。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["go", "no_go", "conditional_go"],
+      "description": "判断結果。出典: skill-ecosystem-design-plan.md §3 #6「`go`/`no_go`/`conditional_go`」、quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "gate_status": {
+      "type": "string",
+      "enum": ["passed", "passed-with-risks", "blocked"],
+      "description": "ゲート判定状態。出典: portability-design.md §3 出力エンベロープ例（artifacts[].content.gate_status）。ハブ§4 ハンドオフエンベロープの gate_status（passed/passed-with-risks/blocked）と同一語彙。"
+    },
+    "scope": {
+      "type": "string",
+      "description": "対象バージョン・変更範囲。出典: quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "summary": {
+      "type": "string",
+      "description": "判断内容の要約文。出典: portability-design.md §3 出力エンベロープ例（artifacts[].content.summary）。"
+    },
+    "criteria_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "判定に用いた受入基準ID一覧（AC-*）。出典: quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "判断根拠の証跡ID一覧（EV-*）。出典: quality-knowledge-schema.md §1.3 REL属性表「根拠証跡リンク」（skill-ecosystem-design-plan.md §3 #6 にも同旨の記載あり）。"
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "判断に使用した証跡ファイル名等の一覧。出典: portability-design.md §3 出力エンベロープ例（artifacts[].content.evidence_used、ファイル名形式の実例）。"
+    },
+    "residual_risk_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "受容した残リスクのID一覧（RISK-*）。出典: quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "residual_risks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "残存リスクの説明文一覧。出典: skill-ecosystem-design-plan.md §3 #6「残存リスク」、portability-design.md §3 出力エンベロープ例（artifacts[].content.residual_risks、自由文形式の実例）。"
+    },
+    "exceptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "基準未達のまま出荷した項目と受容理由・期限。出典: skill-ecosystem-design-plan.md §3 #6「例外事項」、quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "approver": {
+      "type": "string",
+      "description": "承認者（権限を持つ者）。出典: quality-knowledge-schema.md §1.3 REL属性表。"
+    },
+    "decided_at": {
+      "type": "string",
+      "description": "判断日時。出典: quality-knowledge-schema.md §1.3 REL属性表。"
+    }
+  },
+  "additionalProperties": false
+}
