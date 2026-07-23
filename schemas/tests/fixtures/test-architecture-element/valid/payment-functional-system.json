@@ -6,7 +6,7 @@
   "test_type": "functional",
   "test_cycle": "new_feature_test",
   "risk_level": "high",
-  "thickness": "deep",
+  "thickness": "thick",
   "assigned_conditions": [
     "DTC-001",
     "DTC-002"
