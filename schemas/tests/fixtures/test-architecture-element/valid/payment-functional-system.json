@@ -1,0 +1,16 @@
+{
+  "id": "TAE-001",
+  "name": "決済機能のシステムテスト",
+  "element_type": "function_responsibility_group",
+  "test_level": "system",
+  "test_type": "functional",
+  "test_cycle": "new_feature_test",
+  "risk_level": "high",
+  "thickness": "deep",
+  "assigned_conditions": [
+    "DTC-001",
+    "DTC-002"
+  ],
+  "delegated_to": null,
+  "rationale": "二重請求リスクが高いため、境界値と再送制御をシステムレベルで厚く検証する"
+}

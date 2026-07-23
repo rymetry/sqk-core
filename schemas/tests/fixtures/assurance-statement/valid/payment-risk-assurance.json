@@ -1,0 +1,38 @@
+{
+  "assurance_statement": {
+    "target": "決済金額入力の境界値処理",
+    "claim": "1円から100万円までの許容範囲と範囲外入力の拒否を、システムテスト範囲で保証する",
+    "test_level": "システム",
+    "test_type": "機能",
+    "technique": [
+      "boundary-value-analysis",
+      "equivalence-partitioning"
+    ],
+    "risk_link": {
+      "risk_item": "RISK-007",
+      "risk_level": "高",
+      "depth_policy": "高リスク機能は境界値と異常系を深く検証する"
+    },
+    "oracle": {
+      "kind": "specified",
+      "description": "決済API仕様の金額制約とエラー応答定義",
+      "strength": "完全",
+      "known_blind_spots": "外部決済事業者内部の計算誤差は検出できない"
+    },
+    "coverage": {
+      "model": "同値クラスと境界値",
+      "achieved": "有効2クラス・無効2クラスと全境界値を網羅",
+      "not_covered": "外貨換算は別のシステム統合テストへ委譲"
+    },
+    "fault_detection_evidence": "金額比較演算子のミューテーションを全件検出",
+    "assumptions": [
+      "通貨は日本円に固定する",
+      "外部決済サービスはスタブ化する"
+    ],
+    "limitations": [
+      "決済事業者との通信障害は保証しない"
+    ],
+    "flakiness_controls": "時刻と乱数シードを固定し、外部依存をスタブ化する",
+    "decay_conditions": "金額上限、通貨、または決済API仕様が変更されたとき"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RISK-007",
+  "statement": "再送制御の不備により決済が重複し、STK-001 が二重請求の不利益を受ける",
+  "category": "product",
+  "likelihood": "medium",
+  "impact": "critical",
+  "affected_stakeholder_refs": [
+    "STK-001"
+  ],
+  "requirement_refs": [
+    "REQ-012"
+  ],
+  "treatment": "mitigate",
+  "residual_risk": "決済事業者の応答喪失時には手動照合が必要となる"
+}

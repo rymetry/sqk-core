@@ -1,0 +1,12 @@
+{
+  "id": "COV-001",
+  "condition_id": "DTC-001",
+  "architecture_element_id": "TAE-001",
+  "parameters": {
+    "purchase_amount": 1000000,
+    "currency": "JPY",
+    "account_status": "active"
+  },
+  "expected_result": "上限金額の決済が1回だけ受理される",
+  "coverage_rationale": "高影響の決済上限境界を確認する"
+}

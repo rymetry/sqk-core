@@ -1,0 +1,22 @@
+{
+  "id": "REL-001",
+  "decision": "conditional_go",
+  "scope": "決済API v2.3.0",
+  "summary": "重大障害はなく、既知の低リスク制約を監視条件付きで受容する",
+  "criteria_refs": [
+    "AC-021",
+    "AC-022"
+  ],
+  "evidence_refs": [
+    "EV-101",
+    "EV-102"
+  ],
+  "residual_risk_refs": [
+    "RISK-014"
+  ],
+  "exceptions": [
+    "高負荷時の応答時間は次回リリースまで継続監視する"
+  ],
+  "approver": "品質責任者",
+  "decided_at": "2026-07-23T10:00:00+09:00"
+}
