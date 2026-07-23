@@ -33,3 +33,17 @@ yarn-error.log*
 # Coverage
 coverage/
 .nyc_output/
+
+# 動的ナレッジ（社内情報の混入防止。テンプレートとREADMEは追跡する）
+knowledge/dynamic/*
+!knowledge/dynamic/README.md
+!knowledge/dynamic/_templates/
+!knowledge/dynamic/_templates/**
+
+# Agent 作業状態（raw review evidence 等。コミットしない）
+.agent-work/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
