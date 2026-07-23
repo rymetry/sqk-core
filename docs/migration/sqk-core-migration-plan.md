@@ -4,7 +4,7 @@
 
 `software-quality-knowledge-base`（v1）はガバナンス機構（`docs/agent-ecosystem` 18k行 + `provenance/` 13k行 + `scripts/` 18k行 + `tests/` 8k行 ≒ 57k行）が知識成果物本体（domain canon 10.3k行 + skills/schemas/knowledge 4k行）の約4倍に膨張し、1変更あたりの修正コストが過大になった。価値の核を `repo-template` 起点の新リポジトリ **`sqk-core`**（public）へ移植し、最小ガバナンスで再出発する。移行完了後、ユーザー自身が v1 を削除する。
 
-**Status: approved for execution**。実行は 1タスク=1PR=1セッション、merge 判断は人間。Task 0・1 は preflight/external setup（例外として PR なし、または setup PR のみ）。
+**Status: completed**（完了記録は文末を参照）。実行は 1タスク=1PR=1セッション、merge 判断は人間。Task 0・1 は preflight/external setup（例外として PR なし、または setup PR のみ）。
 
 **スレッド分割と計画の収載**: Task 0〜1（v1 凍結・リポジトリ/フォルダ作成・実行基盤の導入）は本スレッドで実行し、Task 1 の setup PR で本計画を **`docs/migration/sqk-core-migration-plan.md`** として sqk-core にコミットする。**Task 2 以降は sqk-core 専用スレッドで、repo 収載版の計画を正として実行する**（`/execute-task docs/migration/sqk-core-migration-plan.md <Task-ID>` 形式で参照）。このため、`/execute-task` コマンド・hooks 等の実行基盤は Task 1 の setup PR に含める（Task 3 ではなく。repo-template には `.claude/commands/` も `.codex/prompts/` も存在しないため）。
 
@@ -153,3 +153,13 @@ TDD: 失敗 fixtures → FAIL 確認 → 実装 → PASS → **Task 1 完了後�
 ## 確定済み決定
 
 public 維持 / 監査済み bundle のみ public（全 ref bundle・metadata は非公開でローカル保管、`~/Dev/personal-projects/backups/sqk` は通常バックアップ対象に含める）/ `docs/agent-ecosystem/` 名称維持 / auto-merge 無効化 / enforce_admins false / execute-task はリスク応分レビュー（通常1名+高影響+1名）
+
+## 完了記録（status: completed）
+
+- Task 0〜4: 完了（Task 2 = PR #2、Task 3 = PR #3、Task 4 = PR #4。各 merge は人間判断）
+- Task 5 ステップ1〜3: 2026-07-23 完了
+  - 完了チェック: `check.py` PASS（5項目 issues=0）/ 固定 pytest 52 passed / symlink 3本 / skills 7 / schemas 8 / agent-ecosystem 7 / `.allow_auto_merge == false`
+  - Release `archive-sqkb-v1` 作成済み（`sqk-v1-public.bundle`、SHA-256 `6bc2c2e603038fbe1bf90931ba068bbcd002d0e8c9c003d44ceccf014d3b551c`、2,022,458 bytes、`--latest=false`。v2 に `v1-final` タグは作成していない）
+  - 復旧検証: Release 再ダウンロード → SHA-256・bytes 一致 → bundle clone + `git fsck --full` OK → bundle 内 `v1-final^{commit}` == `ced0ccc495b45a37a446a20319674a6d2468262b` / v2 remote fresh clone で check + pytest green
+- 削除前監査（追加実施）: GitHub 実体（main HEAD == `v1-final` == `ced0ccc4…`、`refs/pull/1-34/head` 全34 commit は all-refs bundle に収録済み）を確認のうえ、4観点の独立監査（as-is 完全性 67/67 byte-perfect / コンセプト・方針整合 / transform 忠実性 / drop 完全性 72件全て計画根拠あり）が全 PASS。Low 所見の追随修正は PR #5 で反映済み
+- v1 リポジトリ（`rymetry/software-quality-knowledge-base`）削除: YYYY-MM-DD ユーザーにより実施（GitHub リポジトリ削除。ローカル working tree の削除は任意のタイミング）<!-- 削除実施後に日付を確定してから merge する。それまで本 PR は draft を維持 -->

@@ -24,7 +24,7 @@ as-is 対象は source commit `ced0ccc495b45a37a446a20319674a6d2468262b` から6
 
 ## v1 履歴の所在
 
-- Release: `archive-sqkb-v1`（https://github.com/rymetry/sqk-core/releases/tag/archive-sqkb-v1）。Task 5 で作成予定。
+- Release: `archive-sqkb-v1`（https://github.com/rymetry/sqk-core/releases/tag/archive-sqkb-v1）。Task 5 で作成済み。ダウンロード後の SHA-256 照合・bundle clone・`git fsck --full`・タグ commit 照合による復旧検証も完了している。
 - 公開 bundle: `sqk-v1-public.bundle`
   - SHA-256: `6bc2c2e603038fbe1bf90931ba068bbcd002d0e8c9c003d44ceccf014d3b551c`
   - サイズ: 2,022,458 bytes
