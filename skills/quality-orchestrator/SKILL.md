@@ -208,7 +208,7 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
   "type": "RoutingDecision",
   "schema_ref": "schemas/routing-decision.schema.json",
   "content": {
-    "chain_nodes": ["RISK", "REQ", "HTC", "DTC", "TAE", "COV", "TC"],
+    "chain_nodes": ["RISK", "REQ", "AC", "TEST"],
     "routed_skill": [
       "risk-analysis",
       "test-requirement-analysis",

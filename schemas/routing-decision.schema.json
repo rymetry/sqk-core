@@ -2,13 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://software-quality-knowledge-base.example/schemas/routing-decision.schema.json",
   "title": "RoutingDecision",
-  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §4「オーケストレーション設計」、および docs/agent-ecosystem/phase2-implementation-guide.md T0 T12-1。handoff-envelope の artifacts[].content に格納する RoutingDecision を検証する。handoff-envelope.schema.json の content は無制約 object であり、エンベロープ経由では routed_skill の配列形を強制できないため、repo-local の専用スキーマとして分離した。",
+  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §4「オーケストレーション設計」、および docs/agent-ecosystem/phase2-implementation-guide.md T0 T12-1。handoff-envelope の artifacts[].content に格納する RoutingDecision を検証する。handoff-envelope.schema.json の content は無制約 object であり、エンベロープ経由では routed_skill の配列形を強制できないため、repo-local の専用スキーマとして分離した。RoutingDecision はトレースグラフに参加する構造ノードではないため、id フィールドおよび ^PREFIX-[0-9]+$ の id 体系を持たない。",
   "type": "object",
   "properties": {
     "chain_nodes": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "相談文を分類した品質知識チェーンのノード一覧。"
+      "description": "相談文を分類した品質知識チェーンのノード一覧。truly-empty 相談のフォールバック時は分類ノードが確定しないまま test-requirement-analysis へ着地するため、minItems を課さず空配列を許容する。"
     },
     "routed_skill": {
       "type": "array",

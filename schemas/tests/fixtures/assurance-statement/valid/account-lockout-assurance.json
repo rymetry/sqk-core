@@ -1,0 +1,35 @@
+{
+  "assurance_statement": {
+    "target": "ログイン失敗時のアカウントロック判定",
+    "claim": "連続5回の認証失敗でアカウントをロックし、ロック中の認証を拒否することを、システムテスト範囲で保証する",
+    "test_level": "システム",
+    "test_type": "機能",
+    "technique": "boundary-value-analysis, decision-table",
+    "risk_link": {
+      "risk_item": "RISK-012",
+      "risk_level": "高",
+      "depth_policy": "不正アクセスにつながる高リスク機能は閾値境界と条件組合せを深く検証する"
+    },
+    "oracle": {
+      "kind": "specified",
+      "description": "認証仕様の失敗回数閾値、ロック状態、およびエラー応答定義",
+      "strength": "完全",
+      "known_blind_spots": "分散環境での失敗回数同期遅延は検出できない"
+    },
+    "coverage": {
+      "model": "境界値とデシジョンテーブル",
+      "achieved": "失敗回数4回・5回・6回の境界と、ロック状態・認証結果の主要条件組合せを網羅",
+      "not_covered": "複数リージョン間の状態同期はシステム統合テストへ委譲"
+    },
+    "fault_detection_evidence": "ロック閾値の比較演算子と状態遷移条件のミューテーションを全件検出",
+    "assumptions": [
+      "認証失敗回数はアカウント単位で集計する",
+      "テスト開始時にロック状態を初期化する"
+    ],
+    "limitations": [
+      "分散キャッシュ障害時のロック状態整合性は保証しない"
+    ],
+    "flakiness_controls": "時刻を固定し、各テストで認証状態と失敗回数を分離する",
+    "decay_conditions": "ロック閾値、解除条件、または認証状態管理方式が変更されたとき"
+  }
+}
