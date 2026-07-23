@@ -95,6 +95,9 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    する（[skill-ecosystem-design-plan.md §4 の根拠](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)：
    「情報が少ないときほど上流から手当てする」）。`fallback_applied: true`
    をエンベロープに記録する。
+   どのスキルの最小入力も満たさない truly-empty の相談時は、フェーズ順最上流の
+   `test-requirement-analysis` に着地し、以降は当該スキルのコールドスタート
+   分岐に委ねる（[skill-ecosystem-design-plan.md §4「上流から手当てする」](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)）。
 5. **P2/P3 スキル宛の案内**: 分類結果が [routing-table.md フォールバック
    規則](references/routing-table.md#フォールバック規則) に従い P2/P3 スキル
    （`nfr-review`・`sre-quality-ops`・`code-review`・`defect-analysis-rca`・
