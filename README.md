@@ -55,7 +55,7 @@ veridia は将来の runtime consumer である。本リポジトリは、veridi
 
 - secrets やローカル環境固有の状態をコミットしない。
 - `main` へ直接 push せず、変更は PR 経由で反映し、merge は人間が判断する。
-- `main` への force push を禁止する。hook はこれをブロックする。
+- `main` への force push を禁止する。hook は `main` 宛の push（force を含む）をブロックする。
 - conflict marker を残したまま作業を終えない。
 - source verification なしに `docs/_research/` の内容を canonical 化しない。
 - research card から `knowledge/` を直接更新しない。

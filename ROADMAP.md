@@ -27,7 +27,7 @@ Phase 1 / 1b レポートから申し送られた CS-1、CS-2、CS-3、T12-1、T
 
 ### 3. Phase 2 の keep / merge / defer / drop 再評価
 
-[D-007](./DECISIONS.md) に従い、vertical slice の結果を根拠として Phase 2 の backlog material を再評価する。残り8スキル、ナレッジ文書3件、schema や routing の候補を、そのまま実装対象とはみなさない。
+[D-007](./DECISIONS.md#d-007-phase-2-の再ベースライン) に従い、vertical slice の結果を根拠として Phase 2 の backlog material を再評価する。残り8スキル、ナレッジ文書3件、schema や routing の候補を、そのまま実装対象とはみなさない。
 
 ### 4. 再評価後の実装
 
