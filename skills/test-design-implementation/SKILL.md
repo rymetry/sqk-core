@@ -302,6 +302,15 @@ test-architecture-design の成果物（`TestArchitectureElement`）が存在し
 }
 ```
 
+上記の `"technique": "BB-02"` は文字列形の例である。複数技法を引用する
+保証ステートメントでは、配列形を次のように用いる。
+
+```json
+{
+  "technique": ["BB-02", "BB-03"]
+}
+```
+
 `gate_status` は `passed` / `passed-with-risks` / `blocked` の3値のいずれか
 をとる。保証ステートメントが付与できないテストケースが残っている、または
 選定技法がカタログに実在しない ID を使っている場合は `blocked` とし、
