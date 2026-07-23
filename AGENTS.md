@@ -12,5 +12,5 @@ sqk-core は、ソフトウェア品質ナレッジベース v2 のリポジト�
 
 - Secrets やローカル環境固有の状態をコミットしない。
 - `main` へ直接 push しない。変更は PR 経由で反映する。
-- `main` への force push は禁止(`.claude/hooks/pre-tool-use-policy.sh` でブロックされる)。
+- `main` 宛の push(通常・force とも)、および `--all` / `--mirror` / 宛先を明示しない bare push は禁止(`.claude/hooks/pre-tool-use-policy.sh` でブロックされる。feature branch への明示 push のみ許可)。
 - コンフリクトマーカーを残したまま作業を終えない(`.claude/hooks/stop-verify.sh` で検出される)。

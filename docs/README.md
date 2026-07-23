@@ -19,6 +19,8 @@
 | `secure-development/` | セキュア開発と supply chain |
 | `test-techniques/` | テスト技法・プロセス・assurance |
 
+domain canon の文書間関係は、ハブ文書 [quality-models/quality-knowledge-schema.md](./quality-models/quality-knowledge-schema.md)（10ノードトレーサビリティチェーン）を起点に辿る。AI 向けのナビゲーションは [knowledge/index.md](../knowledge/index.md) からのプログレッシブディスクロージャを参照する。
+
 ### その他
 
 | Path | 位置づけ |

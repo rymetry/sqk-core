@@ -62,3 +62,9 @@
 **決定内容**: v1 の PR / Issue / review metadata export（`v1-github-metadata.tar.gz`、SHA-256 `3bb0bc3ec51031644216e02da683ff4ebfa292dbf80c271f228d88a855424937`、84,168 bytes）は公開リポジトリに含めず、非公開のローカルバックアップとして保管する。公開履歴は Release `archive-sqkb-v1` の public bundle で提供する。
 
 **理由**: metadata export には公開 repository の再構築に不要な運用情報が含まれうる。履歴の公開保全と metadata の保管範囲を分離し、公開範囲を必要最小限にする。
+
+## D-010: SKILL.md `version` の authority
+
+**決定内容**: `SKILL.md` frontmatter の `version` は、SKILL.md 自身を authority とする。スキルの実質的な変更（inputs / outputs、手順、判定基準の変更）を含む PR では、同一 PR 内で semver に従って `version` を更新する。変更履歴の追跡は git 履歴で行う。
+
+**理由**: v1 では provenance registry（`artifacts.yaml`）が `version` の writable authority であり、frontmatter は readonly projection だった。D-002 で registry を移植しないと決定した結果、version 更新の規律が未宣言になっていた。authority の所在と更新タイミングを明文化し、更新判断の属人化を防ぐ。

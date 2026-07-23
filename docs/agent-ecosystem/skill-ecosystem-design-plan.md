@@ -437,4 +437,4 @@ SKILL.md の frontmatter に `capabilities`（`file_read` / `file_write` / `shel
 - [../test-techniques/testing-standards-and-assurance-concepts.md](../test-techniques/testing-standards-and-assurance-concepts.md) — 保証ステートメントテンプレートの主参照
 - [../test-techniques/test-techniques-skill-catalog.md](../test-techniques/test-techniques-skill-catalog.md) — 135技法カタログの主参照
 - [../quality-models/iso25010-product-quality-model.md](../quality-models/iso25010-product-quality-model.md) — トレードオフマトリクスの主参照
-- docs/README.md — ナレッジベース全体の索引ハブ
+- [docs/README.md](../README.md) — ナレッジベース全体の索引ハブ
