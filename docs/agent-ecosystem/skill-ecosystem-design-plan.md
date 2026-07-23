@@ -431,10 +431,10 @@ SKILL.md の frontmatter に `capabilities`（`file_read` / `file_write` / `shel
 - [knowledge-management-design.md](./knowledge-management-design.md) — ナレッジ管理設計（静的/動的分離、用語対応表、テスト空間マトリクス、プログレッシブディスクロージャ）
 - [portability-design.md](./portability-design.md) — ポータビリティ方針（SKILL.md frontmatter、プラットフォーム別変換レシピ、Claude Code実装例フル掲載）
 - [phase1-implementation-guide.md](./phase1-implementation-guide.md) — Phase 1 実装ガイド（タスク分解、schemas/ 出典対応表、ルーティング表シード、スキル別受入基準）
-- [adr-0001-design-plan-snapshot.md](./adr-0001-design-plan-snapshot.md) — 本設計に至った調査過程・意思決定の記録（アーカイブ。正典は本文書以下3文書）
+- adr-0001-design-plan-snapshot.md — 本設計に至った調査過程・意思決定の記録（アーカイブ。正典は本文書以下3文書）
 - [../quality-models/quality-knowledge-schema.md](../quality-models/quality-knowledge-schema.md) — 10ノードトレーサビリティチェーンとAIエージェント推論手順の主参照
 - [../test-techniques/test-process-research-summary-test-design.md](../test-techniques/test-process-research-summary-test-design.md) — TRA/TAD/TDD/TI/TEのデータ契約とレビューゲートの主参照
 - [../test-techniques/testing-standards-and-assurance-concepts.md](../test-techniques/testing-standards-and-assurance-concepts.md) — 保証ステートメントテンプレートの主参照
 - [../test-techniques/test-techniques-skill-catalog.md](../test-techniques/test-techniques-skill-catalog.md) — 135技法カタログの主参照
 - [../quality-models/iso25010-product-quality-model.md](../quality-models/iso25010-product-quality-model.md) — トレードオフマトリクスの主参照
-- [../README.md](../README.md) — ナレッジベース全体の索引ハブ
+- docs/README.md — ナレッジベース全体の索引ハブ

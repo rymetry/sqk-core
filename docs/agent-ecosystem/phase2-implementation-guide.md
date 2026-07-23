@@ -6,7 +6,7 @@
 
 本書は [スキル・エコシステム設計プラン](./skill-ecosystem-design-plan.md)（ハブ）・[ナレッジマネジメント設計](./knowledge-management-design.md)・[ポータビリティ設計](./portability-design.md) の設計3文書を、**Phase 2 スコープについて追加の設計判断なしで実装可能にするための実行補助文書**である。[Phase 1 実装ガイド](./phase1-implementation-guide.md)と同形式で、「どの順序で・どの出典から・何をもって完成とするか」だけを固定する。
 
-**Phase 1 との違い（本書の基礎）**: 本書は設計3文書に加えて、Phase 1 の**実測結果**を基礎に置く——[統合試行レポート](./phase1-integration-trial-report.md)（T12・ハッピーパス）と [コールドスタート検証レポート](./phase1b-coldstart-trial-report.md)（Phase 1b）。ロードマップの設計決定「Phase 2/3 の実装ガイドは事前に作らず、各 Phase 開始時に前 Phase の実測を反映して作成する」（[roadmap-status.md](./roadmap-status.md)）に従い、Phase 2 開始時点の本書で両レポートの改善点を受入基準へ落とし込んでいる。
+**Phase 1 との違い（本書の基礎）**: 本書は設計3文書に加えて、Phase 1 の**実測結果**を基礎に置く——[統合試行レポート](./phase1-integration-trial-report.md)（T12・ハッピーパス）と [コールドスタート検証レポート](./phase1b-coldstart-trial-report.md)（Phase 1b）。ロードマップの設計決定「Phase 2/3 の実装ガイドは事前に作らず、各 Phase 開始時に前 Phase の実測を反映して作成する」（roadmap-status.md）に従い、Phase 2 開始時点の本書で両レポートの改善点を受入基準へ落とし込んでいる。
 
 **根拠**: Phase 2 で実行者判断に委ねられうる箇所を本書で固定する——(1) Phase 1 申し送り6件（改訂 PR）の修正方針・対象・検証、(2) 新規8スキルの作成順序と共通/個別受入基準、(3) 不足ナレッジ文書3件の正規出典、(4) ゲート判定の委譲・テスト空間マトリクス描画という2つの実装タスクの完成条件。これらを固定しないと実行セッションごとに解釈がブレる。
 
@@ -175,7 +175,7 @@ Phase 1 の T12／Phase 1b が積み残した項目を、Phase 2 スキルを含
 1. 4段階複合フロー（TRA→TAD→TDD/TI→**TE**、[ハブ §4](./skill-ecosystem-design-plan.md#4-オーケストレーション設計)）を一気通しで実行し、末端 TE（#7）まで RUN 生成とゲート委譲（#14）を確認する。
 2. #9〜#13 の単体起動を各1本、#14 のメタレビューを成果物一式に対し1本実施する。
 3. コールドスタート: 新8スキルの「上流成果物なし→3件以内質問→必ず出力（blocked 可）」を発火＋スキーマ機械検証（Phase 1b と同方式）。生成 item は schema-valid で、前提は `assumptions[]` のみに記録されること。
-4. **実セッション・トリガー観点の follow-up 登録（非ゲート）**: 実 Claude Code セッションでの `description` 自動発火の精度と、明確化質問→応答待ち→再開の対話フローは、ロールプレイでは原理的に検証できない（[roadmap-status.md「完了の意味と検証の限界」](./roadmap-status.md)）。**Phase 2 完了の必須ゲートにはせず**、別建ての follow-up として登録し受入観点にのみ明記する。実インタラクティブ運用で埋める。
+4. **実セッション・トリガー観点の follow-up 登録（非ゲート）**: 実 Claude Code セッションでの `description` 自動発火の精度と、明確化質問→応答待ち→再開の対話フローは、ロールプレイでは原理的に検証できない（roadmap-status.md「完了の意味と検証の限界」）。**Phase 2 完了の必須ゲートにはせず**、別建ての follow-up として登録し受入観点にのみ明記する。実インタラクティブ運用で埋める。
 5. 結果（誤分類・質問数超過・ゲート誤判定・トリガー精度）を Phase 2 試行レポートに記録する。
 
 **受入基準**: 4段階複合フローが末端 TE まで通り全 envelope が valid。8新スキルのコールドスタートが全て schema-valid な item を生成しつつ前提を `assumptions[]` のみに記録する。実セッションのトリガー精度・対話フローは follow-up として登録・記録される（完了ゲートではない）。
@@ -219,5 +219,5 @@ Phase 1 の T12／Phase 1b が積み残した項目を、Phase 2 スキルを含
 - [Phase 1 実装ガイド](./phase1-implementation-guide.md) — 本書の形式雛形
 - [統合試行レポート](./phase1-integration-trial-report.md) — T12（ハッピーパス）の結果と改善点（T12-1/2/3）
 - [コールドスタート検証レポート](./phase1b-coldstart-trial-report.md) — Phase 1b の結果と改善点（CS-1〜CS-3）・正典照合の結論
-- [ADR-0002 Phase 2 計画意思決定記録](./adr-0002-phase2-plan-snapshot.md) — 本ガイドに至った設計判断・レビュー経緯・承認時プランのスナップショット
-- [ロードマップ俯瞰・進捗トラッキング](./roadmap-status.md) — 全 Phase の現在地
+- ADR-0002 Phase 2 計画意思決定記録 — 本ガイドに至った設計判断・レビュー経緯・承認時プランのスナップショット
+- ロードマップ俯瞰・進捗トラッキング — 全 Phase の現在地

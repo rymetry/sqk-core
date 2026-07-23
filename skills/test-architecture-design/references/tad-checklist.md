@@ -30,14 +30,14 @@ docs/ 側の該当節が正典であり、本ファイルはそこへのポイ�
 
 | 項目 | 内容 | 出典 |
 | --- | --- | --- |
-| レベル別の保証範囲 | コンポーネント／コンポーネント統合／システム／システム統合／受け入れの各レベルで「保証できること」「保証できないこと」「代表的な技法」 | [testing-standards-and-assurance-concepts.md §3](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md#3-テストレベル--テストタイプ--技法の保証マトリクス) |
+| レベル別の保証範囲 | コンポーネント／コンポーネント統合／システム／システム統合／受け入れの各レベルで「保証できること」「保証できないこと」「代表的な技法」 | [testing-standards-and-assurance-concepts.md §3](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md) |
 | タイプ別の保証言明形式 | 機能／非機能／ブラックボックス／ホワイトボックスごとの保証の言明形式と網羅・判定モデル | 同上 |
 
 ## リスク→テスト深度の変換手順（§4.2）
 
 | 項目 | 内容 | 出典 |
 | --- | --- | --- |
-| 変換手順 | リスク識別→リスク分析→深度への変換→優先順位への変換→リスクモニタリングの循環 | [testing-standards-and-assurance-concepts.md §4.2](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md#42-リスク--テスト深度の変換手順) |
+| 変換手順 | リスク識別→リスク分析→深度への変換→優先順位への変換→リスクモニタリングの循環 | [testing-standards-and-assurance-concepts.md §4.2](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md) |
 | 深度ポリシー表 | リスクレベル（高/中/低）ごとの技法の厚み・カバレッジ目標・実行順序/回帰頻度の対応 | 同上 |
 
 ## TAD レビューゲート観点（§8.2）

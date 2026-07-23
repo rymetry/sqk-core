@@ -4,7 +4,7 @@
 
 ## 位置づけ
 
-本書は [roadmap-status.md「完了の意味と検証の限界」](./roadmap-status.md) および
+本書は roadmap-status.md「完了の意味と検証の限界」および
 [phase1-integration-trial-report.md「未検証事項」](./phase1-integration-trial-report.md#未検証事項)
 が「マージ後の実運用またはコールドスタート専用の追加試行で埋める」とした
 **コールドスタート系分岐の追加試行**の実行結果である。T12（統合試行）は上流成果物ありの
@@ -58,11 +58,11 @@
   `assumptions[]` を持つため、test-design-implementation のコールドスタート前提は保証
   ステートメント内に正しく退避できる（item レベルで前提を保持できるのはこの1スキーマのみ）。
 - **正典との照合（元プラン方針）**: 設計プラン §4 は**一貫してエンベロープ側での記録**を意図していた。
-  具体 JSON 例（[skill-ecosystem-design-plan.md:327](./skill-ecosystem-design-plan.md#L327)）は
+  具体 JSON 例（[skill-ecosystem-design-plan.md:327](./skill-ecosystem-design-plan.md)）は
   `"assumptions": [{ "field": "risk_level", "value": "unknown", "reason": "risk-analysis 未実行のため暫定" }]`
   と**エンベロープ `assumptions[]` に `{field, value, reason}` オブジェクト**で持つ形を示し、
-  同 §4 本文（[:388](./skill-ecosystem-design-plan.md#L388)）も「…`assumption: true` として**エンベロープに
-  記録する**」、根拠（[:337](./skill-ecosystem-design-plan.md#L337)）も「`assumptions`/`open_questions` は
+  同 §4 本文（[:388](./skill-ecosystem-design-plan.md)）も「…`assumption: true` として**エンベロープに
+  記録する**」、根拠（[:337](./skill-ecosystem-design-plan.md)）も「`assumptions`/`open_questions` は
   …上流成果物なし状態を後から検出・補完可能にするための**必須フィールド**」と述べる。
   **スキーマはこのプラン方針を正しく実装しており、逸脱したのは SKILL.md 文言側**（「エンベロープに記録」を
   「item に付与」と言い換えた）。
@@ -87,8 +87,8 @@
   `architecture_element_id` や TC の参照は自由文字列のため、`TAE-inline-001` を**参照**しても
   それ自体は valid（TAE の `id` フィールドだけが落ちる）。
 - **正典との照合（元プラン方針）**: TAE の id 体系はデータ契約 §6.1 ID体系表・§6.3 JSON例
-  （[test-process-research-summary-test-design.md:686](../test-techniques/test-process-research-summary-test-design.md#L686)、
-  [:715](../test-techniques/test-process-research-summary-test-design.md#L715)）で**一貫して `TAE-001`
+  （[test-process-research-summary-test-design.md:686](../test-techniques/test-process-research-summary-test-design.md)、
+  [:715](../test-techniques/test-process-research-summary-test-design.md)）で**一貫して `TAE-001`
   （数値のみ）**。スキーマ `^TAE-[0-9]+$` はこれを忠実に実装している。**`TAE-inline-001` はプランにも
   データ契約にも存在せず、[test-design-implementation/SKILL.md:154](../../skills/test-design-implementation/SKILL.md)
   で SKILL 執筆時に初めて持ち込まれた語**であり、確立済みの id 規約からの逸脱にあたる。
@@ -110,7 +110,7 @@
   （`fallback_applied: true`）。この解釈で運用は回るが、SKILL 本文に truly-empty 時の
   具体的着地先の規定がない。
 - **正典との照合（元プラン方針）**: このフォールバック規定自体は設計プラン §4
-  （[skill-ecosystem-design-plan.md:306-307](./skill-ecosystem-design-plan.md#L306)）の
+  （[skill-ecosystem-design-plan.md:306-307](./skill-ecosystem-design-plan.md)）の
   「曖昧な場合は明確化質問を1回まで…それでも定まらない場合は入力が揃っている最上流フェーズへ」＋根拠
   「**情報が少ないときほど上流から手当てする**」を SKILL が忠実にコピーしたもの。**truly-empty 時の着地先が
   未規定なのは SKILL の逸脱ではなくプラン由来のギャップ**であり、設計思想（上流へ倒す）から意図は明白。

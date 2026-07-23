@@ -151,4 +151,4 @@ T11: #0 quality-orchestrator           ← 最後
 - [スキル・エコシステム設計プラン](./skill-ecosystem-design-plan.md) — スキル定義・オーケストレーション設計の正典
 - [ナレッジマネジメント設計](./knowledge-management-design.md) — knowledge/ 配下の構造とシード内容の正典
 - [ポータビリティ設計](./portability-design.md) — SKILL.md 仕様と実装例の正典
-- [ADR-0001 設計プラン意思決定記録](./adr-0001-design-plan-snapshot.md) — 本設計に至った調査過程のアーカイブ
+- ADR-0001 設計プラン意思決定記録 — 本設計に至った調査過程のアーカイブ
