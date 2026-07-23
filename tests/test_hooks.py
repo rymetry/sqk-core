@@ -32,6 +32,14 @@ BLOCKED_COMMANDS = [
     # 複数行コマンドでも push 行自体の違反は検出する
     'git commit -m "docs: update\n\n- release + restore" && git push origin main',
     'git commit -m "note\nwith + plus" && git push --force origin feature-x',
+    # 行継続(バックスラッシュ+改行)で分断されたオプションも検出する
+    "git push origin feature/x \\\n--force",
+    "git push origin feature/x \\\n--mirror",
+    # 2つ目以降の refspec で main を指定するバイパスを塞ぐ
+    "git push origin feature/x HEAD:main",
+    # git の global option を挟んだ push も検出する
+    "git -C . push origin main",
+    "git -C . push --force origin feature/x",
 ]
 
 ALLOWED_COMMANDS = [
@@ -45,6 +53,9 @@ ALLOWED_COMMANDS = [
     'git commit -m "docs: update\n\n- release + restore verification; done\n- Status -> completed" && git push -u origin docs/x',
     # メッセージ本文に "--force" という文字列があっても push 自体が非 force なら許可
     'git commit -m "docs: explain --force blocking\n\ndetails here" && git push origin feature/hook-docs',
+    # 行継続・global option 込みでも正当な feature push は許可
+    "git push origin \\\nfeature/x",
+    "git -C . push origin feature/x",
 ]
 
 
