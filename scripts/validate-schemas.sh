@@ -145,6 +145,11 @@ classify_strict_warnings() {
   local warning entry matched
   local -a baseline_entries
 
+  if [[ ! -f "${STRICT_WARNINGS_BASELINE}" ]]; then
+    printf '  FAIL missing strict warnings baseline: %s\n' "${STRICT_WARNINGS_BASELINE}"
+    exit 1
+  fi
+
   baseline_entries=()
   while IFS= read -r entry || [[ -n "${entry}" ]]; do
     entry="${entry%$'\r'}"
@@ -155,12 +160,14 @@ classify_strict_warnings() {
 
   while IFS= read -r warning || [[ -n "${warning}" ]]; do
     matched=false
-    for entry in "${baseline_entries[@]}"; do
-      if [[ "${warning}" == *"${entry}"* ]]; then
-        matched=true
-        break
-      fi
-    done
+    if (( ${#baseline_entries[@]} > 0 )); then
+      for entry in "${baseline_entries[@]}"; do
+        if [[ "${warning}" == *"${entry}"* ]]; then
+          matched=true
+          break
+        fi
+      done
+    fi
 
     if [[ "${matched}" == true ]]; then
       printf '%s\n' "${warning}" >>"${known_strict_warnings_file}"
@@ -169,19 +176,21 @@ classify_strict_warnings() {
     fi
   done <"${strict_warnings_file}"
 
-  for entry in "${baseline_entries[@]}"; do
-    matched=false
-    while IFS= read -r warning || [[ -n "${warning}" ]]; do
-      if [[ "${warning}" == *"${entry}"* ]]; then
-        matched=true
-        break
-      fi
-    done <"${strict_warnings_file}"
+  if (( ${#baseline_entries[@]} > 0 )); then
+    for entry in "${baseline_entries[@]}"; do
+      matched=false
+      while IFS= read -r warning || [[ -n "${warning}" ]]; do
+        if [[ "${warning}" == *"${entry}"* ]]; then
+          matched=true
+          break
+        fi
+      done <"${strict_warnings_file}"
 
-    if [[ "${matched}" == false ]]; then
-      printf '%s\n' "${entry}" >>"${stale_strict_warnings_file}"
-    fi
-  done
+      if [[ "${matched}" == false ]]; then
+        printf '%s\n' "${entry}" >>"${stale_strict_warnings_file}"
+      fi
+    done
+  fi
 }
 
 shopt -s nullglob
