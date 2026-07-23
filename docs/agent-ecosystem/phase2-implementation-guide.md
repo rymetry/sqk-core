@@ -12,7 +12,7 @@
 
 **Phase 2 スコープ**（正典は [ハブ §5 段階的ロードマップ](./skill-ecosystem-design-plan.md#5-段階的ロードマップ)）: 残り8スキル（#7〜#14）＋不足ナレッジ文書3件（コードレビュー技法／ODC 欠陥タクソノミー／日本発テスト設計技法）＋ゲート判定の quality-artifact-review への委譲＋テスト空間マトリクス描画実装。
 
-> **superseded**: この Execution freeze は v1 で宣言されたもので、v2 では失効している（DECISIONS.md D-006 として記録予定）。v1 原文は Release `archive-sqkb-v1` の bundle を参照。
+> **superseded**: この Execution freeze は v1 で宣言されたもので、v2 では失効している（[DECISIONS.md](../../DECISIONS.md) の D-006 として記録）。v1 原文は Release `archive-sqkb-v1` の bundle を参照。
 
 > **実行前レビュー反映（2026-07-08）**: 本ガイドは Phase 2 着手前の多角的レビュー（検証・批判・governance適合・adversarial・Codex・correctness の6視点）を反映して改訂した。主な変更: (1) 検証ハーネスを前提タスク化、(2) T12-2 を enum 追加から**軽量修正**へ改訂、(3) MON のフィールド契約を [quality-knowledge-schema.md §1.3](../quality-models/quality-knowledge-schema.md) に明示、(4) T1 に #1/#3 の `knowledge_refs` 再配線ステップを追加、(5) T3a にマージ順制約、(6) T12-1 の検証機構を明確化。
 
