@@ -40,7 +40,7 @@ v1 の provenance 機構で扱っていた出典、`derived_from`、`knowledge_r
 | 文書内の出典 | 文書内出典をそのまま保持し、知識主張の根拠を追跡する |
 | `derived_from` | Git 履歴と `MIGRATION-SOURCES.sha256` により、移植元 commit とコピー時の同一性を追跡する |
 | skill の `knowledge_refs` | repo-root 相対参照を保持し、`scripts/check.py` で実在性を検証する |
-| authority 区分 | 文書内出典、Git 履歴、および Task 4 で作成予定の DECISIONS.md によって判断根拠を維持する |
+| authority 区分 | 文書内出典、Git 履歴、および Task 4 で作成した [DECISIONS.md](./DECISIONS.md) によって判断根拠を維持する |
 
 ## Metadata archive
 
