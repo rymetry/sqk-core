@@ -171,7 +171,7 @@ def test_ci_workflow_runs_check_and_fixed_pytest() -> None:
     assert "branches: [main]" in workflow
     assert "permissions:\n  contents: read" in workflow
     assert "uses: actions/checkout@v6" in workflow
-    assert "uses: astral-sh/setup-uv@v8" in workflow
+    assert "uses: astral-sh/setup-uv@v7" in workflow
     assert "uv run scripts/check.py" in workflow
     assert (
         "uv run --with pytest --with jsonschema --with pyyaml pytest tests/ -v"
