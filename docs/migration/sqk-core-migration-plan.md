@@ -162,4 +162,4 @@ public 維持 / 監査済み bundle のみ public（全 ref bundle・metadata �
   - Release `archive-sqkb-v1` 作成済み（`sqk-v1-public.bundle`、SHA-256 `6bc2c2e603038fbe1bf90931ba068bbcd002d0e8c9c003d44ceccf014d3b551c`、2,022,458 bytes、`--latest=false`。v2 に `v1-final` タグは作成していない）
   - 復旧検証: Release 再ダウンロード → SHA-256・bytes 一致 → bundle clone + `git fsck --full` OK → bundle 内 `v1-final^{commit}` == `ced0ccc495b45a37a446a20319674a6d2468262b` / v2 remote fresh clone で check + pytest green
 - 削除前監査（追加実施）: GitHub 実体（main HEAD == `v1-final` == `ced0ccc4…`、`refs/pull/1-34/head` 全34 commit は all-refs bundle に収録済み）を確認のうえ、4観点の独立監査（as-is 完全性 67/67 byte-perfect / コンセプト・方針整合 / transform 忠実性 / drop 完全性 72件全て計画根拠あり）が全 PASS。Low 所見の追随修正は PR #5 で反映済み
-- v1 リポジトリ（`rymetry/software-quality-knowledge-base`）削除: YYYY-MM-DD ユーザーにより実施（GitHub リポジトリ削除。ローカル working tree の削除は任意のタイミング）<!-- 削除実施後に日付を確定してから merge する。それまで本 PR は draft を維持 -->
+- v1 リポジトリ（`rymetry/software-quality-knowledge-base`）削除: 2026-07-23 ユーザーにより実施。agent が削除を確認済み（`git ls-remote` = Repository not found、GitHub API = 404）。ローカル working tree の削除は任意のタイミング
