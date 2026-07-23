@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/risk-item.schema.json",
+  "title": "RiskItem",
+  "description": "正規出典: docs/quality-models/quality-knowledge-schema.md §1.3 RISK: Risk（リスク）ノードのデータ契約。フィールド: id / statement / category / likelihood / impact / affected_stakeholder_refs[] / requirement_refs[] / treatment / residual_risk。id の桁数規約は同文書 §1.2（`RISK-nnn`、桁数不特定）と docs/test-techniques/test-process-research-summary-test-design.md §6.1（`RISK-001`、3桁例のみ）の両方を確認し、いずれも厳密な桁数を規定していないため、緩い方（可変桁数）を採用した。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^RISK-[0-9]+$",
+      "description": "リスクの一意ID。出典: quality-knowledge-schema.md §1.2 ID体系表・§1.3 属性表（`RISK-nnn`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "statement": {
+      "type": "string",
+      "description": "「〜により〜が起き、STK-x が〜の不利益を受ける」形式のリスク文。出典: §1.3 RISK 属性表。"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["product", "project", "safety", "security", "compliance", "ethical"],
+      "description": "安全・規制・倫理リスクを一般の製品リスクと区別するための分類。出典: §1.3 RISK 属性表。"
+    },
+    "likelihood": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "発生しやすさ。出典: §1.3 RISK 属性表。"
+    },
+    "impact": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "affected_stakeholder_refs の不利益から判定する影響度。出典: §1.3 RISK 属性表。"
+    },
+    "affected_stakeholder_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "影響を受ける者のステークホルダーID一覧（STK-*）。出典: §1.3 RISK 属性表。"
+    },
+    "requirement_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "関連要求ID一覧（REQ-*）。出典: §1.3 RISK 属性表。"
+    },
+    "treatment": {
+      "type": "string",
+      "enum": ["mitigate", "accept", "transfer", "avoid"],
+      "description": "対応方針。出典: §1.3 RISK 属性表。"
+    },
+    "residual_risk": {
+      "type": ["string", "null"],
+      "description": "対応後に残るリスク。REL の判断材料になる。出典: §1.3 RISK 属性表。"
+    }
+  },
+  "required": ["id", "statement", "category", "likelihood", "impact", "treatment"],
+  "additionalProperties": false
+}

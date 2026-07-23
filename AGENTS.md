@@ -1,14 +1,12 @@
 # Agent Context
 
-<!-- プロジェクト概要をここに記載してください。 -->
+sqk-core は、ソフトウェア品質ナレッジベース v2 のリポジトリである。
+品質知識、スキル、リポジトリ内契約を、最小限のガバナンスで管理する。
 
 ## コマンド
 
-<!-- プロジェクトで使うコマンドを記載してください。例:
-- Build: `...`
-- Test: `...`
-- Lint: `...`
--->
+- Check: `uv run scripts/check.py`
+- Test: `uv run --with pytest --with jsonschema --with pyyaml pytest tests/ -v`
 
 ## ルール
 

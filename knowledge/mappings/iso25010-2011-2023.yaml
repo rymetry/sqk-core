@@ -1,0 +1,219 @@
+# knowledge/mappings/iso25010-2011-2023.yaml
+# 出典（正典）: docs/quality-models/iso25010-product-quality-model.md
+#   - 変更ありの特性・メタレベル変更: 「2011 年版からの変更点」節の対応表（primary source）
+#   - 変更なしの特性（機能適合性・性能効率性・互換性・信頼性・セキュリティ・保守性）:
+#     同文書「9 品質特性・サブ特性 全体リファレンス」節。9特性を漏れなく引けるよう
+#     補完的に収録したもので、対応表に明示行はない（内容は再調査せず docs から抽出）。
+source_document: "docs/quality-models/iso25010-product-quality-model.md#2011-年版からの変更点"
+revision_summary: >
+  2023年改訂は用語変更にとどまらず、規格の分割（製品品質=25010、
+  利用時品質=25019、モデルの使い方=25002）と特性体系の再編を伴う。
+mappings:
+  # --- 9特性ごとの対応（変更なしの3特性を含む） ---
+
+  - change_type: "特性名変更なし"
+    id_2011: "functional-suitability"
+    name_2011_ja: "機能適合性"
+    name_2011_en: "Functional Suitability"
+    id_2023: "functional-suitability"
+    name_2023_ja: "機能適合性"
+    name_2023_en: "Functional Suitability"
+    jis_status: "○（JIS X 25010:2013 訳語を踏襲。2023年版での名称変更なし）"
+    practical_impact: >
+      特性名・サブ特性構成に変更なし。2011年版のテンプレートをそのまま
+      引き継いで良い領域。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "特性名変更なし"
+    id_2011: "performance-efficiency"
+    name_2011_ja: "性能効率性"
+    name_2011_en: "Performance Efficiency"
+    id_2023: "performance-efficiency"
+    name_2023_ja: "性能効率性"
+    name_2023_en: "Performance Efficiency"
+    jis_status: "○（JIS X 25010:2013 訳語を踏襲。2023年版での名称変更なし）"
+    practical_impact: >
+      特性名・サブ特性構成に変更なし。2011年版のテンプレートをそのまま
+      引き継いで良い領域。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "特性名変更なし"
+    id_2011: "compatibility"
+    name_2011_ja: "互換性"
+    name_2011_en: "Compatibility"
+    id_2023: "compatibility"
+    name_2023_ja: "互換性"
+    name_2023_en: "Compatibility"
+    jis_status: "○（JIS X 25010:2013 訳語を踏襲。2023年版での名称変更なし）"
+    practical_impact: >
+      特性名・サブ特性構成に変更なし。2011年版のテンプレートをそのまま
+      引き継いで良い領域。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "特性名変更"
+    id_2011: "usability"
+    name_2011_ja: "使用性"
+    name_2011_en: "Usability"
+    id_2023: "interaction-capability"
+    name_2023_ja: "インタラクション容易性"
+    name_2023_en: "Interaction Capability"
+    jis_status: "◎（JIS X 25010:2025 序文で確認された公式訳語）"
+    practical_impact: >
+      「ユーザビリティ要求」は、製品側（対話能力）と利用時品質側（成果、
+      ISO/IEC 25019 に分離）とに分けて書き直す必要がある。
+      さらに旧アクセシビリティはインクルーシビティとユーザ支援性の
+      2観点に分解して定義し直す必要がある。
+    subcharacteristic_changes:
+      added: ["インクルーシビティ", "自己記述性"]
+      replaced:
+        - from: "ユーザインタフェース快美性"
+          to: "ユーザエンゲージメント（利用者関与性）"
+        - from: "アクセシビリティ"
+          to: "インクルーシビティ（包摂性）＋ユーザ支援性"
+
+  - change_type: "特性名変更なし"
+    id_2011: "reliability"
+    name_2011_ja: "信頼性"
+    name_2011_en: "Reliability"
+    id_2023: "reliability"
+    name_2023_ja: "信頼性"
+    name_2023_en: "Reliability"
+    jis_status: "○（サブ特性名のみ変更。特性名自体は2013年版訳語を踏襲）"
+    practical_impact: >
+      「通常運用でフォールトなしに動く度合い」として意味が明確化された。
+      旧「成熟性」を参照するテンプレート・チェックリストは
+      「無障害性」への読み替えが必要。
+    subcharacteristic_changes:
+      added: []
+      replaced:
+        - from: "成熟性（Maturity）"
+          to: "無障害性（Faultlessness）"
+
+  - change_type: "特性名変更なし"
+    id_2011: "security"
+    name_2011_ja: "セキュリティ"
+    name_2011_en: "Security"
+    id_2023: "security"
+    name_2023_ja: "セキュリティ"
+    name_2023_en: "Security"
+    jis_status: "○（サブ特性追加のみ。特性名自体は2013年版訳語を踏襲）"
+    practical_impact: >
+      攻撃下の運用継続（耐攻撃性）が新設サブ特性として明示された。
+      DoS等の攻撃を受けている間の運用維持要件をテンプレートに追加する必要がある。
+    subcharacteristic_changes:
+      added: ["耐攻撃性（Resistance）"]
+      replaced: []
+
+  - change_type: "特性名変更なし"
+    id_2011: "maintainability"
+    name_2011_ja: "保守性"
+    name_2011_en: "Maintainability"
+    id_2023: "maintainability"
+    name_2023_ja: "保守性"
+    name_2023_en: "Maintainability"
+    jis_status: "○（JIS X 25010:2013 訳語を踏襲。2023年版での名称変更なし）"
+    practical_impact: >
+      特性名・サブ特性構成に変更なし。2011年版のテンプレートをそのまま
+      引き継いで良い領域。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "特性名変更"
+    id_2011: "portability"
+    name_2011_ja: "移植性"
+    name_2011_en: "Portability"
+    id_2023: "flexibility"
+    name_2023_ja: "柔軟性"
+    name_2023_en: "Flexibility"
+    jis_status: "◎（JIS X 25010:2025 序文で確認された公式訳語）"
+    practical_impact: >
+      移植性テンプレートに拡張性（スケーラビリティ）観点を追加する必要がある。
+    subcharacteristic_changes:
+      added: ["拡張性"]
+      replaced: []
+
+  - change_type: "新設特性"
+    id_2011: null
+    name_2011_ja: null
+    name_2011_en: null
+    id_2023: "safety"
+    name_2023_ja: "安全性"
+    name_2023_en: "Safety"
+    jis_status: "◎（JIS X 25010:2025 序文で確認された公式訳語）"
+    practical_impact: >
+      安全関連システムでなくても、要求分析の段階で安全性の要否判断を
+      組み込む必要がある。2011年版ベースのテンプレートを使い続けると
+      この観点が構造的に抜け落ちる。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  # --- 特性単位に閉じない規格レベルの変更（docs対応表の「規格構成」「特性数」
+  #     「定義スタイル」「利用時品質」の各行に対応。id_2011/id_2023 は
+  #     単一特性に紐づかないため null とする） ---
+
+  - change_type: "規格構成"
+    id_2011: null
+    name_2011_ja: "製品品質＋利用時品質を1規格に収録"
+    name_2011_en: "Product quality and quality in use combined in one standard"
+    id_2023: null
+    name_2023_ja: "製品品質(25010)・利用時品質(25019)・モデルの使い方(25002)に分割"
+    name_2023_en: "Split into ISO/IEC 25010 (product quality), 25019 (quality in use), 25002 (model usage guide)"
+    jis_status: "参考（JIS側の分割発行状況は本ドキュメントでは未確認）"
+    practical_impact: >
+      「利用時品質」を参照する既存文書は参照先規格の変更（25010→25019）が必要。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "特性数"
+    id_2011: null
+    name_2011_ja: "8特性"
+    name_2011_en: "8 characteristics"
+    id_2023: null
+    name_2023_ja: "9特性（安全性を新設）"
+    name_2023_en: "9 characteristics (Safety newly added)"
+    jis_status: "◎（safety の追加は JIS X 25010:2025 序文で確認済み）"
+    practical_impact: >
+      安全関連システムでなくても安全性の要否判断を要求分析に組み込む必要がある。
+      （safety 特性エントリと同内容だが、docs対応表の独立行としてそのまま抽出）
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "定義スタイル"
+    id_2011: null
+    name_2011_ja: "degree to which（〜の度合い）"
+    name_2011_en: "degree to which"
+    id_2023: null
+    name_2023_ja: "capability of a product to（製品の〜する能力）"
+    name_2023_en: "capability of a product to"
+    jis_status: "参考（定義文の書式変更であり訳語の公式性とは無関係）"
+    practical_impact: >
+      要求文・受入基準への変換が容易になる（能力ベースの記述は
+      「〜できる」という検証可能な受入基準に直接変換しやすい）。
+    subcharacteristic_changes:
+      added: []
+      replaced: []
+
+  - change_type: "利用時品質"
+    id_2011: null
+    name_2011_ja: "5特性（有効性・効率性・満足性・リスク回避性・利用状況網羅性）"
+    name_2011_en: "5 characteristics (effectiveness, efficiency, satisfaction, freedom from risk, context coverage)"
+    id_2023: null
+    name_2023_ja: "25019で3特性（有益性・リスク回避性・受容性）に再編。利用状況網羅性は削除"
+    name_2023_en: "Reorganized into 3 characteristics in ISO/IEC 25019 (beneficialness, freedom from risk, acceptability); context coverage removed"
+    jis_status: "参考（25019 の JIS 発行状況は本ドキュメントでは未確認）"
+    practical_impact: >
+      利用時品質の要求・測定体系は25019ベースで再設計する必要がある。
+      利害関係者の分類が明示された点にも留意する。
+    subcharacteristic_changes:
+      added: []
+      replaced: []

@@ -1,0 +1,30 @@
+# _templates/quality-criteria.yaml
+#
+# 空スキーマテンプレート。実データはコミットしないこと。
+# 使い方: このファイルを knowledge/dynamic/quality-criteria.yaml にコピーし、
+#         実データを記入する（コピー先は .gitignore 対象）。
+#
+# 社内独自の品質基準・受入基準の閾値を記録する。quality-gate-release-judgment
+# スキル等が、静的ナレッジ（docs/quality-models/iso25010-product-quality-model.md 等）
+# と併せて参照する想定。
+#
+# 構造例（コメントのみ・実データではない）:
+#
+# quality_characteristics:
+#   - id: "<ISO/IEC 25010:2023 の特性ID。例: security>"
+#     criteria:
+#       - id: "<社内基準ID。例: QC-SEC-001>"
+#         description: "<基準の内容>"
+#         threshold: "<閾値・合否ライン>"
+#         measurement_method: "<測定方法>"
+#         source_refs:
+#           - "<社内文書名・章番号など>"
+#
+# release_gates:
+#   - id: "<ゲートID>"
+#     phase: "<適用フェーズ。例: pre-release>"
+#     required_evidence: []
+#     mandatory: true
+
+quality_characteristics: []
+release_gates: []

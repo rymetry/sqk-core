@@ -1,0 +1,53 @@
+# knowledge/terminology/term-map.yaml
+terms:
+  - id: test-condition
+    ja: "テスト条件"
+    en: "Test Condition"
+    definitions:
+      jstqb_istqb_v4:
+        summary: >
+          テストベースから識別される、テスト対象の項目・機能・振る舞いのうち
+          テスト可能な側面。「何をテストするか」を粒度の粗いレベルで表現する。
+        source_refs:
+          - "JSTQB Foundation Level シラバス v4.0 用語集"
+      iso29119:
+        summary: >
+          テスト条件は、1つ以上のテストケースによって充足されうる、
+          テストアイテムの特性またはテストアイテムに関する条件。
+          カバレッジアイテムの導出元として、より形式的なトレーサビリティの
+          単位として位置づけられる。
+        source_refs:
+          - "ISO/IEC/IEEE 29119-1:2022"
+          - "ISO/IEC/IEEE 29119-3:2021（テストケース仕様との関係）"
+      iso25010_2023:
+        summary: >
+          直接の用語定義なし。品質特性・サブ特性が「何を条件として
+          確認すべきか」の上流input として参照されるのみ。
+        source_refs:
+          - "ISO/IEC 25010:2023"
+      inhouse:
+        summary: "（動的レイヤ。プロジェクト固有の用語定義がある場合はここに追記）"
+        source_refs:
+          - "knowledge/dynamic/company-terms.yaml 参照"
+    divergence_note: >
+      JSTQB は「テスト対象の側面」という認識論的な粒度を強調するのに対し、
+      29119 は「テストケースによって充足されうる条件」というトレーサビリティ
+      上の役割を強調する。29119 準拠のテスト設計プロセス（TRA→TAD→TDD/TI）では
+      後者の定義を採用し、DTC（Detailed Test Condition）IDのトレース起点とする。
+      JSTQB の定義は教育・共通言語としての役割にとどめ、ID体系には使わない。
+    do_not_conflate: true
+
+  - id: test-basis
+    ja: "テストベース"
+    en: "Test Basis"
+    definitions:
+      jstqb_istqb_v4:
+        summary: "テスト条件を識別するための情報源となるすべての知識・成果物。"
+        source_refs:
+          - "JSTQB Foundation Level シラバス v4.0 用語集"
+      iso29119:
+        summary: "テストの導出に用いられる文書、その他の作業成果物。"
+        source_refs:
+          - "ISO/IEC/IEEE 29119-1:2022"
+    divergence_note: "両者の定義は実務上ほぼ同義。乖離は軽微。"
+    do_not_conflate: false
