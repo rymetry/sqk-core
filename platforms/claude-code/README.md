@@ -35,6 +35,6 @@ Cowork は Claude Code と同じ SKILL.md 形式（frontmatter の `name` /
 ## 詳細
 
 - 導入手順・シンボリックリンクの根拠・単体実行の検証観点（4項目）の完全な記述:
-  [`docs/agent-ecosystem/portability-design.md` §3](../../docs/agent-ecosystem/portability-design.md)
+  [`docs/agent-ecosystem/portability-design.md` §3](../../docs/agent-ecosystem/portability-design.md#3-claude-code--cowork-向け実装例フル掲載)
 - スキル一覧・ロードマップ:
   [`docs/agent-ecosystem/skill-ecosystem-design-plan.md`](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md)

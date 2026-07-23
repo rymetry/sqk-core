@@ -62,7 +62,7 @@
 | 項目 | 内容 | 出典 |
 | --- | --- | --- |
 | オラクル4分類 | specified（明示仕様オラクル）／derived（導出オラクル）／implicit（暗黙オラクル）／human（人間オラクル） とそれぞれの保証の強さ | [testing-standards-and-assurance-concepts.md §5.1](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md#51-オラクルの分類barr-et-al-2015) |
-| オラクル別の保証範囲 | 各オラクル状態が「実際に保証していること」「保証していないこと」の対応表 | [同 §5.2](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md) |
+| オラクル別の保証範囲 | 各オラクル状態が「実際に保証していること」「保証していないこと」の対応表 | [同 §5.2](../../../docs/test-techniques/testing-standards-and-assurance-concepts.md#52-オラクルが無い--弱い場合に何が保証できるか) |
 
 ## 保証ステートメントテンプレート（testing-standards §9）
 

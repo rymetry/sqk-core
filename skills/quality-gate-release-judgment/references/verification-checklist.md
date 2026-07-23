@@ -8,7 +8,7 @@
 
 ## 単体実行の4検証観点
 
-[portability-design.md §3「単体実行の検証観点」](../../../docs/agent-ecosystem/portability-design.md)
+[portability-design.md §3「単体実行の検証観点」](../../../docs/agent-ecosystem/portability-design.md#3-claude-code--cowork-向け実装例フル掲載)
 に定義された次の4観点を、Phase 1 の実装完了直後に手動で一度実施し、以後は
 回帰確認として使う。
 

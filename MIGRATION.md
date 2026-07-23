@@ -19,20 +19,7 @@ v1（`software-quality-knowledge-base`）では、ガバナンス機構が約57,
 
 ## 移植の完全性
 
-as-is 対象は source commit `ced0ccc495b45a37a446a20319674a6d2468262b` から67パスを列挙し、リポジトリ直下の `MIGRATION-SOURCES.sha256` に repo-relative path と SHA-256 を記録した。コピー直後に `shasum -a 256 -c MIGRATION-SOURCES.sha256` を実行し、67件すべてが一致することを検証した。
-
-### Post-copy 修正
-
-リンク掃引と v2 のリンク検証を通すため、次の as-is ファイルだけで、存在しない見出し fragment を解除した。リンク先文書は変更していない。
-
-| ファイル | 修正理由 |
-| --- | --- |
-| `platforms/claude-code/README.md` | portability-design §3 への v1 fragment が v2 の Markdown anchor 検証と一致しなかった |
-| `skills/quality-gate-release-judgment/references/verification-checklist.md` | portability-design §3 への v1 fragment が v2 の Markdown anchor 検証と一致しなかった |
-| `skills/test-architecture-design/references/tad-checklist.md` | testing-standards §3、§4.2 への v1 fragment が v2 の Markdown anchor 検証と一致しなかった |
-| `skills/test-design-implementation/references/tdd-ti-checklist.md` | testing-standards §5.2 への v1 fragment が v2 の Markdown anchor 検証と一致しなかった |
-
-最終 SHA-256 再検証では、この4ファイルの不一致だけが本一覧と一致することを確認する。
+as-is 対象は source commit `ced0ccc495b45a37a446a20319674a6d2468262b` から67パスを列挙し、リポジトリ直下の `MIGRATION-SOURCES.sha256` に repo-relative path と SHA-256 を記録した。コピー直後と最終 tree の双方で `shasum -a 256 -c MIGRATION-SOURCES.sha256` を実行し、67件すべてが一致することを検証した。
 
 ## v1 履歴の所在
 
