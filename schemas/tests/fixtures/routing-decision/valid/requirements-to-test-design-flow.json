@@ -1,0 +1,12 @@
+{
+  "chain_nodes": ["RISK", "REQ", "HTC", "DTC", "TAE", "COV", "TC"],
+  "routed_skill": [
+    "risk-analysis",
+    "test-requirement-analysis",
+    "test-architecture-design",
+    "test-design-implementation"
+  ],
+  "clarification_asked": false,
+  "fallback_applied": false,
+  "flow_label": "要求分析からテストケース設計まで"
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/routing-decision.schema.json",
+  "title": "RoutingDecision",
+  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §4「オーケストレーション設計」、および docs/agent-ecosystem/phase2-implementation-guide.md T0 T12-1。handoff-envelope の artifacts[].content に格納する RoutingDecision を検証する。handoff-envelope.schema.json の content は無制約 object であり、エンベロープ経由では routed_skill の配列形を強制できないため、repo-local の専用スキーマとして分離した。",
+  "type": "object",
+  "properties": {
+    "chain_nodes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "相談文を分類した品質知識チェーンのノード一覧。"
+    },
+    "routed_skill": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "ルーティング先スキル名の実行順付き配列。単体ルーティングも要素1の配列とする。"
+    },
+    "clarification_asked": {
+      "type": "boolean",
+      "description": "ルーティング前に明確化質問を行ったか。"
+    },
+    "fallback_applied": {
+      "type": "boolean",
+      "description": "最上流フェーズへのフォールバックを適用したか。"
+    },
+    "flow_label": {
+      "type": "string",
+      "description": "複合フローなどを識別する任意の人間可読名。"
+    }
+  },
+  "required": ["chain_nodes", "routed_skill", "clarification_asked", "fallback_applied"],
+  "additionalProperties": false
+}
