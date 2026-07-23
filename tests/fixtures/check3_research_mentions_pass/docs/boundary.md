@@ -1,6 +1,8 @@
 ---
 title: Research boundary
 status: active
+source_refs:
+  - docs/some_research/example.md
 ---
 
 # Research Boundary

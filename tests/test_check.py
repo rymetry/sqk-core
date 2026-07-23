@@ -47,6 +47,16 @@ def test_check1_markdown_links_fail(check_module) -> None:
     assert any("#missing-heading" in message for message in messages(result))
 
 
+def test_check1_inline_code_links_are_ignored(check_module) -> None:
+    result = check_module.check_markdown_links(
+        FIXTURES / "check1_inline_code_links_pass"
+    )
+
+    assert result.check_number == 1
+    assert result.checked == 1
+    assert result.issues == ()
+
+
 def test_check2_schemas_pass(check_module) -> None:
     result = check_module.check_schemas(FIXTURES / "check2_schemas_pass")
 
@@ -83,6 +93,19 @@ def test_check3_structured_research_reference_fails(check_module) -> None:
     assert len(result.issues) == 1
     assert "source_refs" in result.issues[0].message
     assert "docs/_research/" in result.issues[0].message
+
+
+def test_check3_research_directory_reference_without_trailing_slash_fails(
+    check_module,
+) -> None:
+    result = check_module.check_research_leaks(
+        FIXTURES / "check3_research_root_fail"
+    )
+
+    assert result.check_number == 3
+    assert len(result.issues) == 1
+    assert "source_refs" in result.issues[0].message
+    assert "docs/_research" in result.issues[0].message
 
 
 def test_check4_skill_references_pass(check_module) -> None:

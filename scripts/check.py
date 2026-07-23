@@ -36,6 +36,8 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
 )
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)\n]+)\)")
 FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
+BACKTICK_RUN_PATTERN = re.compile(r"`+")
+RESEARCH_PATH_PATTERN = re.compile(r"(?:^|/)_research(?:/|$)")
 ATX_HEADING_PATTERN = re.compile(r"^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$")
 SETEXT_HEADING_PATTERN = re.compile(r"^ {0,3}(?:=+|-+)\s*$")
 
@@ -121,6 +123,23 @@ def _without_fenced_code(text: str) -> tuple[str, ...]:
         if fence_character is None:
             visible.append(line)
     return tuple(visible)
+
+
+def _without_inline_code(line: str) -> str:
+    """Replace inline code spans while preserving surrounding text positions."""
+    visible: list[str] = []
+    position = 0
+    while opener := BACKTICK_RUN_PATTERN.search(line, position):
+        closer = BACKTICK_RUN_PATTERN.search(line, opener.end())
+        while closer is not None and len(closer.group()) != len(opener.group()):
+            closer = BACKTICK_RUN_PATTERN.search(line, closer.end())
+        if closer is None:
+            break
+        visible.append(line[position : opener.start()])
+        visible.append(" " * (closer.end() - opener.start()))
+        position = closer.end()
+    visible.append(line[position:])
+    return "".join(visible)
 
 
 def _github_slug(heading: str) -> str:
@@ -254,7 +273,7 @@ def check_markdown_links(root: Path) -> CheckResult:
             issues.append(Issue(_display_path(source, root), f"cannot read file: {error}"))
             continue
         for line in _without_fenced_code(body):
-            for match in LINK_PATTERN.finditer(line):
+            for match in LINK_PATTERN.finditer(_without_inline_code(line)):
                 issues.extend(_validate_markdown_link(source, root, match.group(1)))
     return CheckResult(1, len(candidates), tuple(issues))
 
@@ -331,7 +350,7 @@ def check_research_leaks(root: Path) -> CheckResult:
         if frontmatter is None:
             continue
         for field, value in _string_values(frontmatter):
-            if "_research/" in value:
+            if RESEARCH_PATH_PATTERN.search(value):
                 issues.append(
                     Issue(
                         _display_path(path, root),
@@ -352,11 +371,10 @@ def _output_reference_issues(
     issues: list[Issue] = []
     for name, output in outputs.items():
         field = f"outputs.{name}.schema"
-        if not isinstance(output, Mapping) or not isinstance(output.get("schema"), str):
+        schema_reference = output.get("schema") if isinstance(output, Mapping) else None
+        if not isinstance(schema_reference, str):
             issues.append(Issue(_display_path(skill_path, root), f"{field} must be a string"))
             continue
-        schema_reference = output["schema"]
-        assert isinstance(schema_reference, str)
         if not schema_reference or Path(schema_reference).is_absolute():
             issues.append(
                 Issue(
