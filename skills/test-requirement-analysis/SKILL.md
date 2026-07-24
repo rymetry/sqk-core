@@ -20,7 +20,9 @@ inputs:
     required: false
     description: >
       risk-analysis の出力（RiskRegister、`RISK-nnn`）へのパス。
-      存在しない場合はリスク欄を `assumption: true` 付きで暫定値とする
+      存在しない場合はリスク欄を暫定値とし、その前提をエンベロープの
+      `assumptions[]` に `{field, value, reason}` 形式で記録する。
+      DTC 自体には `assumption` フィールドを足さず、スキーマ準拠のまま保つ
   test_overview_hint:
     type: string
     required: false
@@ -118,8 +120,9 @@ ITスキル（軽）／コミュニケーション（質問リスト生成、重
    - `source_refs`: どの仕様記述（赤・青タグ箇所）に基づくか
    - `high_level_condition_id`: 経由した HTC の ID（DTC は必ず HTC 経由で
      導出し、HTC を飛ばして仕様から直接 DTC を作らない）
-   - `risk_refs`: 関連するリスク ID（`risk_register_ref` 由来、または
-     `assumption: true` の暫定値）
+   - `risk_refs`: 関連するリスク ID（`risk_register_ref` 由来、または暫定値。
+     暫定性はエンベロープの `assumptions[]` に `{field, value, reason}` 形式で
+     記録し、DTC 自体には `assumption` フィールドを足さない）
 7. **テストパラメーターの識別**: 振る舞いを変化させる要素（入力値、状態、
    環境等）の候補を識別し、DTC の `unknowns` または後続 TAD への申し送りに
    含める。本スキルではパラメーターの値候補までは確定しない（TDD/TI の
@@ -155,9 +158,10 @@ risk-analysis の成果物（`RiskRegister`）が存在しない場合、次の�
 2. 回答が得られない、または利用者が回答不能な場合でも、赤タグ（重要箇所）の
    内容から一般的なリスク推定を行い、DTC の `risk_refs` に仮の識別子を割り当てて
    **必ず出力する**。分析不能を理由に無出力にはしない。
-3. 仮置きしたリスク欄には `assumption: true` を付与し、根拠が
-   risk-analysis の実データではなく本スキル内での推定であることを
-   `open_questions` にも反映する。
+3. 仮置きしたリスク欄の前提は、エンベロープの `assumptions[]` に
+   `{field, value, reason}` 形式で記録し、根拠が risk-analysis の実データ
+   ではなく本スキル内での推定であることを `open_questions` にも反映する。
+   DTC 自体には `assumption` フィールドを足さず、スキーマ準拠のまま保つ。
 
 ## 出力エンベロープ
 

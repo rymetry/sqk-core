@@ -719,7 +719,7 @@ TAD で決めた構造と厚みに沿って、パラメーター、値、制約�
   "test_type": "functional",
   "test_cycle": "new_feature_test",
   "risk_level": "high",
-  "thickness": "deep",
+  "thickness": "thick",
   "assigned_conditions": ["DTC-001", "DTC-002", "DTC-003"],
   "delegated_to": null,
   "rationale": "支払い失敗時のユーザー影響が大きく、入力制御の変更量も大きいため"

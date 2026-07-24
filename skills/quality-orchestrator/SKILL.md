@@ -95,6 +95,9 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    する（[skill-ecosystem-design-plan.md §4 の根拠](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)：
    「情報が少ないときほど上流から手当てする」）。`fallback_applied: true`
    をエンベロープに記録する。
+   どのスキルの最小入力も満たさない truly-empty の相談時は、フェーズ順最上流の
+   `test-requirement-analysis` に着地し、以降は当該スキルのコールドスタート
+   分岐に委ねる（[skill-ecosystem-design-plan.md §4「上流から手当てする」](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)）。
 5. **P2/P3 スキル宛の案内**: 分類結果が [routing-table.md フォールバック
    規則](references/routing-table.md#フォールバック規則) に従い P2/P3 スキル
    （`nfr-review`・`sre-quality-ops`・`code-review`・`defect-analysis-rca`・
@@ -104,16 +107,17 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    Phase 1 時点で未実装。`docs/` の該当文書（ルーティング表の Phase 列
    参照）を手動で参照すること」と案内し、`gate_status: blocked` を返す。
 6. **単体ルーティングの実行**: MVP スキル1つへのルーティングと判定した
-   場合、ルーティング先スキル名と分類根拠を出力する（本スキル自身は
-   ルーティング先スキルの手順を代行実行しない。呼び出しは利用者または
-   呼び出し環境が行う）。
+   場合、ルーティング先スキル名を要素1の順序付き配列として分類根拠とともに
+   出力する（本スキル自身はルーティング先スキルの手順を代行実行しない。
+   呼び出しは利用者または呼び出し環境が行う）。
 7. **複合フローの進行管理（`desired_scope_hint` が複合フローを示す場合）**:
    risk-analysis を並行起動し、その `RiskRegister` を
    test-requirement-analysis（TRA）のゲート入力として渡す。以降
    TRA → test-architecture-design（TAD）→ test-design-implementation
-   （TDD/TI）の順で各スキルを起動し、各段の出力エンベロープの
-   `gate_status` を [references/pipeline-gates.md](references/pipeline-gates.md)
-   の観点で判定する。
+   （TDD/TI）の順で各スキルを起動する。`routed_skill` にはこの実行順で
+   スキル名を並べ、各段の出力エンベロープの `gate_status` を
+   [references/pipeline-gates.md](references/pipeline-gates.md) の観点で
+   判定する。
    - `passed`: 次段へそのまま進める
    - `passed-with-risks`: 残存リスクを明示した上で次段へ進める
    - `blocked`: 停止し、利用者にその段までの結果と理由を返す
@@ -157,11 +161,10 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
 
 本スキルは常に下記形式のハンドオフエンベロープ（
 [schemas/handoff-envelope.schema.json](../../schemas/handoff-envelope.schema.json)
-準拠）を出力する。`RoutingDecision` は Phase 1 時点で専用の JSON Schema が
-存在しないため、`schema_ref` には
-[skill-ecosystem-design-plan.md §4「オーケストレーション設計」](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
-をポインタとして指定し、`content` に `{chain_nodes, routed_skill,
-clarification_asked, fallback_applied}` の最小構造を持たせる。
+準拠）を出力する。`RoutingDecision` の `schema_ref` には
+[schemas/routing-decision.schema.json](../../schemas/routing-decision.schema.json)
+を指定し、`content` を同スキーマに準拠させる。`routed_skill` はスキル名の
+順序付き配列とし、単体ルーティングでも要素1の配列にする。
 
 例は「決済機能のリリース判定をしたいが何から始めればいいか」という相談文
 を分類する例である。この相談は⑦リリース判断（REL/EV ノード）に見えるが、
@@ -178,10 +181,10 @@ clarification_asked, fallback_applied}` の最小構造を持たせる。
   "artifacts": [
     {
       "type": "RoutingDecision",
-      "schema_ref": "docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計",
+      "schema_ref": "schemas/routing-decision.schema.json",
       "content": {
         "chain_nodes": ["EV", "REL"],
-        "routed_skill": "quality-gate-release-judgment",
+        "routed_skill": ["quality-gate-release-judgment"],
         "clarification_asked": true,
         "fallback_applied": false
       }
@@ -195,6 +198,27 @@ clarification_asked, fallback_applied}` の最小構造を持たせる。
     "決済機能の変更概要と、入手可能な証跡ファイル（テスト結果・カバレッジレポート等）はあるか"
   ],
   "gate_status": "passed"
+}
+```
+
+複合フローでは、同じ `RoutingDecision` 成果物を次のように出力する。
+
+```json
+{
+  "type": "RoutingDecision",
+  "schema_ref": "schemas/routing-decision.schema.json",
+  "content": {
+    "chain_nodes": ["RISK", "REQ", "AC", "TEST"],
+    "routed_skill": [
+      "risk-analysis",
+      "test-requirement-analysis",
+      "test-architecture-design",
+      "test-design-implementation"
+    ],
+    "clarification_asked": false,
+    "fallback_applied": false,
+    "flow_label": "要求分析からテストケース設計まで"
+  }
 }
 ```
 

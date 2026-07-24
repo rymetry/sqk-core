@@ -1,3 +1,1 @@
-# Known strict-mode warnings (one substring per line). Remove the line when resolved.
-# T12-3 will refactor assurance-statement `technique` to oneOf and delete the next line.
-assurance-statement.schema.json#/properties/assurance_statement/properties/technique
+# No known strict-mode warnings. Add one stable substring per line when needed.

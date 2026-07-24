@@ -137,9 +137,11 @@ test-requirement-analysis の成果物（`DetailedTestConditionList`）が存在
    記述から想定される DTC 相当の項目を仮に列挙し、それらを担当する簡易な
    TAE（1〜2グループ）を**インラインで合成し、必ず出力する**。分析不能を
    理由に無出力にはしない。
-3. インラインで合成した TAE・割当マトリクスには `assumption: true` を付与し、
-   根拠が実際の DTC ではなく本スキル内での推定であることを `open_questions`
-   にも反映する。
+3. インラインで合成した TAE・割当マトリクスの前提は、エンベロープの
+   `assumptions[]` に `{field, value, reason}` 形式で記録し、根拠が実際の
+   DTC ではなく本スキル内での推定であることを `open_questions` にも反映
+   する。TAE 自体には `assumption` フィールドを足さず、スキーマ準拠のまま
+   保つ。
 
 ## 出力エンベロープ
 

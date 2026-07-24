@@ -36,7 +36,7 @@
     },
     "thickness": {
       "type": "string",
-      "description": "テストの厚み（例: deep）。出典: §6.3 JSON例。"
+      "description": "テストの厚み（thick / standard / narrow / delegate）。規範源: skills/test-architecture-design/SKILL.md 手順4。値集合の実運用前であるため自由文字列を維持する。"
     },
     "assigned_conditions": {
       "type": "array",

@@ -26,9 +26,14 @@
           "description": "機能 / 非機能 / ブラックボックス / ホワイトボックス。出典: §9 テンプレート。"
         },
         "technique": {
-          "type": ["string", "array"],
           "description": "使用技法（テスト技法スキルカタログの skill_id）。出典: §9 テンプレート。記入例では複数技法をカンマ区切りの文字列（boundary-value-analysis, decision-table）で記載しているため、文字列・配列のいずれも許容する。",
-          "items": { "type": "string" }
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          ]
         },
         "risk_link": {
           "type": "object",

@@ -1,0 +1,6 @@
+{
+  "chain_nodes": ["EV", "REL"],
+  "routed_skill": ["quality-gate-release-judgment"],
+  "clarification_asked": true,
+  "fallback_applied": false
+}
