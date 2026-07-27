@@ -10,7 +10,7 @@ description: >
   評価設計（`TEST-nnn`、`method_type: llm_eval`）を出力する。評価の
   実行・データ収集は行わない（実行系が担う）。AI 機能の説明のみで
   起動でき、既存評価データが無い場合はゴールデンセット設計指針に留める。
-version: 0.1.0
+version: 0.2.0
 inputs:
   ai_feature_summary:
     type: string
@@ -33,11 +33,12 @@ inputs:
 outputs:
   handoff_envelope:
     schema: ../../schemas/handoff-envelope.schema.json
+  evaluation_design:
+    schema: ../../schemas/evaluation-design.schema.json
 capabilities:
   - file_read
 knowledge_refs:
   - docs/quality-models/ai-system-quality-model.md
-  - docs/quality-management/ai-quality-assurance-and-management-research-report.md
   - docs/governance-compliance/ai-governance-regulation-audit.md
   - docs/test-techniques/test-techniques-skill-catalog.md
 ---
@@ -103,7 +104,9 @@ test-design-implementation が担い、本スキルは代行しない。
    評価・ドリフト監視・評価セット汚染検出
    （[§モデル更新・運用フェーズの品質](../../docs/quality-models/ai-system-quality-model.md#モデル更新運用フェーズの品質)）
    への接続と、本番監視への還流（sre-quality-ops の `MON-nnn` との接続）
-   を明記する。
+   を明記する。評価コスト・呼び出し予算の制約が与えられた場合は、段階別の
+   想定呼び出し数として `EvalCiPlan` に記録し、予算が合格基準（k の選択等）
+   に与える制約を明記する。
 7. **ガバナンス要求の反映（該当する場合）**: `risk_context_hint` に
    規制・監査文脈がある場合、[ai-governance-regulation-audit.md](../../docs/governance-compliance/ai-governance-regulation-audit.md)
    に従い、評価設計に監査証跡の残し方と
@@ -133,6 +136,10 @@ test-design-implementation が担い、本スキルは代行しない。
    (a) AI 機能の入出力と自動化度合い（人間レビュー併用か無人実行か）、
    (b) 既存の評価データ・ゴールデンセットはあるか、
    (c) 規制・監査文脈（EU AI Act 等）の適用はあるか、の3つに絞る。
+   この上限は利用者への対話的な確認質問の件数であり、出力の
+   `open_questions` のエントリ数には上限を設けない
+   （test-requirement-analysis と同旨。振る舞い3の unknown 明示により
+   3件を超えてよい）。
 2. 回答が得られない、または利用者が回答不能な場合でも、必ず出力する。
    既存評価データが無い場合は、ゴールデンセット設計指針と評価設計の
    骨子（合格基準の型・オラクル方式・CI 段構成）までを出力し、評価
@@ -156,7 +163,7 @@ test-design-implementation が担い、本スキルは代行しない。
   "artifacts": [
     {
       "type": "EvaluationDesignList",
-      "schema_ref": "docs/quality-models/quality-knowledge-schema.md",
+      "schema_ref": "schemas/evaluation-design.schema.json",
       "items": [
         {
           "id": "TEST-001",
@@ -220,10 +227,13 @@ test-design-implementation が担い、本スキルは代行しない。
 }
 ```
 
-`TEST-nnn` は [quality-knowledge-schema.md §1.3 TEST](../../docs/quality-models/quality-knowledge-schema.md#test-test--evaluation-methodテスト評価方法)
-の契約に従う。専用の repo-local schema は未整備のため `schema_ref` は
-正典契約へのポインタとする（将来 schema が追加された場合は機械検証へ
-切り替える）。`GoldenSetDesignGuide`・`EvalCiPlan` は ID 体系を持たない
+`TEST-nnn` は `EvaluationDesignList` の items として
+[evaluation-design schema](../../schemas/evaluation-design.schema.json)
+に個別準拠させる（正規出典は
+[quality-knowledge-schema.md §1.3 TEST](../../docs/quality-models/quality-knowledge-schema.md#test-test--evaluation-methodテスト評価方法)
+の契約）。`GoldenSetDesignGuide`・`EvalCiPlan` は ID 体系を持たない
 助言的成果物のため `content` に置く（[schemas/README.md の content/items
-使い分け](../../schemas/README.md)）。`gate_status` は `passed` /
+使い分け](../../schemas/README.md)）。LLM-as-a-judge のメタ評価（手順4）の
+成果物も、必要に応じて `JudgeMetaEvalPlan` 等の任意の content 型成果物
+として同様に出力してよい。`gate_status` は `passed` /
 `passed-with-risks` / `blocked` の3値のいずれかをとる（判定規則は手順8）。

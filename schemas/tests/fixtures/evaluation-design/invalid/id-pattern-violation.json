@@ -1,0 +1,9 @@
+{
+  "id": "EVAL-001",
+  "name": "重要通知の収載完全性（漏れゼロ）の pass^k 測定",
+  "method_type": "llm_eval",
+  "acceptance_criterion_refs": [],
+  "technique_refs": [],
+  "design_chain_refs": [],
+  "evidence_refs": []
+}

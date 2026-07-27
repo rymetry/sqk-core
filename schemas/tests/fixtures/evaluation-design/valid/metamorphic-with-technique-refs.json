@@ -1,0 +1,10 @@
+{
+  "id": "TEST-003",
+  "name": "メタモルフィック関係による頑健性・一貫性測定",
+  "method_type": "llm_eval",
+  "acceptance_criterion_refs": [],
+  "technique_refs": ["SKILL-META-01"],
+  "oracle": "意味を変えない変換（順序並べ替え・ノイズ追加・意味保存の言い換え）で出力の判定集合が不変であること",
+  "design_chain_refs": [],
+  "evidence_refs": []
+}
