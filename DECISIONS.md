@@ -68,3 +68,13 @@
 **決定内容**: `SKILL.md` frontmatter の `version` は、SKILL.md 自身を authority とする。スキルの実質的な変更（inputs / outputs、手順、判定基準の変更）を含む PR では、同一 PR 内で semver に従って `version` を更新する。変更履歴の追跡は git 履歴で行う。
 
 **理由**: v1 では provenance registry（`artifacts.yaml`）が `version` の writable authority であり、frontmatter は readonly projection だった。D-002 で registry を移植しないと決定した結果、version 更新の規律が未宣言になっていた。authority の所在と更新タイミングを明文化し、更新判断の属人化を防ぐ。
+
+## D-011: Phase 2 backlog の再評価（vertical slice 根拠）
+
+**決定内容**: D-007 が求める Phase 2 backlog の再評価を、vertical slice（m0 Viewer Analytics のテスト設計を既存7スキルチェーンで一気通し）の実測を根拠に実施した。結果は次のとおり分類する。
+
+- **keep（次の実装対象）**: 実証済みチェーンの「深さ」を埋める4件のみ。(1) `StakeholderList` の schema 追加と risk-analysis の生成手当て（RISK→STK の接続が存在しない構造的欠落）、(2) `schemas/README.md` の content/items 使い分け明文化と HTC/各マトリクスの専用 schema 追加（機械検証範囲の拡張）、(3) traceability-management の「各段後随時起動」→「複合フロー末尾で一括」への文言修正、(4) テスト空間3軸マトリクス描画の稼働確認（slice で既に稼働）。
+- **defer（判断保留・ドメイン別再評価待ち）**: 8新スキル（#7〜#14）とナレッジ文書3件（code-review-techniques / defect-taxonomy-odc / japanese-test-design-methods）。slice はテスト設計1本であり、別ドメイン（コードレビュー・RCA・SRE・AI評価・テスト実行・探索）向けスキルの価値を判定する根拠を持たない。各項目は該当ドメインの実タスクが現れた時点で再評価する（D-007 の哲学を再帰適用）。#14 quality-artifact-review はメタレビュー+ゲート委譲先で「幅」ではなく「深さ」寄りのため、keep 4件（フェーズA）の完了後の再評価キュー先頭に置く。
+- **drop（積極的破棄）**: 現時点でなし。「テスト設計 slice で不要だった」は「恒久的に不要」を意味しないため、drop ではなく defer とする。
+
+**理由**: slice の最も強い実測は「1本の実タスクで8スキルは1つも使われず、既存7スキルには構造的な穴（StakeholderList・REQ ノード・マトリクス系 schema の不在）があった」ことである。幅（8スキル）を足す前に深さ（既存チェーンの完全性・機械検証）を埋めるのが、consumer のいない仕組みを増やさないという D-005 / D-007 の原則に整合し、実証済みユースケースについて core を実際に end-to-end で完成させる。raw な slice 証跡（RISK/HTC/DTC/TAE/COV/TC/保証/トレーサビリティ/再評価分析）は `.agent-work/vertical-slice/viewer-analytics/` に保持し、コミットしない。

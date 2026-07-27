@@ -27,11 +27,18 @@ Phase 1 / 1b レポートから申し送られた CS-1、CS-2、CS-3、T12-1、T
 
 ### 3. Phase 2 の keep / merge / defer / drop 再評価
 
-[D-007](./DECISIONS.md#d-007-phase-2-の再ベースライン) に従い、vertical slice の結果を根拠として Phase 2 の backlog material を再評価する。残り8スキル、ナレッジ文書3件、schema や routing の候補を、そのまま実装対象とはみなさない。
+[D-007](./DECISIONS.md#d-007-phase-2-の再ベースライン) に従い、vertical slice（m0 Viewer Analytics のテスト設計）の結果を根拠として Phase 2 の backlog material を再評価した。結果は [D-011](./DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠) に記録する。方針は「幅（8新スキル）より先に、実証済みチェーンの深さ（構造的欠落の解消・機械検証範囲の拡張）を作りきる」。
 
 ### 4. 再評価後の実装
 
-keep または merge と判断した項目だけを、依存順とリスクに応じて実装する。各項目の受入基準は着手時に定める。
+keep と判断した「深さ」4件を、依存順で実装する。各項目の受入基準は着手時に定める。
+
+1. `StakeholderList` の schema 追加と risk-analysis の生成手当て（RISK→STK の接続）
+2. `schemas/README.md` の content/items 明文化と HTC/マトリクス系の専用 schema 追加
+3. traceability-management の随時起動→末尾一括への文言修正
+4. テスト空間3軸マトリクス描画の稼働確認
+
+8新スキル（#7〜#14）とナレッジ文書3件は defer とし、ROADMAP から削除せず「ドメイン別再評価待ち」として保持する（[D-011](./DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)）。該当ドメインの実タスクが現れた時が各項目の再評価タイミングである。#14 quality-artifact-review は上記4件の完了後の再評価キュー先頭に置く。
 
 ### 5. Phase 3 素材
 
