@@ -1,0 +1,8 @@
+{
+  "id": "STK-001",
+  "name": "決済利用者",
+  "category": "end_user",
+  "interests": ["正確な課金", "決済の完了"],
+  "harm_exposure": ["二重請求による金銭的損失", "決済失敗による機会損失"],
+  "oversight_role": null
+}

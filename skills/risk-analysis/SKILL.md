@@ -6,7 +6,7 @@ description: >
   機能概要、変更差分、既知の障害影響、（あれば）過去の欠陥履歴を材料に、
   FMEA/FTA/STPA/STRIDE の中から状況に応じた手法を選び、影響度×発生確率で
   優先度付けしたリスク一覧を生成する。TRA・TAD・リリース判定への入力となる。
-version: 0.1.0
+version: 0.2.0
 inputs:
   feature_summary:
     type: string
@@ -29,6 +29,8 @@ inputs:
 outputs:
   handoff_envelope:
     schema: ../../schemas/handoff-envelope.schema.json
+  stakeholder_register:
+    schema: ../../schemas/stakeholder.schema.json
   risk_register:
     schema: ../../schemas/risk-item.schema.json
 capabilities:
@@ -70,23 +72,37 @@ FMEA・FTA・STPA・STRIDE のいずれを使うかを選び、**選定理由を
    出力エンベロープの `assumptions` または成果物本体に含める。判断に迷う場合は
    [references/technique-selection.md](references/technique-selection.md) の
    対応表を参照する。
-3. **リスク項目の列挙**: 選んだ手法の観点でリスクを列挙し、各項目を
+3. **ステークホルダーの識別（必須）**: リスクを列挙する前に、「誰のための品質か・
+   誰がどんな不利益を受けるか」を [STK ノードのデータ契約](../../docs/quality-models/quality-knowledge-schema.md#stk-stakeholderステークホルダー)
+   に従って洗い出し、`StakeholderList`（各項目は
+   [stakeholder.schema.json](../../schemas/stakeholder.schema.json) 準拠）として
+   出力する。各 STK は `id`（`STK-nnn`）・`name`・`category`（end_user / business /
+   operator / regulator / affected_third_party）・`interests`・`harm_exposure`・
+   `oversight_role` を埋める。**発注者（business）だけに絞らず、エンドユーザー・
+   運用者・規制当局・間接的に影響を受ける第三者を漏らさず列挙する**
+   （[§4 アンチパターン集「ステークホルダー＝発注者だけ」](../../docs/quality-models/quality-knowledge-schema.md#4-アンチパターン集)）。
+   後続の影響度判定（手順5）は各 STK の `harm_exposure` を根拠にするため、
+   `harm_exposure` を可能な限り埋める。ここで採番した `STK-nnn` を、手順4の
+   `affected_stakeholder_refs` から参照する。
+4. **リスク項目の列挙**: 選んだ手法の観点でリスクを列挙し、各項目を
    [RISK ノードのデータ契約](../../docs/quality-models/quality-knowledge-schema.md#risk-riskリスク)
    に従って `id`（`RISK-nnn`）・`statement`・`category`・`likelihood`・`impact`・
    `affected_stakeholder_refs`・`requirement_refs`・`treatment`・`residual_risk`
-   のフィールドで記述する。STRIDE を選んだ場合は
+   のフィールドで記述する。`affected_stakeholder_refs` には手順3で採番した
+   `STK-nnn` を用い、`StakeholderList` に存在しない STK を参照しない
+   （RISK→STK のリンク切れを防ぐ）。STRIDE を選んだ場合は
    [STRIDE の6分類](../../docs/secure-development/secure-development-and-supply-chain.md#41-stride)
    に沿って脅威種別ごとに洗い出す。
-4. **影響度×発生確率の判定**: `likelihood`（low/medium/high）と `impact`
-   （low/medium/high/critical）を、`affected_stakeholder_refs` が被る不利益の
-   大きさから判定する。規制ドメイン（安全・医療・金融等）に該当する場合は、
-   影響度の判定基準自体が規格で定義され得ることに留意し、
+5. **影響度×発生確率の判定**: `likelihood`（low/medium/high）と `impact`
+   （low/medium/high/critical）を、`affected_stakeholder_refs` が指す STK の
+   `harm_exposure` の大きさから判定する。規制ドメイン（安全・医療・金融等）に
+   該当する場合は、影響度の判定基準自体が規格で定義され得ることに留意し、
    [ドメイン別品質・安全規格](../../docs/governance-compliance/domain-specific-quality-and-safety-standards.md)
    の該当ドメイン節を確認する。セキュリティ・コンプライアンスの一般的な
    リスク評価の枠組み（ISO 31000 等）については
    [品質管理実務リファレンスのリスク・コンプライアンス・セキュリティ品質節](../../docs/quality-management/software-quality-management-practical-reference.md#リスクコンプライアンスセキュリティ品質)
    を参照する。
-5. **優先度付けと出所レイヤの明示**: `likelihood × impact` で優先順位を決め、
+6. **優先度付けと出所レイヤの明示**: `likelihood × impact` で優先順位を決め、
    最優先で対処すべきリスクから並べる。判断の根拠が静的ナレッジ（`docs/` の
    一般知識）由来か、動的ナレッジ（`defect_history_ref` 等のプロジェクト固有
    データ）由来かを、[ナレッジ参照順序の原則](../../docs/agent-ecosystem/knowledge-management-design.md#14-スキルの参照順序と出所レイヤの明示)
@@ -128,15 +144,32 @@ FMEA・FTA・STPA・STRIDE のいずれを使うかを選び、**選定理由を
 
 本スキルは単体実行・オーケストレーター経由実行のいずれでも、下記形式の
 ハンドオフエンベロープ（[schemas/handoff-envelope.schema.json](../../schemas/handoff-envelope.schema.json)
+準拠、各ステークホルダーは [schemas/stakeholder.schema.json](../../schemas/stakeholder.schema.json)
 準拠、各リスク項目は [schemas/risk-item.schema.json](../../schemas/risk-item.schema.json)
-準拠）を必ず出力する。これにより、後から `test-requirement-analysis` や
-`quality-orchestrator` に再取り込みできる。
+準拠）を必ず出力する。`StakeholderList` と `RiskRegister` の2成果物を含め、
+リスクの `affected_stakeholder_refs` が `StakeholderList` の STK を参照する
+（RISK→STK のリンクを成果物として閉じる）。これにより、後から
+`test-requirement-analysis` や `quality-orchestrator` に再取り込みできる。
 
 ```json
 {
   "source_skill": "risk-analysis",
   "phase": "risk-analysis",
   "artifacts": [
+    {
+      "type": "StakeholderList",
+      "schema_ref": "schemas/stakeholder.schema.json",
+      "items": [
+        {
+          "id": "STK-001",
+          "name": "決済利用者",
+          "category": "end_user",
+          "interests": ["正確な課金", "決済の完了"],
+          "harm_exposure": ["二重課金による金銭的損失", "情報漏えい"],
+          "oversight_role": null
+        }
+      ]
+    },
     {
       "type": "RiskRegister",
       "schema_ref": "schemas/risk-item.schema.json",
@@ -166,7 +199,7 @@ FMEA・FTA・STPA・STRIDE のいずれを使うかを選び、**選定理由を
       ]
     }
   ],
-  "trace_ids": ["RISK-001", "RISK-002"],
+  "trace_ids": ["STK-001", "RISK-001", "RISK-002"],
   "assumptions": [
     "過去の欠陥履歴（knowledge/dynamic/defect-history.yaml）が空のため、決済API一般の既知障害パターン（二重課金・タイムアウト連鎖）から RISK-001 を仮説として提示した（静的ナレッジのみに基づく一般論）",
     "手法選択: 対象はソフトウェア・自動化が支配的なAPI変更のためSTPAの適用も検討したが、変更範囲が単一エンドポイントの故障モードに限定されるため FMEA 的な故障モード列挙で十分と判断し、RISK-001 を抽出した。RISK-002 は外部境界を越えるデータフローが関わるため STRIDE（Information Disclosure）を適用した"

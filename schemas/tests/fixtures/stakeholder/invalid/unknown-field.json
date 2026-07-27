@@ -1,0 +1,7 @@
+{
+  "id": "STK-005",
+  "name": "文書所有者",
+  "category": "business",
+  "harm_exposure": ["非公開文書のアクセス痕跡露出"],
+  "assumption": true
+}

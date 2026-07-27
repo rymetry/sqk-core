@@ -1,0 +1,6 @@
+{
+  "id": "STK-inline-001",
+  "name": "共有URL経由の社外閲覧者",
+  "category": "affected_third_party",
+  "harm_exposure": ["予期しない実名化"]
+}
