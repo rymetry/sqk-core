@@ -9,7 +9,7 @@ description: >
   特性間トレードオフマトリクスを必ず出力する。レンズ未指定時は全4レンズを
   実施し、対象外レンズは「非該当」と理由付きで明記する。仕様テキストのみ
   でも起動できる。
-version: 0.1.0
+version: 0.1.1
 inputs:
   review_target_summary:
     type: string
@@ -84,8 +84,10 @@ Tester Skillspace 4象限: テスト技法（軽）／ドメイン（重）／IT
    [references/lens-security.md](references/lens-security.md)・
    [references/lens-architecture.md](references/lens-architecture.md)）
    のチェック観点に従い、所見を「観点／指摘（何が不足・不明か）／根拠
-   （正典の該当節）／推奨」の形で記録する。証跡なき主張をせず、仕様の
-   どこを見てそう判断したかを付す。
+   （正典の該当節）／推奨」の形で記録する。この4項目は出力エンベロープの
+   findings フィールド（観点=`characteristic`／指摘=`statement`／根拠=
+   `evidence_ref`／推奨=`recommendation`）にそれぞれ対応する。証跡なき
+   主張をせず、仕様のどこを見てそう判断したかを付す。
 4. **トレードオフマトリクスの作成（必須）**: [iso25010 §「品質特性間の
    トレードオフと調停」](../../docs/quality-models/iso25010-product-quality-model.md#品質特性間のトレードオフと調停)
    の典型トレードオフ表と調停手順に従い、対象で実際に衝突する（または
@@ -122,7 +124,9 @@ Tester Skillspace 4象限: テスト技法（軽）／ドメイン（重）／IT
 1. **質問は最大3件まで**とし、それ以上は聞かない。優先して聞くべき質問は
    (a) 対象仕様・設計文書はどこにあるか、(b) 重点的に見たいレンズは
    どれか、(c) レビュー結果を何に使うか（設計改善か受入基準化か）、
-   の3つに絞る。
+   の3つに絞る。なお「最大3件」は利用者への対話的な確認質問の上限で
+   あり、手順1で測定不能要求を `open_questions` に記録する件数には
+   上限を設けない（test-requirement-analysis の質問リスト運用と同旨）。
 2. 回答が得られない、または利用者が回答不能な場合でも、必ず出力する。
    仕様が1件も無い場合は、`review_target_summary` から推定できる範囲の
    特性マッピングと確認すべき観点の一覧のみを出し、レンズ別所見と
@@ -203,7 +207,13 @@ Tester Skillspace 4象限: テスト技法（軽）／ドメイン（重）／IT
 `NfrReviewFindings`・`TradeoffMatrix` は ID 体系を持たない助言的成果物の
 ため専用スキーマを設けず `content` に置く（[schemas/README.md の
 content/items 使い分け](../../schemas/README.md)）。`TradeoffMatrix` は
-レンズ指定の有無にかかわらず**必須**で出力する。`gate_status` は
+レンズ指定の有無にかかわらず**必須**で出力する。`lens` フィールドの
+正準値は `ui-ux-accessibility` / `performance` / `security` /
+`architecture` の4値であり、表記ゆれ（例: `ui_ux`）をさせない。
+findings への `severity` 付与は任意だが、付与する場合は
+quality-artifact-review と同じ4値（`blocker` / `major` / `minor` /
+`info`）を用いる（ゲート判定の severity→gate_status 導出との整合の
+ため）。`gate_status` は
 `passed` / `passed-with-risks` / `blocked` の3値のいずれかをとる
 （判定規則は手順6）。
 
