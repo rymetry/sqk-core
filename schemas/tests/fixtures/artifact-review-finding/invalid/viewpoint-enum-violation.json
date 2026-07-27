@@ -1,0 +1,7 @@
+{
+  "id": "ARF-001",
+  "viewpoint": "completeness",
+  "severity": "major",
+  "target_refs": ["02-risk-register.json"],
+  "statement": "viewpoint が5観点 enum に含まれない値のため invalid。"
+}

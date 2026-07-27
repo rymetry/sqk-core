@@ -1,0 +1,8 @@
+{
+  "id": "ARF-004",
+  "viewpoint": "process_consistency",
+  "severity": "major",
+  "target_refs": ["04-tad.json"],
+  "statement": "additionalProperties: false に反する未知フィールドを含むため invalid。",
+  "gate_status": "passed-with-risks"
+}
