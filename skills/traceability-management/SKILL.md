@@ -64,7 +64,9 @@ Markdown ヒート表で描画する。本スキルは
 [test-requirement-analysis](../test-requirement-analysis/SKILL.md)・
 [test-architecture-design](../test-architecture-design/SKILL.md)・
 [test-design-implementation](../test-design-implementation/SKILL.md) の
-各段の後に随時起動されるのが標準だが、単体起動も可能である。
+複合フロー（TRA→TAD→TDD/TI）が末尾まで進んだ後に一括起動されるのが標準
+だが（オーケストレーター手順8。各段完了ごとに逐次起動すると未完成チェーンの
+下流未生成を切断として過大報告するため）、単体起動も可能である。
 
 **役割境界（必読）**: 本スキルはリンクの有無・整合性を**検査・報告**する
 だけであり、欠けているノードの内容（例: 未接続の DTC が本来参照すべき

@@ -11,7 +11,7 @@ description: >
   では、risk-analysis・test-requirement-analysis・test-architecture-design・
   test-design-implementation を順に呼び出し、各段のゲート判定を行う
   進行管理も担う。
-version: 0.1.0
+version: 0.2.0
 inputs:
   consultation_text:
     type: string
@@ -121,10 +121,16 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    - `passed`: 次段へそのまま進める
    - `passed-with-risks`: 残存リスクを明示した上で次段へ進める
    - `blocked`: 停止し、利用者にその段までの結果と理由を返す
-8. **トレーサビリティの随時付与**: 複合フローの各段完了後に
-   `traceability-management` を呼び、チェーンリンクを追記する
+8. **トレーサビリティの一括付与**: 複合フロー（TRA→TAD→TDD/TI）が末尾まで
+   進んだ後に `traceability-management` を**1回**呼び、成果物一式に対して
+   チェーンリンクを付与する
    （[skill-ecosystem-design-plan.md §4 の4段階複合フロー図](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
-   の `TRC` の役割）。
+   の `TRC` の役割）。各段完了ごとに逐次呼ばない——未完成チェーンに対する
+   トレースは下流ノード未生成を「切断」として大量に報告してしまい、
+   ノイズになるためである（複合フロー内の各段のゲート判定は手順7の
+   `gate_status` が担い、トレーサビリティ検査はフロー末尾でまとめて行う）。
+   なお、いずれかの段が `blocked` で複合フローが途中停止した場合は、
+   その時点までの成果物一式に対して呼ぶ。
 9. **統合レポートの出力**: 単体ルーティング・複合フローのいずれでも、
    分類結果・ルーティング先（または各段の結果）・残存する `assumptions`/
    `open_questions` をまとめ、出力エンベロープとして返す。
