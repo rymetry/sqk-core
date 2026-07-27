@@ -7,7 +7,7 @@ description: >
   テストベースとして能動的に分析し、3色ボールペン分析（重要箇所・構成要素・
   疑問矛盾のタグ付け）を経て、ユーザー／プロダクト／テスト組織の3視点で
   ハイレベル・詳細テスト条件を導出し、質問リストとともに出力する。
-version: 0.2.0
+version: 0.3.0
 inputs:
   test_basis:
     type: string
@@ -42,6 +42,7 @@ knowledge_refs:
   - docs/test-techniques/test-process-research-summary-test-design.md
   - docs/test-techniques/testing-standards-and-assurance-concepts.md
   - docs/quality-models/iso25010-product-quality-model.md
+  - docs/test-techniques/japanese-test-design-methods.md
 ---
 
 # test-requirement-analysis
@@ -81,13 +82,13 @@ ITスキル（軽）／コミュニケーション（質問リスト生成、重
 緑タグを付けた箇所は、そのまま「質問リスト」の候補になる（後述の
 「出力エンベロープ」で `open_questions` として必須出力する）。
 
-**出典に関する注記（必読）**: 3色ボールペン分析はユーザー提供のプロンプト
-由来の手法であり、`docs/` に正典文書が未収録である。[スキル・エコシステム
-設計プラン §3 #1](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#1-test-requirement-analysis-tra)
-に記載の通り、Phase 2 で `docs/test-techniques/japanese-test-design-methods.md`
-として文書化予定であり、現時点は「出典補強待ち」として扱う。本スキルの
-分析結果に3色ボールペン由来の判断が含まれる場合、その旨をエンベロープの
-`assumptions` に明記する。
+**出典に関する注記**: 3色ボールペン分析の原典と背景は
+[japanese-test-design-methods.md §2](../../docs/test-techniques/japanese-test-design-methods.md#2-3色ボールペンによる仕様書分析)
+に文書化済みである（原典の赤・青は「客観的な重要度の2段階」であり、
+本スキルの赤=重要箇所／青=構成要素というタグ意味は、テスト条件導出
+向けの本リポジトリの適応である。緑=主観・疑問が質問リストへ接続する
+構造は原典の応用と一致する）。タグの色・意味を場当たりで増改築しない
+こと（同 §7）。
 
 ## 手順
 
@@ -241,7 +242,7 @@ risk-analysis の成果物（`RiskRegister`）が存在しない場合、次の�
   "trace_ids": ["REQ-012", "REQ-042", "RISK-001", "RISK-004", "HTC-001", "HTC-002", "DTC-001", "DTC-002"],
   "assumptions": [
     "risk-analysis の RiskRegister が未実行のため、RISK-001（二重課金）・RISK-004（桁数不正の考慮漏れ）は赤タグ箇所からの推定リスクとして仮置きした（assumption: true）",
-    "3色ボールペン分析はプロンプト由来・出典補強待ちの手法であり、docs/ に正典文書が未収録である（Phase 2 で japanese-test-design-methods.md として文書化予定）"
+    "3色ボールペンのタグ意味（赤=重要箇所/青=構成要素）は原典の色使いを本リポジトリ向けに適応したものである（docs/test-techniques/japanese-test-design-methods.md §2 参照）"
   ],
   "open_questions": [
     "Diners以外の海外ブランドのカード番号桁数仕様は確認済みか",

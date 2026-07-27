@@ -344,6 +344,7 @@ flowchart TD
 | [コードレビュー技法](../quality-management/code-review-techniques.md) | **TEST ◎**（静的テスト・レビュー）, EV ○ | — | IEEE 1028 レビュー体系・静的解析結果の解釈・所見の重大度付け・レビューコメント作法 |
 | [欠陥タクソノミーと ODC](../quality-management/defect-taxonomy-odc.md) | **MET ◎**（欠陥分布の in-process 測定）, RISK ○, TEST ○ | — | ODC 8属性・トリガー/インパクト・欠陥分布分析・RCA との補完（#10 の主参照） |
 | [テスト活動プロセス調査まとめ（テスト設計）](../test-techniques/test-process-research-summary-test-design.md) | RISK ○, **TEST ◎**, EV ○ | — | TEST ノード内部の詳細データ契約（HTC〜RUN）とレビューゲート |
+| [日本発テスト設計技法](../test-techniques/japanese-test-design-methods.md) | **TEST ◎**（テスト分析・観点体系化）, REQ ○ | — | 3色ボールペン分析・テスト観点・ゆもつよメソッド・HAYST 法・NGT/VSTeP（#1/#3 の技法参照） |
 | [テスト標準と保証概念](../test-techniques/testing-standards-and-assurance-concepts.md) | **TEST ◎**, MET ○ | — | ISO/IEC/IEEE 29119・ISTQB・オラクル・flaky・カバレッジ限界 |
 | [テスト技法スキルカタログ](../test-techniques/test-techniques-skill-catalog.md) | **TEST ◎** | — | skill-card 形式の技法カタログ（原案 95 技法、135 技法の状態判定は CSV。`technique_refs` の参照先） |
 | [テスト技法カタログ納品ノート](../test-techniques/software-test-techniques-catalog-delivery.md) | TEST ○ | — | 技法カタログの検証経緯（EV の実例でもある） |

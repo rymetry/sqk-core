@@ -7,7 +7,7 @@ description: >
   材料に、テスト全体を意味のある要素（テストアーキテクチャ要素＝TAE）へ
   分解し、レベル・タイプ・サイクル・厚み・担当を割り当て、割当マトリクスと
   ともに出力する。
-version: 0.2.0
+version: 0.3.0
 inputs:
   detailed_test_condition_list_ref:
     type: path
@@ -40,6 +40,7 @@ capabilities:
 knowledge_refs:
   - docs/test-techniques/test-process-research-summary-test-design.md
   - docs/test-techniques/testing-standards-and-assurance-concepts.md
+  - docs/test-techniques/japanese-test-design-methods.md
 ---
 
 # test-architecture-design
@@ -109,11 +110,16 @@ ITスキル（重、構造設計）／コミュニケーション（軽）。
    を用いる。
 
 **ゆもつよメソッド・Tiramis 8要素について**: 論理的機能構造分析（ゆもつよ
-メソッド）と Tiramis 8要素はプロンプト由来・出典補強待ちの手法であり、
-`docs/` に正典文書が未収録である（Phase 2 で
-`docs/test-techniques/japanese-test-design-methods.md` として文書化予定）。
-本スキルの手順5〜6ではこれらの手法を前提とせず、test-process 文書の
-5切り口・厚みポリシーのみで構造化を完結させる。
+メソッド）は
+[japanese-test-design-methods.md §4](../../docs/test-techniques/japanese-test-design-methods.md#4-ゆもつよメソッド)
+に文書化済みであり、テストカテゴリによる語彙固定の補助方法論として
+参照できる（観点の階層化には [同 §6 NGT/VSTeP](../../docs/test-techniques/japanese-test-design-methods.md#6-ngtvstep--テスト観点コンテナフレームの階層化)
+も使える）。Tiramis 8要素は公開一次出典を確認できなかったため収録
+見送りである（経緯と再起票条件は
+[同 §7](../../docs/test-techniques/japanese-test-design-methods.md#7-収録範囲と利用上の注意)
+を参照）。
+本スキルの手順5〜6は従来どおりこれらの手法を前提とせず、test-process
+文書の5切り口・厚みポリシーのみで構造化を完結させる。
 
 ## 最小入力契約
 
