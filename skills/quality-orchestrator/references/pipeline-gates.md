@@ -2,12 +2,14 @@
 
 ## 位置づけ
 
-本ファイルは、4段階複合フロー（risk-analysis 並行 → TRA → TAD → TDD/TI）
-の各段を進めてよいかを判定するためのゲート観点を定める
+本ファイルは、複合フロー（risk-analysis 並行 → TRA → TAD → TDD/TI。
+利用者が実行結果の整理まで求める場合は test-execution-support（TE）を
+終端段に加えた5段）の各段を進めてよいかを判定するためのゲート観点を
+定める
 （[skill-ecosystem-design-plan.md §4「ゲート基準」](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
 の表を採用）。各行の詳細チェックリストは
 [test-process-research-summary-test-design.md §8](../../../docs/test-techniques/test-process-research-summary-test-design.md#8-レビューゲート)
-の該当節を参照する。
+の該当節（TE 行のみ §4.8/§4.9 の実行タスク・完了条件を併用）を参照する。
 
 ゲート判定そのものは quality-orchestrator ではなく
 [quality-artifact-review](../../quality-artifact-review/SKILL.md) が行う
@@ -30,6 +32,7 @@ Phase 1 中の変更凍結（[phase1-implementation-guide.md T4](../../../docs/a
 | TADレビュー | 構造・関係・厚み・担当・重複漏れ・粒度 | [§8.2 TAD レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#82-tad-レビュー) |
 | TDDレビュー | パラメーター・値候補・制約・カバレッジ・技法・期待結果・ケース数 | [§8.3 TDD レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#83-tdd-レビュー) |
 | TIレビュー | 実行順序・手順・自動化・証跡・再現性 | [§8.4 TI レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#84-ti-レビュー) |
+| TEレビュー | 欠陥候補の再現性・flaky と欠陥の区別・再テスト/回帰範囲・証跡参照（`log_ref`） | [§4.8 テスト実行](../../../docs/test-techniques/test-process-research-summary-test-design.md#48-7-テスト実行te)・[§4.9 再テスト・回帰テスト](../../../docs/test-techniques/test-process-research-summary-test-design.md#49-8-再テスト回帰テスト)（実行タスクと完了条件）＋[§8.4 TI レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#84-ti-レビュー) |
 
 quality-artifact-review は上表の段別観点に加えて、常に
 [§8.5 成果物品質レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#85-成果物品質レビュー)
