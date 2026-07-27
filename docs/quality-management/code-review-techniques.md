@@ -69,7 +69,7 @@ Google の運用でもう一つ重要なのは、可読性(readability)認定制
 | 観点 | 代表的な確認項目 | 主な出典 |
 | --- | --- | --- |
 | 正確性 | 要求・仕様との一致/エッジケース(空・null・境界値・重複・順序)/エラー処理と例外伝播(握りつぶしの禁止)/並行性(競合・デッドロック・共有状態)/リソース管理(リーク・クローズ漏れ)/後方互換性・データ移行 | Google eng-practices(functionality)、[テスト標準と保証概念](../test-techniques/testing-standards-and-assurance-concepts.md) |
-| セキュリティ | 入力検証(信頼境界の明確化)/認証・認可(権限チェックの漏れ・昇格経路)/秘密情報(ハードコード・ログ出力・エラーメッセージ経由の漏えい)/インジェクション(SQL・OS コマンド・テンプレート)/暗号(自作暗号の禁止・鍵管理)/依存関係の追加(サプライチェーン) | OWASP Code Review Guide、[セキュア開発とサプライチェーン](../secure-development/secure-development-and-supply-chain.md) |
+| セキュリティ | 入力検証(信頼境界の明確化)/認証・認可(権限チェックの漏れ・昇格経路)/秘密情報(ハードコード・ログ出力・エラーメッセージ経由の漏えい)/デフォルト値・フォールバック経由の秘密情報混入(設定欠落時のフォールバックにハードコードされた鍵・秘密を使わない)/インジェクション(SQL・OS コマンド・テンプレート)/アウトバウンド先 URL の検証(SSRF: ユーザー・テナント入力由来の宛先へのリクエストは内部ネットワーク到達性・スキーム・宛先の制限を確認)/暗号(自作暗号の禁止・鍵管理)/依存関係の追加(サプライチェーン) | OWASP Code Review Guide、OWASP ASVS、[セキュア開発とサプライチェーン](../secure-development/secure-development-and-supply-chain.md) |
 | 保守性 | 設計(責務の分離・抽象の妥当性・不要な複雑さ)/命名・コメント(なぜ、を説明しているか)/テスト(変更に対応するテストの有無と質)/重複(既存実装の再利用可否)/ドキュメント(利用者向け文書の追随) | Google eng-practices(design, complexity, tests, naming, comments) |
 
 運用上の原則を三つ挙げます。
@@ -187,6 +187,7 @@ question: この再試行回数 5 は要件由来ですか?
 セキュリティレビュー・静的解析の解釈:
 
 - OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/
+- OWASP Application Security Verification Standard(ASVS): https://owasp.org/www-project-application-security-verification-standard/
 - FIRST, Common Vulnerability Scoring System(CVSS): https://www.first.org/cvss/
 - FIRST, Exploit Prediction Scoring System(EPSS): https://www.first.org/epss/
 - CISA, Known Exploited Vulnerabilities Catalog: https://www.cisa.gov/known-exploited-vulnerabilities-catalog
