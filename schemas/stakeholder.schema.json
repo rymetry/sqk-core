@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/stakeholder.schema.json",
+  "title": "Stakeholder",
+  "description": "正規出典: docs/quality-models/quality-knowledge-schema.md §1.3 STK: Stakeholder（ステークホルダー）ノードのデータ契約。フィールド: id / name / category / interests[] / harm_exposure[] / oversight_role。RISK ノードの affected_stakeholder_refs（STK-*）が指す先であり、リスク影響度判定の根拠（harm_exposure）を保持する（同 §1.4 STK -.影響度の判定根拠.-> RISK）。id の桁数規約は §1.2 ID体系表（STK-nnn、桁数不特定）に従い可変桁数を許容。harm_exposure は影響度判定の根拠だが、ステークホルダーを段階的に洗い出す運用を許すため required にはせず、未記載時の是正は §3 アンチパターン表『ステークホルダー＝発注者だけ』（category が business のみ・harm_exposure 未記載）に委ねる（risk-item.schema.json が affected_stakeholder_refs を required にしないハウススタイルと整合）。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^STK-[0-9]+$",
+      "description": "ステークホルダーの一意ID。出典: §1.2 ID体系表・§1.3 属性表（STK-nnn）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "name": {
+      "type": "string",
+      "description": "名称（ロールでよい。例: 決済利用者、運用オンコール、監査人）。出典: §1.3 STK 属性表。"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["end_user", "business", "operator", "regulator", "affected_third_party"],
+      "description": "直接の利用者以外（運用者・規制当局・間接的に影響を受ける第三者）を漏らさないための分類。出典: §1.3 STK 属性表。"
+    },
+    "interests": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "期待する価値・関心事。出典: §1.3 STK 属性表。"
+    },
+    "harm_exposure": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "品質不全時に受けうる不利益（金銭・安全・権利・機会損失等）。RISK の影響度判定の根拠。出典: §1.3 STK 属性表・§1.4 関係表。"
+    },
+    "oversight_role": {
+      "type": ["string", "null"],
+      "description": "人間監督上の役割（承認者・介入者等。AI システムで特に重要。MON ノード・Human oversight レイヤと直結）。該当しない場合は null。出典: §1.3 STK 属性表・§3 AI 品質分解ツリー。"
+    }
+  },
+  "required": ["id", "name", "category"],
+  "additionalProperties": false
+}

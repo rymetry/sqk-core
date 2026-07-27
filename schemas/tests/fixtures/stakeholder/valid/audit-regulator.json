@@ -1,0 +1,8 @@
+{
+  "id": "STK-003",
+  "name": "監査人",
+  "category": "regulator",
+  "interests": ["証跡の保全", "統制の実効性"],
+  "harm_exposure": ["監査不能による説明責任の欠如"],
+  "oversight_role": "リリース承認前の統制レビューと例外承認"
+}

@@ -13,6 +13,7 @@
 - `release-decision.schema.json`
 - `risk-item.schema.json`
 - `routing-decision.schema.json`
+- `stakeholder.schema.json`
 - `test-architecture-element.schema.json`
 - `test-case.schema.json`
 

@@ -1,0 +1,6 @@
+{
+  "id": "STK-004",
+  "name": "社内マーケティング",
+  "category": "internal_team",
+  "harm_exposure": ["施策効果の測定不能"]
+}
