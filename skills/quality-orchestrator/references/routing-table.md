@@ -27,12 +27,12 @@
 | TEST（コード差分） | PR・コードをレビューする／静的解析結果を優先度付けする | code-review | P2 |
 | RISK, MON | 障害・欠陥を分析する／RCA・ポストモーテム | defect-analysis-rca | P2 |
 | QC, TEST（AI/LLM） | LLM/AI 機能の評価を設計する | ai-system-quality-eval | P2 |
-| EV | 成果物一式が整合しているかメタレビューする | quality-artifact-review | P2 |
+| EV | 成果物一式が整合しているかメタレビューする | quality-artifact-review | P2（実装済み） |
 | MET | 事業指標（NPS/チャーン等）と品質の相関を見る | business-quality-metrics | P3 |
 
 ## フォールバック規則
 
-[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、Phase 1 時点では「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。
+[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。ただし **`quality-artifact-review`（#14）は実装済み**（[D-011 フェーズB追記](../../../DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)で defer→keep へ格上げ・実装）のため、MVP スキルと同様に通常どおりルーティングする。
 
 ## 関連ドキュメント
 

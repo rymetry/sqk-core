@@ -38,7 +38,7 @@ keep と判断した「深さ」4件を、依存順で実装する。各項目�
 3. traceability-management の随時起動→末尾一括への文言修正
 4. テスト空間3軸マトリクス描画の稼働確認
 
-keep 4件の完了後、再評価キュー先頭の #14 quality-artifact-review を slice 成果物への dry-run で再評価し、keep（実装）へ格上げした（[D-011 フェーズB追記](./DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)）。実装は `skills/quality-artifact-review/` ＋ `artifact-review-finding` schema。follow-up として (a) ルーティング表 #14 行の実装済みへの昇格（T3a 相当・単行）、(b) orchestrator ゲート判定の #14 への委譲（T12）を別 PR で行う。
+keep 4件の完了後、再評価キュー先頭の #14 quality-artifact-review を slice 成果物への dry-run で再評価し、keep（実装）へ格上げした（[D-011 フェーズB追記](./DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)）。実装は `skills/quality-artifact-review/` ＋ `artifact-review-finding` schema。ルーティング表 #14 行の実装済みへの昇格（T3a 相当・単行）は実施済み。follow-up として orchestrator ゲート判定の #14 への委譲（T12）を別 PR で行う。
 
 新スキル7件（#7〜#13）とナレッジ文書3件は defer 継続とし、ROADMAP から削除せず「ドメイン別再評価待ち」として保持する（[D-011](./DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)）。該当ドメインの実タスクが現れた時が各項目の再評価タイミングである。
 
