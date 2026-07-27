@@ -7,7 +7,7 @@ description: >
   TAE〜COV〜TC の ID 参照群（Markdown/JSON/CSVいずれか）を材料に、フォワード
   ／バックワード双方向でリンク切れ・未接続ノードを検出し、`TraceabilityMatrix`
   とテスト空間3軸マトリクス（Markdownヒート表）を生成する。
-version: 0.1.0
+version: 0.2.0
 inputs:
   artifact_bundle_ref:
     type: path
@@ -32,6 +32,10 @@ inputs:
 outputs:
   handoff_envelope:
     schema: ../../schemas/handoff-envelope.schema.json
+  traceability_matrix:
+    schema: ../../schemas/traceability-matrix.schema.json
+  test_space_matrix:
+    schema: ../../schemas/test-space-matrix.schema.json
 capabilities:
   - file_read
 knowledge_refs:
@@ -157,11 +161,14 @@ TDD-TI）または人間の作業とする。
 
 本スキルは単体実行・オーケストレーター経由実行のいずれでも、下記形式の
 ハンドオフエンベロープ（[schemas/handoff-envelope.schema.json](../../schemas/handoff-envelope.schema.json)
-準拠）を必ず出力する。`TraceabilityMatrix` と `TestSpaceMatrix` はいずれも
-専用の JSON Schema が Phase 1 時点で存在しないため、`schema_ref` には
-出力データの定義箇所へのポインタを指定する（`TraceabilityMatrix` は
-[test-process-research-summary-test-design.md §7 トレーサビリティ](../../docs/test-techniques/test-process-research-summary-test-design.md#7-トレーサビリティ)、
-`TestSpaceMatrix` は [matrix-template.yaml](../../knowledge/test-space/matrix-template.yaml)）。
+準拠）を必ず出力する。`TraceabilityMatrix` は
+[schemas/traceability-matrix.schema.json](../../schemas/traceability-matrix.schema.json)、
+`TestSpaceMatrix` は
+[schemas/test-space-matrix.schema.json](../../schemas/test-space-matrix.schema.json)
+に準拠し、`schema_ref` に各スキーマを指定する（`content` 形の成果物であり、
+handoff-envelope の `content` は無制約 object のため、これらの repo-local
+スキーマで構造を機械検証する）。`disconnected_nodes` が空でない場合は
+`gate_status: blocked` とする既定は据え置く。
 
 例は既存スキル群の題材（REQ-012/REQ-042 → RISK-001/004 → HTC-001/002 →
 DTC-001/002 → TAE-001/002 → COV-001/002 → TC-001/002）を引き継ぎ、加えて
@@ -175,7 +182,7 @@ DTC-001/002 → TAE-001/002 → COV-001/002 → TC-001/002）を引き継ぎ、�
   "artifacts": [
     {
       "type": "TraceabilityMatrix",
-      "schema_ref": "docs/test-techniques/test-process-research-summary-test-design.md#7-トレーサビリティ",
+      "schema_ref": "schemas/traceability-matrix.schema.json",
       "content": {
         "chain_links": [
           { "from": "REQ-012", "to": "HTC-001", "direction": "forward" },
@@ -204,7 +211,7 @@ DTC-001/002 → TAE-001/002 → COV-001/002 → TC-001/002）を引き継ぎ、�
     },
     {
       "type": "TestSpaceMatrix",
-      "schema_ref": "knowledge/test-space/matrix-template.yaml",
+      "schema_ref": "schemas/test-space-matrix.schema.json",
       "content": {
         "heat_table_markdown": "| test_level \\ test_type | functional-suitability | security |\n| --- | --- | --- |\n| component | covered | none |\n| system | partial | covered |\n| acceptance | none | none |\n",
         "cells": [

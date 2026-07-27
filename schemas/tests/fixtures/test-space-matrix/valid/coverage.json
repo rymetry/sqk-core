@@ -1,0 +1,8 @@
+{
+  "heat_table_markdown": "| test_level \\ test_type | security | reliability |\n| --- | --- | --- |\n| system | covered | partial |\n",
+  "cells": [
+    { "test_level": "system", "test_type": "security", "test_process": "TDD-TI", "status": "covered", "evidence": ["TC-001", "TC-002"], "notes": "権限ゲートを thick 設計" },
+    { "test_level": "system", "test_type": "reliability", "test_process": "TDD-TI", "status": "partial", "evidence": ["TC-027"], "notes": "故障注入は全遮断のみ" }
+  ],
+  "csv_export": "test_level,test_type,test_process,status,evidence,notes\nsystem,security,TDD-TI,covered,\"TC-001;TC-002\",権限ゲートを thick 設計\n"
+}

@@ -1,0 +1,5 @@
+{
+  "assignments": [
+    { "architecture_element_id": "TAE-001", "assigned_conditions": ["DTC-001"] }
+  ]
+}

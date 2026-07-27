@@ -1,0 +1,15 @@
+{
+  "chain_links": [
+    { "from": "F-1", "to": "HTC-001", "direction": "forward" },
+    { "from": "HTC-001", "to": "DTC-001", "direction": "forward" },
+    { "from": "RISK-001", "to": "DTC-001", "direction": "forward" }
+  ],
+  "disconnected_nodes": [],
+  "unreached_downstream": [
+    { "id": "N-2", "node_type": "REQ", "reason": "no_downstream", "detail": "測定方法未定義でテスト条件化不能", "detected_by": "forward" }
+  ],
+  "advisory_findings": [
+    { "id": "STK-001,STK-002", "node_type": "STK", "reason": "informal_node", "detail": "StakeholderList 契約はあるが本バンドルに未同梱", "detected_by": "backward" }
+  ],
+  "summary": { "total_links": 3, "reached_req": ["F-1"] }
+}

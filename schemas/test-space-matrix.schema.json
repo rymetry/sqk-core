@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/test-space-matrix.schema.json",
+  "title": "TestSpaceMatrix",
+  "description": "正規出典: knowledge/test-space/matrix-template.yaml（axes: test_level / test_type / test_process、セル形式 {status, evidence, notes}）、および docs/agent-ecosystem/knowledge-management-design.md §6 テスト空間3軸マトリクス。traceability-management が出力する、レベル×タイプ×プロセスのカバレッジ状況。handoff-envelope の content 形の成果物であり repo-local の専用スキーマとして分離した。enum は matrix-template.yaml の axes 定義（test_type は ISO/IEC 25010:2023 の9特性＋機能＋変更関連）に厳密に一致させる。",
+  "type": "object",
+  "properties": {
+    "heat_table_markdown": {
+      "type": "string",
+      "description": "test_level を行・test_type を列とした Markdown ヒート表（status を covered/partial/none の文字列で表示）。プラットフォーム非依存のため絵文字を使わない。"
+    },
+    "cells": {
+      "type": "array",
+      "description": "3軸の各セル。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "test_level": {
+            "type": "string",
+            "enum": ["component", "integration", "system", "acceptance"],
+            "description": "テストレベル軸。出典: matrix-template.yaml axes.test_level。"
+          },
+          "test_type": {
+            "type": "string",
+            "enum": [
+              "functional-suitability",
+              "performance-efficiency",
+              "compatibility",
+              "interaction-capability",
+              "reliability",
+              "security",
+              "maintainability",
+              "flexibility",
+              "safety",
+              "change-related"
+            ],
+            "description": "テストタイプ軸（ISO/IEC 25010:2023 の9特性＋機能＋変更関連）。出典: matrix-template.yaml axes.test_type。"
+          },
+          "test_process": {
+            "type": "string",
+            "enum": ["TRA", "TAD", "TDD-TI", "TE", "MON"],
+            "description": "テストプロセス軸。出典: matrix-template.yaml axes.test_process。"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["covered", "partial", "none"],
+            "description": "カバレッジ状況。出典: matrix-template.yaml セル形式。"
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "根拠となる成果物ID一覧（TC-*, TAE-*, CHT-* 等）。空配列可。"
+          },
+          "notes": {
+            "type": "string",
+            "description": "補足（未カバー理由・委譲先・部分カバーの範囲等）。"
+          }
+        },
+        "required": ["test_level", "test_type", "test_process", "status"],
+        "additionalProperties": false
+      }
+    },
+    "csv_export": {
+      "type": "string",
+      "description": "同じ行×列構造をカンマ区切りで併記したエクスポート。"
+    }
+  },
+  "required": ["heat_table_markdown", "cells", "csv_export"],
+  "additionalProperties": false
+}

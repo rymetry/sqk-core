@@ -7,7 +7,7 @@ description: >
   テストベースとして能動的に分析し、3色ボールペン分析（重要箇所・構成要素・
   疑問矛盾のタグ付け）を経て、ユーザー／プロダクト／テスト組織の3視点で
   ハイレベル・詳細テスト条件を導出し、質問リストとともに出力する。
-version: 0.1.0
+version: 0.2.0
 inputs:
   test_basis:
     type: string
@@ -32,6 +32,8 @@ inputs:
 outputs:
   handoff_envelope:
     schema: ../../schemas/handoff-envelope.schema.json
+  high_level_test_condition_list:
+    schema: ../../schemas/high-level-test-condition.schema.json
   detailed_test_condition_list:
     schema: ../../schemas/detailed-test-condition.schema.json
 capabilities:
@@ -172,9 +174,9 @@ risk-analysis の成果物（`RiskRegister`）が存在しない場合、次の�
 準拠）を必ず出力する。これにより、後から `test-architecture-design` や
 `quality-orchestrator` に再取り込みできる。
 
-`HighLevelTestConditionList` は Phase 1 時点で専用の JSON Schema が
-存在しないため、`schema_ref` には ID 体系の定義箇所（[基本 ID 体系](../../docs/test-techniques/test-process-research-summary-test-design.md#61-基本-id-体系)）
-をポインタとして指定し、items は `{id, title}` の最小形とする。
+`HighLevelTestConditionList` の各項目は
+[schemas/high-level-test-condition.schema.json](../../schemas/high-level-test-condition.schema.json)
+に準拠し、items は `{id, title}` の最小形とする（`schema_ref` に同スキーマを指定）。
 
 3色ボールペン分析結果は人間可読な Markdown レポートとして本文で提示し、
 エンベロープ上は `ThreeColorAnalysisReport` として存在を明記する（専用
@@ -188,7 +190,7 @@ risk-analysis の成果物（`RiskRegister`）が存在しない場合、次の�
   "artifacts": [
     {
       "type": "HighLevelTestConditionList",
-      "schema_ref": "docs/test-techniques/test-process-research-summary-test-design.md#61-基本-id-体系",
+      "schema_ref": "schemas/high-level-test-condition.schema.json",
       "items": [
         { "id": "HTC-001", "title": "決済API: カード番号入力の妥当性確認" },
         { "id": "HTC-002", "title": "決済API: タイムアウト時の二重課金防止" }
