@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/evaluation-design.schema.json",
+  "title": "EvaluationDesign",
+  "description": "正規出典: docs/quality-models/quality-knowledge-schema.md §1.3 TEST: Test / Evaluation Method（テスト・評価方法）の完全フィールド契約（id / name / method_type 7値 / acceptance_criterion_refs / technique_refs / oracle / design_chain_refs / evidence_refs）、および docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #13 ai-system-quality-eval（出力=評価設計（`TEST-nnn`、`method_type: llm_eval`））。フィールドは正典契約をそのまま転記し発明しない（docs/agent-ecosystem/phase2-implementation-guide.md T2「完全な正典契約に従い発明しない」の方針に準拠）。設計判断（正典が明記しない範囲のみ）: (1) required は id / name / method_type と4つの参照配列とし、参照配列は空を許容する。コールドスタート（上流の AC ノード・テスト設計チェーン・実行証跡が無い状態）でも item をスキーマ準拠に保ち、暫定性はエンベロープ assumptions[] に記録するため（phase2-implementation-guide 共通受入基準4 = CS-1/CS-2 準拠。item に assumption フィールドを足さない）。oracle は方法選定の段階では未確定でありうるため任意・nullable とする（skills/ai-system-quality-eval の手順3 は oracle の明記を求める）。(2) 本 schema は skill-handoff の知識成果物であり、veridia の runtime evidence（`Evidence` / `ExecutionEvidence`）／`OracleSpec` 契約ではない。評価の実行・評価データの収集・CI への実装は実行系が担い、本 schema は評価設計の記録形式のみを定める（DECISIONS.md D-012 の実行境界）。詳細なテスト設計分解（`HTC-`〜`RUN-`）は既存データ契約（docs/test-techniques/test-process-research-summary-test-design.md）へ委譲し、本 schema は design_chain_refs によるリンクのみを扱う。(3) id の桁数は既存スキーマのハウススタイルに倣い可変桁数を許容する。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^TEST-[0-9]+$",
+      "description": "テスト・評価方法の一意ID。出典: quality-knowledge-schema §1.2 ID 規約表（`TEST-` は HTC-〜RUN- のテスト設計チェーン全体を内包する粗粒度ノード）・§1.3 TEST 契約。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "name": {
+      "type": "string",
+      "description": "方法名（例: 無人実行ワークフローの一貫性測定（pass^k））。出典: §1.3 TEST 契約。"
+    },
+    "method_type": {
+      "type": "string",
+      "enum": [
+        "dynamic_test",
+        "static_review",
+        "exploratory",
+        "llm_eval",
+        "human_eval",
+        "red_team",
+        "audit"
+      ],
+      "description": "手段の種別。出典: §1.3 TEST 契約の値域7値（そのまま転記。追加・変更しない）。"
+    },
+    "acceptance_criterion_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "検証対象の受入基準への参照一覧（例: AC-005）。出典: §1.3 TEST 契約。上流の AC ノードが無い場合は空配列とし、前提はエンベロープ assumptions[] に記録する（設計判断(1)）。"
+    },
+    "technique_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "使用技法への参照一覧（テスト技法スキルカタログの技法 ID 等。例: SKILL-META-01）。出典: §1.3 TEST 契約。"
+    },
+    "oracle": {
+      "type": ["string", "null"],
+      "description": "合否をどう判定するか（期待値、メタモルフィック関係、人間判定等）。出典: §1.3 TEST 契約。未確定の場合は null。実行系の判定機構（OracleSpec）ではなく判定方針の記述である（設計判断(2)）。"
+    },
+    "design_chain_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "既存テスト設計チェーンへのリンク一覧（例: HTC-001、DTC-003、TC-012）。出典: §1.3 TEST 契約。詳細分解が未着手の場合は空配列とする。"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "実行によって生成された証跡への参照一覧（例: EV-001）。出典: §1.3 TEST 契約。実行前の設計段階では空配列とする（実行と証跡収集は実行系が担う。設計判断(2)）。"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "method_type",
+    "acceptance_criterion_refs",
+    "technique_refs",
+    "design_chain_refs",
+    "evidence_refs"
+  ],
+  "additionalProperties": false
+}

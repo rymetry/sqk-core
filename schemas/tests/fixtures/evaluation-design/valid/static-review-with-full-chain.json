@@ -1,0 +1,9 @@
+{
+  "id": "TEST-010",
+  "name": "受入基準の設計レビュー（静的テスト）",
+  "method_type": "static_review",
+  "acceptance_criterion_refs": ["AC-005"],
+  "technique_refs": [],
+  "design_chain_refs": ["HTC-001", "TC-012"],
+  "evidence_refs": ["EV-001"]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TEST-002",
+  "name": "ベンチマークスコアによる品質測定",
+  "method_type": "benchmark",
+  "acceptance_criterion_refs": [],
+  "technique_refs": [],
+  "design_chain_refs": [],
+  "evidence_refs": []
+}

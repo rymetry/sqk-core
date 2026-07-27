@@ -1,0 +1,11 @@
+{
+  "id": "TEST-004",
+  "name": "文体品質のルーブリック+校正済み judge 評価",
+  "method_type": "llm_eval",
+  "acceptance_criterion_refs": [],
+  "technique_refs": [],
+  "oracle": "バイナリ分解ルーブリックを校正済み LLM-judge で判定",
+  "design_chain_refs": [],
+  "evidence_refs": [],
+  "estimated_calls": 670
+}

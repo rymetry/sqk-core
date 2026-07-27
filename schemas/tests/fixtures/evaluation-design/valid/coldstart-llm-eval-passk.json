@@ -1,0 +1,10 @@
+{
+  "id": "TEST-001",
+  "name": "無人実行ワークフローの一貫性測定（pass^k）",
+  "method_type": "llm_eval",
+  "acceptance_criterion_refs": [],
+  "technique_refs": [],
+  "oracle": "同一入力 k=5 試行の全成功率 pass^k を主指標とし、golden set 全件での95%信頼区間下限を合格基準の型とする（閾値は AC 確定後に設定。前提はエンベロープ assumptions を参照）",
+  "design_chain_refs": [],
+  "evidence_refs": []
+}
