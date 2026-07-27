@@ -1,0 +1,8 @@
+{
+  "id": "SLO-001",
+  "name": "決済成功率 SLO",
+  "signal_type": "slo_sli",
+  "qc_refs": [],
+  "ac_refs": [],
+  "feedback_target_refs": []
+}

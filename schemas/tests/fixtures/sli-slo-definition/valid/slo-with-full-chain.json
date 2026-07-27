@@ -1,0 +1,10 @@
+{
+  "id": "MON-001",
+  "name": "決済成功率 SLO",
+  "signal_type": "slo_sli",
+  "qc_refs": ["QC-002"],
+  "ac_refs": ["AC-005"],
+  "threshold": "30日間の成功リクエスト率 99.9% を下回る（エラーバジェット 0.1% を使い切る）",
+  "owner": "決済チーム SRE",
+  "feedback_target_refs": ["RISK-003"]
+}
