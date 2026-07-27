@@ -341,6 +341,7 @@ flowchart TD
 | [AI の品質保証と品質管理調査報告書](../quality-management/ai-quality-assurance-and-management-research-report.md) | TEST ○, MON ○ | Model / Data / Prompt / Monitoring ◎ | AI 特有の QA/QC 手法と事例 |
 | [ソフトウェア品質ギャップ分析報告書](../quality-management/software-quality-gap-analysis-report.md) | **EV ◎**, REL ○ | — | 証跡の欠落を検出するギャップ分析フレーム |
 | [品質メトリクスの落とし穴](../quality-management/quality-metrics-pitfalls.md) | **MET ◎** | — | メトリクス誤用・Goodhart 対策（`gaming_risk` の根拠） |
+| [コードレビュー技法](../quality-management/code-review-techniques.md) | **TEST ◎**（静的テスト・レビュー）, EV ○ | — | IEEE 1028 レビュー体系・静的解析結果の解釈・所見の重大度付け・レビューコメント作法 |
 | [テスト活動プロセス調査まとめ（テスト設計）](../test-techniques/test-process-research-summary-test-design.md) | RISK ○, **TEST ◎**, EV ○ | — | TEST ノード内部の詳細データ契約（HTC〜RUN）とレビューゲート |
 | [テスト標準と保証概念](../test-techniques/testing-standards-and-assurance-concepts.md) | **TEST ◎**, MET ○ | — | ISO/IEC/IEEE 29119・ISTQB・オラクル・flaky・カバレッジ限界 |
 | [テスト技法スキルカタログ](../test-techniques/test-techniques-skill-catalog.md) | **TEST ◎** | — | skill-card 形式の技法カタログ（原案 95 技法、135 技法の状態判定は CSV。`technique_refs` の参照先） |
