@@ -8,7 +8,7 @@ description: >
   説明責任・技術的妥当性の5観点で `ArtifactReviewFindingList` を生成し、
   所見の severity から3値 gate_status を機械的に導出する。前工程成果物が
   欠けている場合はその欠落自体を最重要所見として報告する。
-version: 0.1.0
+version: 0.2.0
 inputs:
   review_target_summary:
     type: string
@@ -57,6 +57,14 @@ Tester Skillspace 4象限: テスト技法（中）／ドメイン（軽）／IT
 いないか）を検証することが本スキルの固有の責務である。個々のリンク検査は
 traceability-management、リリース可否は quality-gate-release-judgment が
 担い、本スキルは代行しない（役割分担は手順2を参照）。
+
+本スキルは複合フロー各段のゲート判定の委譲先でもある。quality-orchestrator
+の複合フロー進行管理（[同 SKILL.md 手順7](../quality-orchestrator/SKILL.md)）
+から段ごとに起動される場合、`review_target_summary` にどの段のゲート判定か、
+`artifact_bundle_ref` にその段までの成果物一式、`review_scope_hint` に
+[pipeline-gates.md](../quality-orchestrator/references/pipeline-gates.md)
+の該当フェーズ観点が渡される。本スキルの手順は単体実行時と変わらず、
+手順4で導出した `gate_status` がそのままその段のゲート結果として採用される。
 
 ## 手順
 

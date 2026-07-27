@@ -9,9 +9,9 @@ description: >
   のみを入力とし、10ノードチェーン上の分類結果とルーティング先スキル名を
   出力する。複合的な依頼（要求分析からテストケースまで一気に進めたい等）
   では、risk-analysis・test-requirement-analysis・test-architecture-design・
-  test-design-implementation を順に呼び出し、各段のゲート判定を行う
-  進行管理も担う。
-version: 0.3.0
+  test-design-implementation を順に呼び出し、各段のゲート判定を
+  quality-artifact-review へ委譲しつつ進行管理も担う。
+version: 0.4.0
 inputs:
   consultation_text:
     type: string
@@ -67,9 +67,13 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
 `assumptions`/`open_questions` に記録した上で最上流フェーズからルーティング
 する（[quality-knowledge-schema.md §3 運用ルール1](../../docs/quality-models/quality-knowledge-schema.md#3-ai-エージェントの推論手順)）。
 
-**MVP でのゲート判定の位置づけ（必読）**: MVP ではゲート判定を本スキルに
-内蔵する。Phase 2 で `quality-artifact-review` スキルへ委譲する計画である
-（[skill-ecosystem-design-plan.md §4 ゲート基準](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)）。
+**ゲート判定の位置づけ（必読）**: 複合フロー各段のゲート判定は
+`quality-artifact-review` へ委譲する（手順7）。本スキルは判定結果の3値
+`gate_status` を受け取って遷移（進行・停止）を管理することに専念し、
+ゲート観点の充足判定そのものは行わない。これは
+[skill-ecosystem-design-plan.md §4 ゲート基準](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
+の「MVP では内蔵、Phase 2 で quality-artifact-review スキルへ委譲」の
+委譲を実装した状態である。
 
 ## 手順
 
@@ -113,14 +117,24 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    場合、ルーティング先スキル名を要素1の順序付き配列として分類根拠とともに
    出力する（本スキル自身はルーティング先スキルの手順を代行実行しない。
    呼び出しは利用者または呼び出し環境が行う）。
-7. **複合フローの進行管理（`desired_scope_hint` が複合フローを示す場合）**:
-   risk-analysis を並行起動し、その `RiskRegister` を
-   test-requirement-analysis（TRA）のゲート入力として渡す。以降
-   TRA → test-architecture-design（TAD）→ test-design-implementation
-   （TDD/TI）の順で各スキルを起動する。`routed_skill` にはこの実行順で
-   スキル名を並べ、各段の出力エンベロープの `gate_status` を
-   [references/pipeline-gates.md](references/pipeline-gates.md) の観点で
-   判定する。
+7. **複合フローの進行管理とゲート判定の委譲（`desired_scope_hint` が
+   複合フローを示す場合）**: risk-analysis を並行起動し、その
+   `RiskRegister` を test-requirement-analysis（TRA）のゲート入力として
+   渡す。以降 TRA → test-architecture-design（TAD）→
+   test-design-implementation（TDD/TI）の順で各スキルを起動する。
+   `routed_skill` にはこの実行順でスキル名を並べる。各段のゲート判定は
+   本スキルでは行わず、段の完了ごとに `quality-artifact-review` を次の
+   呼び出し境界で起動して委譲する。
+   - **入力**: `review_target_summary` にどの段のゲート判定かを1〜2文で
+     渡し、`artifact_bundle_ref` にその段までのエンベロープ・成果物一式を、
+     `review_scope_hint` に [references/pipeline-gates.md](references/pipeline-gates.md)
+     の該当フェーズ観点（TRA/TAD/TDD/TI レビュー）を渡す
+   - **出力**: quality-artifact-review が所見の severity 分布から機械的に
+     導出した3値 `gate_status` を、その段のゲート結果として採用する
+   - **短絡則**: 段のスキル自身が `blocked` を返した場合は、委譲呼び出しを
+     行わずその段を `blocked` として扱う
+   採用した `gate_status` に応じて次の遷移を適用する（遷移の管理は本スキル
+   の責務のまま）。
    - `passed`: 次段へそのまま進める
    - `passed-with-risks`: 残存リスクを明示した上で次段へ進める
    - `blocked`: 停止し、利用者にその段までの結果と理由を返す
@@ -239,6 +253,8 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
 ## 関連ドキュメント
 
 - [references/routing-table.md](references/routing-table.md) — 第2段階
-  ルーティング表（Phase 1 中変更凍結）
+  ルーティング表
 - [references/pipeline-gates.md](references/pipeline-gates.md) — 複合フロー
-  のゲート基準（Phase 1 中変更凍結）
+  のゲート観点（quality-artifact-review へ渡す入力チェックリスト）
+- [quality-artifact-review/SKILL.md](../quality-artifact-review/SKILL.md) —
+  各段ゲート判定の委譲先（3値 `gate_status` の導出元）

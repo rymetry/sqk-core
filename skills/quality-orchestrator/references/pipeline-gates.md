@@ -1,21 +1,28 @@
-# パイプラインゲート基準（シード）
+# パイプラインゲート観点
 
 ## 位置づけ
 
-本ファイルは quality-orchestrator が4段階複合フロー（risk-analysis 並行
-→ TRA → TAD → TDD/TI）の各段を進めてよいかを判定するためのゲート基準
-シードである（[skill-ecosystem-design-plan.md §4「ゲート基準」](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
-の表をそのまま採用）。各行の詳細チェックリストは
+本ファイルは、4段階複合フロー（risk-analysis 並行 → TRA → TAD → TDD/TI）
+の各段を進めてよいかを判定するためのゲート観点を定める
+（[skill-ecosystem-design-plan.md §4「ゲート基準」](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)
+の表を採用）。各行の詳細チェックリストは
 [test-process-research-summary-test-design.md §8](../../../docs/test-techniques/test-process-research-summary-test-design.md#8-レビューゲート)
 の該当節を参照する。
 
-## 変更凍結の注記
+ゲート判定そのものは quality-orchestrator ではなく
+[quality-artifact-review](../../quality-artifact-review/SKILL.md) が行う
+（[quality-orchestrator/SKILL.md 手順7](../SKILL.md) の委譲呼び出し）。
+本ファイルのゲート表は、その委譲呼び出しで `review_scope_hint` として
+渡す**入力チェックリスト**であり、quality-orchestrator は返された
+`gate_status` の遷移（進行・停止）管理のみを担う。
 
-[phase1-implementation-guide.md T4](../../../docs/agent-ecosystem/phase1-implementation-guide.md) の
-routing-table.md と同様、判断に迷った場合の追加・変更は Phase 1 中は禁止する。
-統合試行（T12）の結果を根拠に PR で改訂すること。
+## 改訂の注記
 
-## ゲート表
+Phase 1 中の変更凍結（[phase1-implementation-guide.md T4](../../../docs/agent-ecosystem/phase1-implementation-guide.md)
+の規定）は、統合試行（T12）の完了により解除済みである。以降の改訂は
+実測・レビュー結果を根拠に通常の PR で行う。
+
+## ゲート表（quality-artifact-review へ渡す段別の重点観点）
 
 | フェーズ | ゲート観点（要約） | 詳細チェックリスト |
 |---|---|---|
@@ -24,24 +31,36 @@ routing-table.md と同様、判断に迷った場合の追加・変更は Phase
 | TDDレビュー | パラメーター・値候補・制約・カバレッジ・技法・期待結果・ケース数 | [§8.3 TDD レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#83-tdd-レビュー) |
 | TIレビュー | 実行順序・手順・自動化・証跡・再現性 | [§8.4 TI レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#84-ti-レビュー) |
 
-成果物そのものの文書品質（文書点・工程一貫性・トレーサビリティ・説明責任・
-技術的妥当性）まで踏み込んで見たい場合は
+quality-artifact-review は上表の段別観点に加えて、常に
 [§8.5 成果物品質レビュー](../../../docs/test-techniques/test-process-research-summary-test-design.md#85-成果物品質レビュー)
-も参照する（MVP のオーケストレーターは§8.1〜§8.4を主判定に使い、§8.5は
-補助観点とする）。
+の5観点（文書点・工程一貫性・トレーサビリティ・説明責任・技術的妥当性）
+で所見を記録する（同スキル手順2）。上表は「その段で特に落としてはいけない
+観点」を段別に重み付けするためのヒントである。
 
-## `gate_status` 3値と遷移
+## `gate_status` 3値の導出と遷移
 
-各段のハンドオフエンベロープの `gate_status` を、対応するフェーズの
-チェックリスト（上表）に照らして判定し、次の遷移を適用する。
+各段のゲート結果は、quality-artifact-review が所見の severity 分布から
+機械的に導出する（[同 SKILL.md 手順3〜4](../../quality-artifact-review/SKILL.md)）。
+quality-orchestrator はその結果を受けて遷移のみを適用する。
 
-| `gate_status` | 判定方法 | 遷移 |
+| `gate_status` | 導出（quality-artifact-review 手順4） | 遷移（quality-orchestrator 手順7） |
 |---|---|---|
-| `passed` | 該当フェーズの観点をすべて満たし、`assumptions`/`open_questions` が実質空 | 次段へそのまま進める |
-| `passed-with-risks` | 観点の大半は満たすが、`assumptions` または残存リスクがある | 残存リスクを利用者・次段の入力に明示した上で次段へ進める |
-| `blocked` | 観点の欠落が大きい、または前段スキル自身が `blocked` を返した | 次段へ進めず、利用者に理由を添えて返す |
+| `passed` | 所見が minor・info のみ、または所見なし | 次段へそのまま進める |
+| `passed-with-risks` | blocker なし・major が1件以上 | 残存リスクを利用者・次段の入力に明示した上で次段へ進める |
+| `blocked` | blocker が1件以上（前工程成果物の欠落・進行不能の矛盾） | 次段へ進めず、利用者に理由を添えて返す |
+
+**短絡則**: 段のスキル自身が `blocked` を返した場合は、委譲呼び出しを
+行わずその段を `blocked` として扱う（quality-orchestrator 手順7）。
+
+severity の付与原則（文書化済みの仮定＋緩和策つきの逸脱は minor、
+未解決のまま下流の期待値・妥当性を毀損する事項は major、前工程成果物の
+欠落・進行不能の矛盾は blocker）は
+[quality-artifact-review/SKILL.md 手順3](../../quality-artifact-review/SKILL.md)
+を正とする。
 
 ## 関連ドキュメント
 
-- [routing-table.md](./routing-table.md) — 第2段階ルーティング表（同様に Phase 1 中変更凍結）
+- [quality-artifact-review/SKILL.md](../../quality-artifact-review/SKILL.md) — ゲート判定の委譲先（severity 付与と `gate_status` 導出の正）
+- [routing-table.md](./routing-table.md) — 第2段階ルーティング表
 - [skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計) — ゲート基準の正典
+- [phase2-implementation-guide.md T12・T3b](../../../docs/agent-ecosystem/phase2-implementation-guide.md#t12-ゲート判定の-quality-artifact-review14-への委譲) — 委譲の実施根拠（受入基準を含む）
