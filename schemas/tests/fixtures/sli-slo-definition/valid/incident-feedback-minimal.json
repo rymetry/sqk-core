@@ -1,0 +1,8 @@
+{
+  "id": "MON-003",
+  "name": "重大インシデント発生シグナル",
+  "signal_type": "incident",
+  "qc_refs": ["QC-001"],
+  "ac_refs": [],
+  "feedback_target_refs": ["REQ-004", "RISK-001"]
+}

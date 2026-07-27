@@ -1,0 +1,10 @@
+{
+  "id": "MON-002",
+  "name": "検索 API バーンレート警報",
+  "signal_type": "alert",
+  "qc_refs": [],
+  "ac_refs": [],
+  "threshold": "長い窓1時間・短い窓5分でバーンレート 14.4 超（業界標準の仮提案。前提はエンベロープ assumptions を参照）",
+  "owner": null,
+  "feedback_target_refs": []
+}

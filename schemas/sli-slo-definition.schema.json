@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/sli-slo-definition.schema.json",
+  "title": "SliSloDefinition",
+  "description": "正規出典: docs/quality-models/quality-knowledge-schema.md §1.3 MON: Production Monitoring Signal（本番監視シグナル）の完全フィールド契約（id / name / signal_type 5値 / qc_refs / ac_refs / threshold / owner / feedback_target_refs）、および docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #12 sre-quality-ops（出力=SLI/SLO定義（`MON-nnn`））。主参照: docs/operations-quality/production-quality-sre-observability.md（SLI/SLO/SLA・エラーバジェット・バーンレート）。フィールドは正典契約をそのまま転記し発明しない（docs/agent-ecosystem/phase2-implementation-guide.md T2「MON は完全な正典契約に従い発明しない」）。設計判断（正典が明記しない範囲のみ）: (1) required は id / name / signal_type と3つの参照配列とし、参照配列は空を許容する。コールドスタート（上流の QC/AC/REQ/RISK ノードが無い状態）でも item をスキーマ準拠に保ち、暫定性はエンベロープ assumptions[] に記録するため（共通受入基準4 = CS-1/CS-2 準拠）。threshold / owner は未確定でありうるため任意・nullable とする。(2) 本 schema は skill-handoff の知識成果物であり、veridia の runtime evidence（`Evidence` / `ExecutionEvidence`）契約ではない。監視の実装・メトリクス収集・発報は実行系・運用基盤が担い、本 schema は定義の記録形式のみを定める（DECISIONS.md D-012 の実行境界）。product-specific data（実サービスの実測値・エンドポイント等）を fixture・実例に含めない。(3) id の桁数は既存スキーマのハウススタイルに倣い可変桁数を許容する。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^MON-[0-9]+$",
+      "description": "本番監視シグナルの一意ID。出典: quality-knowledge-schema §1.2 ID 規約表（`MON-` 新規 prefix）・§1.3 MON 契約。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "name": {
+      "type": "string",
+      "description": "シグナル名（例: 決済成功率 SLO）。出典: §1.3 MON 契約。"
+    },
+    "signal_type": {
+      "type": "string",
+      "enum": ["slo_sli", "alert", "drift_metric", "user_feedback", "incident"],
+      "description": "シグナル種別。出典: §1.3 MON 契約の値域5値（そのまま転記。追加・変更しない）。"
+    },
+    "qc_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "本番で継続検証している品質特性への参照一覧（例: QC-002）。出典: §1.3 MON 契約。上流の QC ノードが無い場合は空配列とし、前提はエンベロープ assumptions[] に記録する（設計判断(1)）。"
+    },
+    "ac_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "本番で継続検証している受入基準への参照一覧（例: AC-005）。出典: §1.3 MON 契約。空配列の扱いは qc_refs と同じ。"
+    },
+    "threshold": {
+      "type": ["string", "null"],
+      "description": "発報・違反の閾値（エラーバジェット・バーンレート条件等。例: 「30日間の成功リクエスト率 99.9% を下回る」）。出典: §1.3 MON 契約。未確定の場合は null。"
+    },
+    "owner": {
+      "type": ["string", "null"],
+      "description": "対応責任者（ロール名・チーム名）。出典: §1.3 MON 契約。未定の場合は null。"
+    },
+    "feedback_target_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "検知結果を還流する先の REQ-*/RISK-* への参照一覧。出典: §1.3 MON 契約・§1.1 の MON→REQ/RISK 還流ループ（このループがないチェーンは「出荷して終わり」になる）。還流先が未定の場合は空配列とし、open_questions に記録する。"
+    }
+  },
+  "required": ["id", "name", "signal_type", "qc_refs", "ac_refs", "feedback_target_refs"],
+  "additionalProperties": false
+}
