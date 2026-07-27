@@ -63,7 +63,25 @@ Trigger は「その欠陥が表面化するために存在しなければなら
 
 ### 3.4 Impact — 顧客影響の種類
 
-流出時に顧客へ及ぶ影響の種類です。in-process 欠陥では「流出していたら何が起きたか」を、フィールド欠陥では実際の影響を選びます。v5.2 の値は **Installability / Integrity-Security / Performance / Maintenance / Serviceability / Migration / Documentation / Usability / Standards / Reliability / Requirements / Accessibility / Capability** の13種です。これは IBM の伝統的な品質特性系の語彙であり、ISO/IEC 25010:2023 の9特性と一対一対応しません。本リポジトリで品質特性として扱う場合は [iso25010-product-quality-model.md](../quality-models/iso25010-product-quality-model.md) の語彙へマッピングして使い、Impact 属性は「欠陥データ側の分類」として保持します(両者の混用が語彙衝突の典型源です)。
+流出時に顧客へ及ぶ影響の種類です。in-process 欠陥では「流出していたら何が起きたか」を、フィールド欠陥では実際の影響を選びます。v5.2 の値は次の13種です(各行の定義は ODC v5.2 の値定義に基づく要約)。
+
+| Impact | 判定の目安(顧客に何が起きるか) |
+| --- | --- |
+| Installability | 製品のインストール・初期セットアップ・アップグレード作業が完了できない、または過度に困難になる |
+| Integrity-Security | データ・システムの保護が損なわれる(改ざん・喪失・漏えい・不正アクセスの防止の失敗) |
+| Performance | 応答時間・スループットなど、顧客が体感する処理速度が期待水準を満たさない |
+| Maintenance | 保守作業(修正・予防保守の適用)が正しく行えない、または過度に困難になる |
+| Serviceability | 障害発生時の診断・問題判別が困難になる(切り分け・原因特定に足る診断情報が得られない) |
+| Migration | 旧バージョン・他環境からのデータ・設定の移行が正しく行えない |
+| Documentation | マニュアル・公開文書類の誤り・不足により、顧客が正しい情報を得られない |
+| Usability | 機能の理解・習得・操作が困難になる(分かりにくさ・使いにくさ) |
+| Standards | 公的規格・業界標準・合意された規約への適合が損なわれる |
+| Reliability | 期待どおりに一貫して動作し続ける能力が損なわれる(クラッシュ・ハング・異常終了など、必要なときに機能が実行できない) |
+| Requirements | 顧客が期待する要求・機能が満たされない(要求の欠落・誤解による不充足) |
+| Accessibility | 障害のある利用者を含む多様な利用者による製品の利用が妨げられる |
+| Capability | 製品が意図した機能を遂行する能力そのものが損なわれる(上記のいずれにも該当しない機能面の影響) |
+
+この語彙は IBM の伝統的な品質特性系の語彙であり、ISO/IEC 25010:2023 の9特性と一対一対応しません。本リポジトリで品質特性として扱う場合は [iso25010-product-quality-model.md](../quality-models/iso25010-product-quality-model.md) の語彙へマッピングして使い、Impact 属性は「欠陥データ側の分類」として保持します(両者の混用が語彙衝突の典型源です)。
 
 ## 4. closer 属性 — Target・Defect Type・Qualifier・Source・Age
 
