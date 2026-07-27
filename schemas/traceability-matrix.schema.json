@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/traceability-matrix.schema.json",
+  "title": "TraceabilityMatrix",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §7 トレーサビリティ（§7.1 最低限のトレースチェーン・§7.2 トレース項目）、および docs/quality-models/quality-knowledge-schema.md §1.4/§1.5。traceability-management が出力する、フォワード／バックワード双方向トレースの結果。handoff-envelope の content 形の成果物であり、envelope 経由では構造を強制できないため repo-local の専用スキーマとして分離した。chain_links / disconnected_nodes / unreached_downstream を必須とし、advisory_findings（リンク切れではないが注意すべき事項）と summary（集計）は任意。",
+  "type": "object",
+  "properties": {
+    "chain_links": {
+      "type": "array",
+      "description": "確認できたノード間リンクの一覧。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string", "description": "リンク元ノードID。" },
+          "to": { "type": "string", "description": "リンク先ノードID。" },
+          "direction": {
+            "type": "string",
+            "enum": ["forward", "backward"],
+            "description": "トレース方向。§7.1 のチェーン順が forward。"
+          }
+        },
+        "required": ["from", "to", "direction"],
+        "additionalProperties": false
+      }
+    },
+    "disconnected_nodes": {
+      "type": "array",
+      "description": "上流／下流リンクを欠くノードの一覧（§1.5 に照らし何が言えなくなるかを detail に記す）。",
+      "items": { "$ref": "#/$defs/nodeFinding" }
+    },
+    "unreached_downstream": {
+      "type": "array",
+      "description": "下流ノードを持たないノードの一覧（下流展開が未着手なだけの場合を含む）。",
+      "items": { "$ref": "#/$defs/nodeFinding" }
+    },
+    "advisory_findings": {
+      "type": "array",
+      "description": "リンク切れではないが注意すべき事項（任意フィールドの空・スキルセットの契約ギャップ等）。切断ではないためゲート判定に影響しない。",
+      "items": { "$ref": "#/$defs/nodeFinding" }
+    },
+    "summary": {
+      "type": "object",
+      "description": "リンク数・ノード数・到達状況などの集計（自由形式）。",
+      "additionalProperties": true
+    }
+  },
+  "required": ["chain_links", "disconnected_nodes", "unreached_downstream"],
+  "additionalProperties": false,
+  "$defs": {
+    "nodeFinding": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "対象ノードID（複数を要約する場合は範囲・列挙表記も可）。" },
+        "node_type": { "type": "string", "description": "ノード種別（REQ / RISK / HTC / DTC / TAE / COV / TC / STK 等）。" },
+        "reason": { "type": "string", "description": "未接続・注意の理由（例: missing_upstream_link / no_downstream / informal_node）。" },
+        "detail": { "type": "string", "description": "§1.5 に照らし、この欠落で何が言えなくなるか等の補足。" },
+        "detected_by": {
+          "type": "string",
+          "enum": ["forward", "backward"],
+          "description": "検出したトレース方向。"
+        }
+      },
+      "required": ["id", "node_type", "reason"],
+      "additionalProperties": false
+    }
+  }
+}

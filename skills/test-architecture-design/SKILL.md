@@ -7,7 +7,7 @@ description: >
   材料に、テスト全体を意味のある要素（テストアーキテクチャ要素＝TAE）へ
   分解し、レベル・タイプ・サイクル・厚み・担当を割り当て、割当マトリクスと
   ともに出力する。
-version: 0.1.0
+version: 0.2.0
 inputs:
   detailed_test_condition_list_ref:
     type: path
@@ -33,6 +33,8 @@ outputs:
     schema: ../../schemas/handoff-envelope.schema.json
   test_architecture_element:
     schema: ../../schemas/test-architecture-element.schema.json
+  condition_assignment_matrix:
+    schema: ../../schemas/condition-assignment-matrix.schema.json
 capabilities:
   - file_read
 knowledge_refs:
@@ -152,10 +154,9 @@ test-requirement-analysis の成果物（`DetailedTestConditionList`）が存在
 準拠）を必ず出力する。これにより、後から `test-design-implementation` や
 `quality-orchestrator` に再取り込みできる。
 
-`ConditionAssignmentMatrix` は Phase 1 時点で専用の JSON Schema が存在しない
-ため、`schema_ref` には出力データの定義箇所（[§4.5 出力](../../docs/test-techniques/test-process-research-summary-test-design.md#45-4-テストアーキテクチャー設計tad)、
-または [§6.3 TestArchitectureElement のデータ契約](../../docs/test-techniques/test-process-research-summary-test-design.md#63-testarchitectureelement)）
-をポインタとして指定する。マトリクスは各 TAE の `assigned_conditions` と
+`ConditionAssignmentMatrix` は
+[schemas/condition-assignment-matrix.schema.json](../../schemas/condition-assignment-matrix.schema.json)
+に準拠し、`schema_ref` に同スキーマを指定する。マトリクスは各 TAE の `assigned_conditions` と
 内容が重複するが、**「全 DTC が漏れなくどこかの TAE に割当済みか（重複・
 漏れ検査）」を横断的に一覧するための検査ビュー**という位置づけであり、
 TAE 自体の `assigned_conditions` を置き換えるものではない。
@@ -199,7 +200,7 @@ TAE 自体の `assigned_conditions` を置き換えるものではない。
     },
     {
       "type": "ConditionAssignmentMatrix",
-      "schema_ref": "docs/test-techniques/test-process-research-summary-test-design.md#63-testarchitectureelement",
+      "schema_ref": "schemas/condition-assignment-matrix.schema.json",
       "content": {
         "assignments": [
           { "architecture_element_id": "TAE-001", "assigned_conditions": ["DTC-001"] },

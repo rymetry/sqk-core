@@ -1,0 +1,5 @@
+{
+  "chain_links": [],
+  "disconnected_nodes": [ { "id": "DTC-009", "node_type": "DTC" } ],
+  "unreached_downstream": []
+}

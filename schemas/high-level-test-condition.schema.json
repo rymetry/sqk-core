@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/high-level-test-condition.schema.json",
+  "title": "HighLevelTestCondition",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §6.1 基本 ID 体系（`HTC-001`、フィーチャーや品質特性単位の確認側面）、および §7.1 トレースチェーン（REQ --> HTC --> DTC）。test-requirement-analysis（TRA）が出力する HighLevelTestConditionList の各項目。Phase 1 時点では専用スキーマが無く schema_ref がドキュメントアンカーを指すだけだったため、機械検証可能にする目的で追加した（D-011 フェーズA）。items は SKILL の最小形（{id, title}）に合わせる。id の桁数は §6.1 が3桁例のみで厳密規約が無いため可変桁数を許容。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^HTC-[0-9]+$",
+      "description": "ハイレベルテスト条件の一意ID。出典: §6.1 基本ID体系表（`HTC-001`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "title": {
+      "type": "string",
+      "description": "フィーチャーや品質特性単位の確認側面の見出し。出典: §6.1 説明列・§6.2 近傍の DTC 例で参照される `high_level_condition_id` の対象。"
+    }
+  },
+  "required": ["id", "title"],
+  "additionalProperties": false
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/condition-assignment-matrix.schema.json",
+  "title": "ConditionAssignmentMatrix",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §4.5 テストアーキテクチャー設計（タスク4〜5 の担当割当）・§6.3 TestArchitectureElement。test-architecture-design（TAD）が出力する、全 DTC がどの TAE に割当済みかを横断一覧する検査ビュー。handoff-envelope の artifacts[].content に格納する content 形の成果物であり、envelope 経由では構造を強制できないため repo-local の専用スキーマとして分離した（routing-decision.schema.json と同方針）。TAE の assigned_conditions を置き換えるものではなく、重複・漏れ検査のための横断ビューである。",
+  "type": "object",
+  "properties": {
+    "assignments": {
+      "type": "array",
+      "description": "各 TAE への DTC 割当の一覧。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "architecture_element_id": {
+            "type": "string",
+            "pattern": "^TAE-[0-9]+$",
+            "description": "割当先のテストアーキテクチャ要素ID。出典: §6.3 TestArchitectureElement（`TAE-001`）。"
+          },
+          "assigned_conditions": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^DTC-[0-9]+$" },
+            "description": "この TAE が担当する詳細テスト条件のID一覧。出典: §6.2 DetailedTestCondition（`DTC-001`）。"
+          }
+        },
+        "required": ["architecture_element_id", "assigned_conditions"],
+        "additionalProperties": false
+      }
+    },
+    "unassigned_conditions": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^DTC-[0-9]+$" },
+      "description": "どの TAE にも割当されていない詳細テスト条件のID一覧（漏れ検査。空配列が理想）。"
+    }
+  },
+  "required": ["assignments", "unassigned_conditions"],
+  "additionalProperties": false
+}

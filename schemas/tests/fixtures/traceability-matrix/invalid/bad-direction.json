@@ -1,0 +1,5 @@
+{
+  "chain_links": [ { "from": "HTC-001", "to": "DTC-001", "direction": "sideways" } ],
+  "disconnected_nodes": [],
+  "unreached_downstream": []
+}
