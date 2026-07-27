@@ -9,7 +9,7 @@ description: >
   監視基盤の構築や警報の実装そのものは行わない（実行系・運用基盤が担う）。
   サービス概要のみでも起動でき、既存メトリクスが無い場合は業界標準的な
   水準を仮提案して前提を明記する。
-version: 0.1.0
+version: 0.1.1
 inputs:
   service_context_summary:
     type: string
@@ -84,7 +84,10 @@ risk-analysis、リリース可否判定は quality-gate-release-judgment が担
    無い場合は業界標準的な水準を仮提案し、仮提案である旨と根拠を
    `assumptions[]` に `{field,value,reason}` 形式で記録する**（実測に
    基づかない水準を確定値として出さない）。SLA 契約がある場合は
-   SLO を SLA より厳しく設定する（内側の防衛線）。
+   SLO を SLA より厳しく設定する（内側の防衛線）。既存メトリクスが
+   あっても SLI の測定定義を変更した場合（分母の除外規則の追加等）は、
+   既存の実測値をその SLI の参照値にできないため水準を仮提案扱いとし、
+   その前提を `assumptions[]` に `{field,value,reason}` 形式で記録する。
 3. **MON レコードの生成**: 設計した SLI/SLO・警報・還流シグナルを
    [schemas/sli-slo-definition.schema.json](../../schemas/sli-slo-definition.schema.json)
    準拠の `MON-nnn` として記録する。上流成果物（QC/AC ノード）があれば
@@ -106,6 +109,9 @@ risk-analysis、リリース可否判定は quality-gate-release-judgment が担
 6. **DORA 5指標の解釈（依頼が該当する場合）**: [§DORA メトリクス](../../docs/operations-quality/production-quality-sre-observability.md#dora-メトリクスデリバリーパフォーマンスの結果指標)
    に従い、指標の現状と悪化要因の仮説を解釈する。DORA 指標は結果指標で
    あり、個人・チームの評価やターゲット化に使わない原則を出力に明記する。
+   DORA 指標の依頼・データがいずれも無い場合は解釈を行わず、DORA 解釈が
+   非該当である旨と、解釈に必要な入力（デプロイ頻度・変更リードタイム等の
+   データソース）を出力に明記する。
 7. **エンベロープ出力**: 「出力エンベロープ」節の形式で出力する。
    `gate_status` は、サービス特性が把握できず設計不能な場合のみ
    `blocked`、仮提案水準・未確定の還流先・未検証の警報条件が残る場合は
