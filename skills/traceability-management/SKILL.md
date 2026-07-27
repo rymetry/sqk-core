@@ -7,7 +7,7 @@ description: >
   TAE〜COV〜TC の ID 参照群（Markdown/JSON/CSVいずれか）を材料に、フォワード
   ／バックワード双方向でリンク切れ・未接続ノードを検出し、`TraceabilityMatrix`
   とテスト空間3軸マトリクス（Markdownヒート表）を生成する。
-version: 0.2.0
+version: 0.3.0
 inputs:
   artifact_bundle_ref:
     type: path
@@ -120,10 +120,23 @@ TDD-TI）または人間の作業とする。
 7. **Markdown ヒート表への描画（必須）**: 手順6のセルデータを、`test_level`
    を行、`test_type` を列とした小さな Markdown 表に描画し、セル内に
    `status` を絵文字や記号ではなく `covered`/`partial`/`none` の文字列
-   そのままで表示する（プラットフォーム非依存のため）。1軸に収まりきら
+   そのままで表示する（プラットフォーム非依存のため）。**`status: none` の
+   セル（未カバー領域）が表上で識別できる**ようにする（値をそのまま表示する
+   ことで視認可能。カバレッジの穴を見落とさないため）。1軸に収まりきら
    ない場合は `test_process` ごとに表を分割してよい。CSV エクスポート
-   （同じ行×列構造をカンマ区切りで併記したもの）も出力に含める。
-8. **レビュー観点での自己点検**: 検出結果を
+   （同じ行×列構造をカンマ区切りで併記したもの）も出力に含める。Markdown
+   ヒート表を主表現とし（`schemas/test-space-matrix.schema.json` の
+   `heat_table_markdown` で機械検証）、必要に応じて Mermaid 図での代替描画も
+   可とする（[knowledge-management-design.md §6.4](../../docs/agent-ecosystem/knowledge-management-design.md#64-描画とインスタンスの置き場所)）。
+8. **インスタンスの置き場所（必須の申し送り）**: 生成したマトリクスの
+   **インスタンス**（実際に埋まったセルデータ）はプロジェクト固有の
+   テストケースID・カバレッジ状況を含む動的データのため、**本リポジトリには
+   コミットせず**、対象プロジェクト側（`<project>/quality-artifacts/`）または
+   `knowledge/dynamic/` に置く（[knowledge-management-design.md §6.4](../../docs/agent-ecosystem/knowledge-management-design.md#64-描画とインスタンスの置き場所)）。
+   本リポジトリが保持するのはテンプレート（[matrix-template.yaml](../../knowledge/test-space/matrix-template.yaml)）
+   のみである。出力エンベロープ自体は成果物として利用者に返すが、その配置先を
+   利用者へ明示する。
+9. **レビュー観点での自己点検**: 検出結果を
    [quality-knowledge-schema.md §1.4/§1.5](../../docs/quality-models/quality-knowledge-schema.md#14-ノード間関係と双方向トレース)
    （多対多を誤って1対1と扱っていないか、フォワード・バックワード両方向
    を検査したか）に照らして自己点検する。詳細な参照ポインタは
