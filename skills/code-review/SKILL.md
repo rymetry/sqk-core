@@ -9,7 +9,7 @@ description: >
   生成する。静的解析結果が無い場合は目視レビューのみで実施し、
   その旨を出力に必ず明記する。diff のみで起動できる。レビューボットの
   CI 組み込み・静的解析の実行・修正の適用は行わない（実行系が担う）。
-version: 0.1.0
+version: 0.1.1
 inputs:
   review_target_summary:
     type: string
@@ -113,7 +113,9 @@ risk-analysis が担い、本スキルは代行しない。本スキルの固有
    [同 §5.1](../../docs/quality-management/code-review-techniques.md#51-重大度スキーム)
    の基準で blocker / major / minor / info を付す。すべての所見に
    該当箇所（ファイル・行）を付し、blocker / major には「どの入力・
-   状態で何が起きるか」の失敗シナリオを必須とする。**該当行と失敗
+   状態で何が起きるか」の失敗シナリオを必須とする。行番号は**変更
+   適用後ファイルの行**を基準とし、diff ハンクの行番号と混同しない
+   よう該当コードの短い引用を併記する。**該当行と失敗
    シナリオを構成できない指摘は断定せず、question（info）に格下げする
    か出力しない**（[同 §5.2](../../docs/quality-management/code-review-techniques.md#52-判定の軸と根拠の必須化)・
    [§7](../../docs/quality-management/code-review-techniques.md#7-ai-エージェントによるレビューの適用境界)
@@ -128,7 +130,9 @@ risk-analysis が担い、本スキルは代行しない。本スキルの固有
    thought / question=info）を守る。修正提案は可能な限り具体的な代替
    （コード断片・既存実装への参照）を添え、設計判断が分かれる論点は
    選択肢とトレードオフの提示に留める。よい設計判断への praise も
-   所見（info）として含める。
+   所見（info）として含める。question 所見が回答により欠陥へ昇格した
+   場合は、エンベロープを再発行せず、利用者・実行系側での追補として
+   扱う。
 7. **エンベロープ出力**: 「出力エンベロープ」節の形式で出力する。
    `gate_status` は、diff を一切読めなかった場合と blocker 所見が残る
    場合は `blocked`、major 所見が残る（またはリスク受容の記録を条件に
@@ -156,7 +160,13 @@ risk-analysis が担い、本スキルは代行しない。本スキルの固有
 1. **質問は最大3件まで**とし、それ以上は聞かない。優先して聞くべき
    質問は (a) レビュー対象の diff・PR はどこにあるか、(b) 静的解析・
    セキュリティスキャンの結果はあるか、(c) レビュー結果を何に使うか
-   （マージ判断か、指摘の優先度付けか）、の3つに絞る。
+   （マージ判断か、指摘の優先度付けか）、の3つに絞る。この上限は
+   **利用者への対話的な確認質問**の件数上限であり、エンベロープの
+   `open_questions` に記録する未解決事項には件数制限を設けない
+   （test-requirement-analysis の質問リスト運用と同旨）。question
+   種別の所見（info）は所見リスト側に残し、利用者への確認が必要な
+   ものだけを `open_questions` に対応付ける（コード起因の疑義は
+   findings、入力・仕様起因の疑義は `open_questions`）。
 2. 回答が得られない、または利用者が回答不能な場合でも、必ず出力する。
    diff が1件も無い場合は、`review_target_summary` から推定できる
    範囲の「レビューで確認すべき観点の一覧」のみを出し、所見の断定は
@@ -248,6 +258,10 @@ risk-analysis が担い、本スキルは代行しない。本スキルの固有
 とる。blocker / major の所見は `failure_scenario` を null にしない。
 `trace_ids` は、上流成果物（TC・RISK 等）との紐付けが入力に含まれる
 場合のみ当該 ID を列挙し、diff 単体レビューでは空配列とする。
+`trace_ids` に列挙するのは本リポジトリの ID 体系（RISK- / DTC- /
+TC- 等）のノード ID のみとし、テストベース・外部仕様に固有の ID
+（例: 仕様書の F-n・§n）は所見の `statement`・`location`・
+`evidence_ref` 側に記載する。
 `gate_status` は `passed` / `passed-with-risks` / `blocked` の3値の
 いずれかをとる（判定規則は手順7）。
 
