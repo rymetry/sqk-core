@@ -1,0 +1,8 @@
+{
+  "id": "ARF-001",
+  "viewpoint": "process_consistency",
+  "severity": "blocker",
+  "target_refs": ["RiskRegister"],
+  "statement": "レビュー対象バンドルに前工程成果物 RiskRegister が存在しないため、DTC の risk_refs・TAE の厚み判断の根拠が検証できない。前工程成果物の欠落は最重要所見として報告する。",
+  "recommendation": "risk-analysis を実行して RiskRegister を生成するか、リスク評価を実施しない判断の記録を提示すること。"
+}

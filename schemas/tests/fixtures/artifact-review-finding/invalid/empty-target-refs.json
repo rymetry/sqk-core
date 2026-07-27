@@ -1,0 +1,7 @@
+{
+  "id": "ARF-003",
+  "viewpoint": "technical_validity",
+  "severity": "info",
+  "target_refs": [],
+  "statement": "target_refs が空配列（minItems 1 違反）のため invalid。"
+}

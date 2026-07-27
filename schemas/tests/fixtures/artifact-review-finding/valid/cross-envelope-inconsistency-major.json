@@ -1,0 +1,8 @@
+{
+  "id": "ARF-2",
+  "viewpoint": "accountability",
+  "severity": "major",
+  "target_refs": ["03-tra.json", "04-tad.json", "DTC-026"],
+  "statement": "仕様矛盾の裁定結果が後工程エンベロープの rationale 内の記述にのみ存在し、裁定対象を報告した元エンベロープの open_questions は未解決のまま残っている。元エンベロープ単独の読者には期待値が未確定に見える。",
+  "recommendation": "裁定・決定事項を一級の記録として残し、解決済み open_questions の解決先を追跡できるようにすること。"
+}

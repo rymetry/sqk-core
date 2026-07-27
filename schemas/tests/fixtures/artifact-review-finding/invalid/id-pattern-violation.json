@@ -1,0 +1,7 @@
+{
+  "id": "FINDING-001",
+  "viewpoint": "traceability",
+  "severity": "minor",
+  "target_refs": ["06-traceability.json"],
+  "statement": "id が ^ARF-[0-9]+$ に一致しないため invalid。"
+}

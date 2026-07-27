@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/artifact-review-finding.schema.json",
+  "title": "ArtifactReviewFinding",
+  "description": "正規出典: docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #14 quality-artifact-review（出力=`ArtifactReviewFindingList`、文書点・工程一貫性・トレーサビリティ・説明責任・技術的妥当性の5観点）、および docs/test-techniques/test-process-research-summary-test-design.md §8.5 成果物品質レビュー（5観点のチェック定義）。フィールドレベルの正典が無いため、docs/agent-ecosystem/phase2-implementation-guide.md T2 の規定（ハウススタイルで最小導出し、description に設計判断の根拠を記録する）に従う。本 schema は `ArtifactReviewFindingList` の1要素（所見）の契約である。設計判断: (1) severity 4値は、#14 が返す3値 gate_status（handoff-envelope）の機械的根拠として導出した repo-local の区分。blocker=前工程成果物の欠落・進行不能の矛盾（ハブ §3 #14「前工程成果物が欠けている場合はその欠落自体を最重要所見として報告する」の明文規定に対応）／major=未解決のまま下流成果物の期待値・妥当性を毀損する事項／minor=文書化済みの仮定・緩和策つきの逸脱／info=改善提案・記録のみ。severity→gate_status の導出規則は skills/quality-artifact-review/SKILL.md の手順が持ち、本 schema は所見単体の契約に留める。(2) id の `ARF-` prefix は repo-local。所見は品質トレーサビリティチェーン（quality-knowledge-schema.md §1.2）のノードではなく、`target_refs` で既存 ID 体系のノード・成果物を参照する側のため、§1.2 の ID 空間には追加しない。桁数は既存スキーマのハウススタイル（stakeholder.schema.json 等）に倣い可変桁数を許容する。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ARF-[0-9]+$",
+      "description": "所見の一意 ID。ARF- prefix は repo-local の最小導出（正典に所見 ID の規定なし。トレースグラフ非参加）。"
+    },
+    "viewpoint": {
+      "type": "string",
+      "enum": [
+        "document_quality",
+        "process_consistency",
+        "traceability",
+        "accountability",
+        "technical_validity"
+      ],
+      "description": "所見が属する観点。出典: ハブ §3 #14 の5観点 = test-process §8.5 の成果物品質レビュー観点。document_quality=文書点（文書体系・情報量・表現統一・更新性・レビューしやすさ）、process_consistency=工程一貫性（前工程の成果物が次工程で使われているか）、traceability=トレーサビリティ（ID が一意で要求から結果まで追えるか）、accountability=説明責任（出力理由・前提・不明点・採用/不採用理由が残っているか）、technical_validity=技術的妥当性（モデリング・技法・カバレッジ・リスク反映が適切か）。"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["blocker", "major", "minor", "info"],
+      "description": "所見の重大度。gate_status 導出の機械的根拠（区分の定義と設計根拠は本 schema の description を参照）。"
+    },
+    "target_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "所見の対象への参照（1件以上）。エンベロープファイル名・artifact type・既存 ID 体系のノード ID（RISK-001、DTC-026 等）のいずれでもよい自由文字列。前工程成果物の欠落を報告する場合は、欠落している成果物種別名（例: RiskRegister）を指す。"
+    },
+    "statement": {
+      "type": "string",
+      "description": "所見本文。何がどの根拠でどう問題か（または欠落しているか）を記述する。命名は risk-item.schema.json の statement に倣う。"
+    },
+    "recommendation": {
+      "type": ["string", "null"],
+      "description": "是正・改善の提案（任意）。提案が無い記録のみの所見では null。"
+    }
+  },
+  "required": ["id", "viewpoint", "severity", "target_refs", "statement"],
+  "additionalProperties": false
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ARF-30",
+  "viewpoint": "document_quality",
+  "severity": "minor",
+  "target_refs": ["05-tdd-ti.json"],
+  "statement": "trace_ids の列挙規約がエンベロープ間で不整合（全列挙と端点のみが混在）。機械的に trace_ids へ依存する下流ツールはノードを見落とす可能性があるが、items 側の ID は完全なため実害は限定的。",
+  "recommendation": null
+}
