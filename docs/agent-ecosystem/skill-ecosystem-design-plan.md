@@ -377,6 +377,7 @@ sequenceDiagram
 | TADレビュー | 構造・関係・厚み・担当・重複漏れ・粒度 |
 | TDDレビュー | パラメーター・値候補・制約・カバレッジ・技法・期待結果・ケース数 |
 | TIレビュー | 実行順序・手順・自動化・証跡・再現性 |
+| TEレビュー | 欠陥候補の再現性・flaky と欠陥の区別・再テスト/回帰範囲・証跡参照（`log_ref`） |
 
 risk-analysis は TRA と並行実行し、`RiskRegister` を TRA ゲートの必須入力とする。traceability-management は各段後にチェーンリンクを追記する。MVP ではゲート判定をオーケストレーター内蔵とし、Phase 2 で quality-artifact-review スキルへ委譲する。
 

@@ -9,9 +9,10 @@ description: >
   のみを入力とし、10ノードチェーン上の分類結果とルーティング先スキル名を
   出力する。複合的な依頼（要求分析からテストケースまで一気に進めたい等）
   では、risk-analysis・test-requirement-analysis・test-architecture-design・
-  test-design-implementation を順に呼び出し、各段のゲート判定を
+  test-design-implementation を順に呼び出し（実行結果の整理まで求められた
+  場合は test-execution-support を終端段に加える）、各段のゲート判定を
   quality-artifact-review へ委譲しつつ進行管理も担う。
-version: 0.10.0
+version: 0.11.0
 inputs:
   consultation_text:
     type: string
@@ -122,13 +123,19 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    `RiskRegister` を test-requirement-analysis（TRA）のゲート入力として
    渡す。以降 TRA → test-architecture-design（TAD）→
    test-design-implementation（TDD/TI）の順で各スキルを起動する。
+   利用者が実行結果の整理まで求める場合は、TDD/TI の後に実行系
+   （veridia 等）によるテスト実行を経て test-execution-support（TE）を
+   複合フローの終端段として起動する。テストの実行そのものは実行系が担い、
+   本スキルは TE への入力（TC 一式＋実行ログ）の受け渡しと `gate_status`
+   遷移の管理のみを行う（TE 段にも下記と同じゲート委譲を適用し、
+   `review_scope_hint` には pipeline-gates.md の TE レビュー行を渡す）。
    `routed_skill` にはこの実行順でスキル名を並べる。各段のゲート判定は
    本スキルでは行わず、段の完了ごとに `quality-artifact-review` を次の
    呼び出し境界で起動して委譲する。
    - **入力**: `review_target_summary` にどの段のゲート判定かを1〜2文で
      渡し、`artifact_bundle_ref` にその段までのエンベロープ・成果物一式を、
      `review_scope_hint` に [references/pipeline-gates.md](references/pipeline-gates.md)
-     の該当フェーズ観点（TRA/TAD/TDD/TI レビュー）を渡す
+     の該当フェーズ観点（TRA/TAD/TDD/TI/TE レビュー）を渡す
    - **出力**: quality-artifact-review が所見の severity 分布から機械的に
      導出した3値 `gate_status` を、その段のゲート結果として採用する
    - **短絡則**: 段のスキル自身が `blocked` を返した場合は、委譲呼び出しを
@@ -138,6 +145,9 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    - `passed`: 次段へそのまま進める
    - `passed-with-risks`: 残存リスクを明示した上で次段へ進める
    - `blocked`: 停止し、利用者にその段までの結果と理由を返す
+   各段の開始時には、前段ゲートの `recommendation` への対応（実施/見送り
+   ＋理由）を当該段エンベロープの `assumptions` に記録する（勧告の暗黙的な
+   失念を防ぐ）。
 8. **トレーサビリティの一括付与**: 複合フロー（TRA→TAD→TDD/TI）が末尾まで
    進んだ後に `traceability-management` を**1回**呼び、成果物一式に対して
    チェーンリンクを付与する
@@ -146,6 +156,8 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    トレースは下流ノード未生成を「切断」として大量に報告してしまい、
    ノイズになるためである（複合フロー内の各段のゲート判定は手順7の
    `gate_status` が担い、トレーサビリティ検査はフロー末尾でまとめて行う）。
+   複合フローが TE まで進んだ場合は、`RUN-nnn` を含む成果物一式に対して
+   traceability-management を呼ぶ。
    なお、いずれかの段が `blocked` で複合フローが途中停止した場合は、
    その時点までの成果物一式に対して呼ぶ。
 9. **統合レポートの出力**: 単体ルーティング・複合フローのいずれでも、
