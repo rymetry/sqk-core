@@ -10,7 +10,7 @@ description: >
   ドラフト、および `RiskRegister` 更新提案（`RISK-nnn`）を出力する。
   インシデント記録のテキストのみで起動できる。欠陥 DB の運用・
   修正の適用・再発防止策の実装は行わない（実行系が担う）。
-version: 0.1.0
+version: 0.1.1
 inputs:
   analysis_request_summary:
     type: string
@@ -121,6 +121,10 @@ risk-analysis または利用者が行う）、設計段階の hazard analysis �
    プロセス・情報の欠落として記述する。是正策は「注意する・教育する」
    で終わらせず、ガードレール（プロセス変更・自動化・設計変更・
    検出の追加）として提案し、各是正策に効果の検証方法を付す。
+   ポストモーテムドラフトを出力する場合は、最低限の章立てとして
+   **概要／影響／タイムライン／根本原因／寄与要因／アクションと
+   検証方法／未確定事項**を含め、`RcaReport` の `content` に
+   `postmortem_ref`（ドラフト本文への参照）を記録して参照する。
 5. **欠陥群の分布分析**（欠陥群モードの場合）:
    [defect-taxonomy-odc.md §5](../../docs/quality-management/defect-taxonomy-odc.md#5-分布分析のパターン)
    の分析パターン（Defect Type の工程シグネチャ・Trigger による
@@ -163,6 +167,12 @@ risk-analysis または利用者が行う）、設計段階の hazard analysis �
    質問は (a) 欠陥票・インシデント記録はどこにあるか、(b) 修正情報
    （diff・修正記録）はあるか、(c) 分析結果を何に使うか（再発防止か
    ポストモーテム公開か リスク登録簿の更新か）、の3つに絞る。
+   インシデント記録・欠陥票が既に与えられている場合、無意味化した
+   質問枠（例: (a) の欠陥票の所在）は、分類・因果分析に最も効く別の
+   質問へ再配分してよい（上限3件は維持する）。なお「最大3件」は
+   利用者への対話的な確認質問の上限であり、`open_questions` に記録
+   する未解決事項・unknown の件数には上限を設けない
+   （test-requirement-analysis の質問リスト運用と同旨）。
 2. 回答が得られない、または利用者が回答不能な場合でも、必ず出力する。
    記録が1件も無い場合は、`analysis_request_summary` から推定できる
    範囲の「分析に必要な記録・情報の一覧」と RCA 手法の候補のみを
@@ -280,7 +290,10 @@ valid でなければならない（[schemas/README.md の content/items
 使い分け](../../schemas/README.md)）。ODC 属性値は
 [defect-taxonomy-odc.md](../../docs/quality-management/defect-taxonomy-odc.md)
 の値集合を使い、確定できない属性は `"unknown"` とする（値集合の
-増改築はしない。同 §7）。`trace_ids` には提案した RISK- と、入力に
+増改築はしない。同 §7）。`activity`・`trigger`・`impact` 等の属性値の
+正規表記は **kebab-case の英語**（例: `recovery-exception`、
+`design-conformance`）とし、日本語訳・スペース区切り等の表記ゆれを
+させない。`trace_ids` には提案した RISK- と、入力に
 含まれる既存 ID（RUN-・TC- 等）を列挙する。`gate_status` は
 `passed` / `passed-with-risks` / `blocked` の3値のいずれかをとる
 （判定規則は手順7）。
