@@ -49,3 +49,4 @@ source verification backlog は `source_records` を持つ。ここで official 
 ## 現在の調査レーン
 
 - [Software Quality Technique Research](software-quality-technique-research/README.md)
+- [ODC 欠陥タクソノミー調査](odc-defect-taxonomy/README.md)
