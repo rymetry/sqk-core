@@ -19,6 +19,7 @@
 - `stakeholder.schema.json`
 - `test-architecture-element.schema.json`
 - `test-case.schema.json`
+- `test-execution-log.schema.json`
 - `test-space-matrix.schema.json`
 - `traceability-matrix.schema.json`
 
@@ -26,7 +27,8 @@
 
 各 skill は成果物を `handoff-envelope.schema.json` の `artifacts[]` に格納する。要素は `content`（object）か `items`（array）のどちらかで本体を表現する。使い分けは次のとおり。
 
-- **`items`（array 形）**: 同種のレコードが並ぶ集合。各レコードが `^PREFIX-[0-9]+$` の一意 ID を持つトレースグラフのノード列（`StakeholderList` / `RiskRegister` / `HighLevelTestConditionList` / `DetailedTestConditionList` / `TestArchitectureElementList` / `CoverageItemList` / `TestCaseList` 等）。各レコードは対応する per-item schema（`risk-item` など）に個別準拠する。例外として `ArtifactReviewFindingList`（quality-artifact-review の所見一覧）はトレースグラフ非参加だが、一意 ID（`ARF-`）を持つ同種レコードの集合のため items 形＋per-item schema（`artifact-review-finding`）を用いる。
+- **`items`（array 形）**: 同種のレコードが並ぶ集合。各レコードが `^PREFIX-[0-9]+$` の一意 ID を持つトレースグラフのノード列（`StakeholderList` / `RiskRegister` / `HighLevelTestConditionList` / `DetailedTestConditionList` / `TestArchitectureElementList` / `CoverageItemList` / `TestCaseList` /
+  `TestExecutionLog`（RUN）等）。各レコードは対応する per-item schema（`risk-item` など）に個別準拠する。例外として `ArtifactReviewFindingList`（quality-artifact-review の所見一覧）はトレースグラフ非参加だが、一意 ID（`ARF-`）を持つ同種レコードの集合のため items 形＋per-item schema（`artifact-review-finding`）を用いる。
 - **`content`（object 形）**: 単一の構造化オブジェクトで、ID 付きレコードの集合ではないもの（`RoutingDecision` / `ConditionAssignmentMatrix` / `TraceabilityMatrix` / `TestSpaceMatrix` / `release_decision` 等）。`handoff-envelope` の `content` は無制約 object のため、機械検証が要る場合は **repo-local の専用スキーマを別途用意し、skill が `schema_ref` でそれを指す**（envelope 経由では構造を強制できないため）。
 
 **専用スキーマを持たない成果物**: ナラティブ／助言的で ID 体系もトレースグラフ参加もしないもの（`ThreeColorAnalysisReport` 等）は、専用スキーマを設けず `content` に置き、`schema_ref` に skill 定義またはテンプレートへのポインタを指定してよい。この場合、機械検証の対象は envelope 構造（type / schema_ref の存在）に留まる。

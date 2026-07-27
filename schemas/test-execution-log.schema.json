@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://software-quality-knowledge-base.example/schemas/test-execution-log.schema.json",
+  "title": "TestExecutionLogEntry",
+  "description": "正規出典: docs/test-techniques/test-process-research-summary-test-design.md §6.1 基本ID体系表（`RUN-001`＝実行単位の結果）、§4.8 テスト実行（TE。出力 `TestExecutionLog` / `ActualResultList` / `TestResultStatus` / `BlockedTestList`、タスク5「不一致、不正、ブロック、未実行を分類する」、完了条件「実行結果と証跡が残っている」「未実行、スキップ、ブロックの理由が説明できる」）、および docs/agent-ecosystem/skill-ecosystem-design-plan.md §3 #7 test-execution-support（出力=`TestExecutionLog`（`RUN-nnn`））。フィールドレベルの正典が無い（§6.1 は ID 行のみ）ため、docs/agent-ecosystem/phase2-implementation-guide.md T2 の規定（ハウススタイルで最小導出し、description に設計判断の根拠を記録する）に従う。本 schema は `TestExecutionLog` の1要素（実行単位1件の結果レコード）の契約である。設計判断: (1) `verdict` の enum は §4.8 タスク5 の分類語彙（不一致=fail／不正=invalid／ブロック=blocked／未実行=not-run）に合格=pass を加えた5値の repo-local 導出。flaky は verdict ではなく複数 RUN 間の揺れから導く判定のため値に含めない（flaky 判定は skills/test-execution-support/SKILL.md の手順が担う）。(2) `test_case_refs` は TC 定義なしでログから実行単位を逆推定した場合に空配列を許容する。逆推定の暫定性は item ではなくエンベロープ `assumptions[]` に記録する（phase2-implementation-guide 共通受入基準4 = CS-1/CS-2 準拠。item に assumption フィールドを足さない）。上流リンク欠落の検出は traceability-management が担う。(3) 本 schema は skill-handoff の知識成果物であり、veridia の runtime evidence（`ExecutionEvidence`）契約ではない。実行そのものと証跡収集は実行系が担い、本 schema はその結果の記録形式のみを定める（DECISIONS.md D-012 の実行境界）。(4) id の桁数は既存スキーマのハウススタイルに倣い可変桁数を許容する。",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^RUN-[0-9]+$",
+      "description": "実行単位の結果の一意ID。出典: §6.1 基本ID体系表（`RUN-001`）。桁数は出典で明記されていないため可変桁数を許容。"
+    },
+    "test_case_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "実行したテストケース・プロシジャーへの参照一覧（例: TC-001、TPR-001）。出典: §6.1 のチェーン TC→TPR→RUN。TC 定義が無くログから実行単位を逆推定した場合は空配列とし、逆推定の前提はエンベロープ assumptions[] に記録する（設計判断(2)）。"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "fail", "invalid", "blocked", "not-run"],
+      "description": "実行結果の分類。出典: §4.8 タスク5「不一致、不正、ブロック、未実行を分類する」の語彙＋合格（設計判断(1)）。fail=期待結果との不一致、invalid=テスト自体の不正・実行異常、blocked=実行不能、not-run=未実行・スキップ。"
+    },
+    "actual_result": {
+      "type": ["string", "null"],
+      "description": "実結果の記録（任意）。出典: §4.8 タスク3「実結果を記録する」・出力 `ActualResultList`。"
+    },
+    "detail": {
+      "type": ["string", "null"],
+      "description": "不一致・異常の内容、または blocked / not-run の理由（任意。ただし §4.8 完了条件「未実行、スキップ、ブロックの理由が説明できる」のため、verdict が blocked / not-run の場合は記入を推奨）。"
+    },
+    "environment": {
+      "type": ["string", "null"],
+      "description": "実行環境の要約（任意）。出典: §4.8 入力 `VerifiedTestEnvironment`・テスト対象ビルド/バージョン。"
+    },
+    "executed_at": {
+      "type": ["string", "null"],
+      "description": "実行日時（任意）。ISO 8601 形式を推奨するが、ログ由来の表記揺れを許容するため自由文字列とする。flaky 判定（同一 TC の時系列比較）の材料になる。"
+    },
+    "log_ref": {
+      "type": ["string", "null"],
+      "description": "元の実行ログ・証跡への参照（任意）。出典: §4.8 完了条件「実行結果と証跡が残っている」。実行系が保持する証跡へのポインタであり、本リポジトリは証跡本体を保持しない（設計判断(3)）。"
+    }
+  },
+  "required": ["id", "test_case_refs", "verdict"],
+  "additionalProperties": false
+}

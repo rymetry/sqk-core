@@ -1,0 +1,7 @@
+{
+  "id": "RUN-002",
+  "test_case_refs": ["TC-005", "TPR-002"],
+  "verdict": "blocked",
+  "detail": "決済ゲートウェイのサンドボックスが停止しており実行不能（環境起因）",
+  "environment": "staging / build 1.4.2"
+}
