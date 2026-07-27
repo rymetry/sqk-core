@@ -1,0 +1,8 @@
+{
+  "id": "RUN-003",
+  "test_case_refs": [],
+  "verdict": "fail",
+  "actual_result": "timeout_retry_spec: リトライ3回後に 504 を返し失敗",
+  "detail": "TC 定義が入手できず、CI ログのテスト名から実行単位を逆推定した（前提はエンベロープ assumptions を参照）",
+  "executed_at": "2026-07-27T10:05:12+09:00"
+}

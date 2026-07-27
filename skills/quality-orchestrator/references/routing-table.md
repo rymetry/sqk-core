@@ -18,7 +18,7 @@
 | RISK | リスクを洗い出す／優先度・厚みを決めたい | risk-analysis | MVP |
 | TEST | テストを構造化する／どの粒度・順序・環境でやるか設計する | test-architecture-design | MVP |
 | TEST | テストケースを作る／技法を選ぶ | test-design-implementation | MVP |
-| TEST | テストを実行した結果をまとめる／flaky を切り分ける | test-execution-support | P2 |
+| TEST | テストを実行した結果をまとめる／flaky を切り分ける | test-execution-support | P2（実装済み） |
 | TEST | 探索的にテストしたい／チャーターを選びたい | exploratory-testing-support | P2 |
 | （全ノード） | 紐づきを確認する／カバレッジを可視化する | traceability-management | MVP |
 | EV, REL | リリース判定する／品質ゲートを通してよいか | quality-gate-release-judgment | MVP |
@@ -32,7 +32,7 @@
 
 ## フォールバック規則
 
-[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。ただし **`quality-artifact-review`（#14）は実装済み**（[D-011 フェーズB追記](../../../DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)で defer→keep へ格上げ・実装）のため、MVP スキルと同様に通常どおりルーティングする。
+[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。ただし **`quality-artifact-review`（#14）と `test-execution-support`（#7）は実装済み**（#14 は [D-011 フェーズB追記](../../../DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)で defer→keep へ格上げ、#7 は [D-012](../../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ) ウェーブ1で作成）のため、MVP スキルと同様に通常どおりルーティングする。
 
 ## 関連ドキュメント
 
