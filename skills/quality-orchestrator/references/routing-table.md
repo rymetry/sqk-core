@@ -22,7 +22,7 @@
 | TEST | 探索的にテストしたい／チャーターを選びたい | exploratory-testing-support | P2 |
 | （全ノード） | 紐づきを確認する／カバレッジを可視化する | traceability-management | MVP |
 | EV, REL | リリース判定する／品質ゲートを通してよいか | quality-gate-release-judgment | MVP |
-| QC | 非機能をレビューする／特性間のバランスを見る | nfr-review | P2 |
+| QC | 非機能をレビューする／特性間のバランスを見る | nfr-review | P2（実装済み） |
 | MON, MET | SLO/SLI を設計する／DORA 指標を解釈する | sre-quality-ops | P2 |
 | TEST（コード差分） | PR・コードをレビューする／静的解析結果を優先度付けする | code-review | P2 |
 | RISK, MON | 障害・欠陥を分析する／RCA・ポストモーテム | defect-analysis-rca | P2 |
@@ -32,7 +32,7 @@
 
 ## フォールバック規則
 
-[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。ただし **`quality-artifact-review`（#14）と `test-execution-support`（#7）は実装済み**（#14 は [D-011 フェーズB追記](../../../DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)で defer→keep へ格上げ、#7 は [D-012](../../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ) ウェーブ1で作成）のため、MVP スキルと同様に通常どおりルーティングする。
+[skill-ecosystem-design-plan.md §4](../../../docs/agent-ecosystem/skill-ecosystem-design-plan.md) のとおり: 曖昧な場合は明確化質問1回まで → それでも定まらない場合は入力が揃っている最上流フェーズへ。P2/P3 スキル宛と判定された場合、「該当スキルは未実装。手動で `docs/` の該当文書（ルーティング表の Phase 列参照）を参照すること」と案内する。ただし **`quality-artifact-review`（#14）・`test-execution-support`（#7）・`nfr-review`（#11）は実装済み**（#14 は [D-011 フェーズB追記](../../../DECISIONS.md#d-011-phase-2-backlog-の再評価vertical-slice-根拠)で defer→keep へ格上げ、#7/#11 は [D-012](../../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ) ウェーブ1で作成）のため、MVP スキルと同様に通常どおりルーティングする。
 
 ## 関連ドキュメント
 
