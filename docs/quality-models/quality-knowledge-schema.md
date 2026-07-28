@@ -343,6 +343,7 @@ flowchart TD
 | [品質メトリクスの落とし穴](../quality-management/quality-metrics-pitfalls.md) | **MET ◎** | — | メトリクス誤用・Goodhart 対策（`gaming_risk` の根拠） |
 | [コードレビュー技法](../quality-management/code-review-techniques.md) | **TEST ◎**（静的テスト・レビュー）, EV ○ | — | IEEE 1028 レビュー体系・静的解析結果の解釈・所見の重大度付け・レビューコメント作法 |
 | [欠陥タクソノミーと ODC](../quality-management/defect-taxonomy-odc.md) | **MET ◎**（欠陥分布の in-process 測定）, RISK ○, TEST ○ | — | ODC 8属性・トリガー/インパクト・欠陥分布分析・RCA との補完（#10 の主参照） |
+| [事業品質メトリクス手法](../quality-management/business-quality-metrics-methods.md) | **MET ◎**（事業指標×品質シグナルの相関）, MON ○ | — | VOC/NPS/チャーン/LTV の定義・限界・確率モデルと GQM 相関分析設計（#15 の主参照。因果は主張しない） |
 | [テスト活動プロセス調査まとめ（テスト設計）](../test-techniques/test-process-research-summary-test-design.md) | RISK ○, **TEST ◎**, EV ○ | — | TEST ノード内部の詳細データ契約（HTC〜RUN）とレビューゲート |
 | [日本発テスト設計技法](../test-techniques/japanese-test-design-methods.md) | **TEST ◎**（テスト分析・観点体系化）, REQ ○ | — | 3色ボールペン分析・テスト観点・ゆもつよメソッド・HAYST 法・NGT/VSTeP（#1/#3 の技法参照） |
 | [テスト標準と保証概念](../test-techniques/testing-standards-and-assurance-concepts.md) | **TEST ◎**, MET ○ | — | ISO/IEC/IEEE 29119・ISTQB・オラクル・flaky・カバレッジ限界 |
