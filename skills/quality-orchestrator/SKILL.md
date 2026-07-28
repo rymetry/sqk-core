@@ -12,7 +12,7 @@ description: >
   test-design-implementation を順に呼び出し（実行結果の整理まで求められた
   場合は test-execution-support を終端段に加える）、各段のゲート判定を
   quality-artifact-review へ委譲しつつ進行管理も担う。
-version: 0.12.0
+version: 0.13.0
 inputs:
   consultation_text:
     type: string
@@ -103,16 +103,13 @@ test-design-implementation（TDD/TI）の4段階複合フローを進行管理�
    どのスキルの最小入力も満たさない truly-empty の相談時は、フェーズ順最上流の
    `test-requirement-analysis` に着地し、以降は当該スキルのコールドスタート
    分岐に委ねる（[skill-ecosystem-design-plan.md §4「上流から手当てする」](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#4-オーケストレーション設計)）。
-5. **P2/P3 スキル宛の案内**: 分類結果が [routing-table.md フォールバック
-   規則](references/routing-table.md#フォールバック規則) に従い未実装の
-   P2/P3 スキル
-   （`business-quality-metrics`）と判定された場合、「該当スキルは
-   未実装。`docs/` の該当文書（ルーティング表の Phase 列
+5. **P2/P3 スキル宛の案内**: [routing-table.md フォールバック
+   規則](references/routing-table.md#フォールバック規則) のとおり、
+   現在ルーティング表の全スキルは実装済みであり（`business-quality-metrics`
+   を含む。D-012 ウェーブ3で完了）、Phase 列に関わらず手順6の単体
+   ルーティングとして扱う。未実装スキルの行が将来追加された場合のみ、
+   「該当スキルは未実装。`docs/` の該当文書（ルーティング表の Phase 列
    参照）を手動で参照すること」と案内し、`gate_status: blocked` を返す。
-   `quality-artifact-review`・`test-execution-support`・`code-review`・
-   `defect-analysis-rca`・`nfr-review`・`sre-quality-ops`・
-   `ai-system-quality-eval`・`exploratory-testing-support` は実装済みの
-   ため本手順の対象外であり、手順6の単体ルーティングとして扱う。
 6. **単体ルーティングの実行**: MVP スキル1つへのルーティングと判定した
    場合、ルーティング先スキル名を要素1の順序付き配列として分類根拠とともに
    出力する（本スキル自身はルーティング先スキルの手順を代行実行しない。
