@@ -109,7 +109,7 @@ T7:  #10 defect-analysis-rca        （T1 ODC 文書に依存）
 T8:  #11 nfr-review                 （1スキル+4レンズ）
 T9:  #12 sre-quality-ops
 T10: #13 ai-system-quality-eval
-T11: #8  exploratory-testing-support  （役割境界「探索実行は人間」を厳守）
+T11: #8  exploratory-testing-support  （役割境界「探索実行主体は AI エージェント（実行系）、スキルは選定・設計・後処理」を厳守。D-012 で改訂）
 ```
 
 **根拠**: #14 を最初に置くのは、後続 T12（ゲート委譲）の受け皿であり、メタレビュー観点が他スキルの受入観点の土台になるため（SKILL.md 作成は正典/schema に対して行い、実成果物は不要。メタレビューの受入試験は T14 で実施）。#9/#10 は T1 のナレッジ文書に依存するので文書完成後。残りは `docs/` の充実度が高くデータ契約リスクが低い順に並べる。
@@ -138,7 +138,7 @@ T11: #8  exploratory-testing-support  （役割境界「探索実行は人間」
 | #11 nfr-review | 1スキル+4レンズ構成。未指定時は全4レンズを実施し対象外を「非該当」と明記する。**トレードオフマトリクスを必須出力**する（[ハブ §3 #11](./skill-ecosystem-design-plan.md#3-スキル定義一覧)） |
 | #12 sre-quality-ops | サービス概要のみで起動する。既存メトリクスなし時は業界標準 SLO を仮提案し前提を `assumptions[]` に記録する。`MON-nnn`（`sli-slo-definition`）＋エラーバジェットポリシー＋バーンレート警報＋DORA5指標解釈を出力する |
 | #13 ai-system-quality-eval | AI 機能説明のみで起動する。既存評価データなし時はゴールデンセット設計指針に留める。pass@k/pass^k・LLM-judge バイアス・メタモルフィックテスト・多段CI を含む評価設計を出力する |
-| #8 exploratory-testing-support | 対象機能説明のみで起動する。リスク情報なし時は汎用チャーターを優先する。[チャーターカタログ](../exploratory-testing/exploratory-testing-charter-catalog-by-tour.md)の `CHT-Cnn` 表記で推奨チャーターとデブリーフ要約を出力し、**「探索実行は人間」の役割境界を出力に明記**する |
+| #8 exploratory-testing-support | 対象機能説明のみで起動する。リスク情報なし時は汎用チャーターを優先する。[チャーターカタログ](../exploratory-testing/exploratory-testing-charter-catalog-by-tour.md)の `CHT-Cnn` 表記で推奨チャーターとデブリーフ要約を出力し、**「探索実行主体は AI エージェント（veridia 等の実行系）であり、本スキルは実行しない。価値判断・重大度・リリース可否の最終判断は人間」の役割境界を出力に明記**する（[D-012](../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)で改訂） |
 
 **各タスクの受入基準**: 各 T は「共通受入基準10項目」＋「上表の該当スキル1行」を満たすことをもって完成とする。
 

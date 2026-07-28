@@ -51,3 +51,4 @@ source verification backlog は `source_records` を持つ。ここで official 
 - [Software Quality Technique Research](software-quality-technique-research/README.md)
 - [ODC 欠陥タクソノミー調査](odc-defect-taxonomy/README.md)
 - [日本発テスト設計技法調査](japanese-test-design-methods/README.md)
+- [探索的テストの AI 実行境界調査](exploratory-ai-execution/README.md)

@@ -56,7 +56,7 @@
 | test-techniques/test-techniques-skill-catalog.md | ~1040 | 135技法のYAMLスキルカード、S/A/B/R優先度、トップ20、ターゲット別レシピ、状況→技法選択マトリクス | テスト技法 | TEST |
 | test-techniques/software-test-techniques-catalog-delivery.md | ~130 | カタログ検証レポート（95→135技法、AI/ML技法は保守的信頼度） | テスト技法 | TEST |
 | test-techniques/test-technique-status-assessment.csv | 135行 | 技法目録CSV（ID・和英名・状態・優先度・参照URL） | テスト技法 | TEST |
-| exploratory-testing/exploratory-testing-concepts-and-practice.md | ~1100 | ET理論・SBTM・小/大区分・AI支援境界（提案と後処理まで、探索は人間） | 探索的テスト | TEST |
+| exploratory-testing/exploratory-testing-concepts-and-practice.md | ~1100 | ET理論・SBTM・小/大区分・AI支援境界（探索実行主体=AIエージェント、人間は監督・最終判断。[D-012](../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)で改訂） | 探索的テスト | TEST |
 | exploratory-testing/exploratory-testing-tours-verification-final.md | ~340 | ツアー出典検証（Whittaker正典／二次／現代拡張、信頼度A/B/C） | 探索的テスト | TEST |
 | exploratory-testing/exploratory-testing-perspective-library.md | ~1350 | 検証済みツアーレンズ集（観点辞書） | 探索的テスト | TEST |
 | exploratory-testing/exploratory-testing-charter-catalog-by-tour.md | ~2500 | 実行可能チャーター50件（C01–C50、P0/P1/P2、AI/LLM向け6件） | 探索的テスト | TEST |
@@ -192,7 +192,7 @@ flowchart TB
 
 ### #8 exploratory-testing-support
 
-- **目的**: 50チャーター（C01–C50）からの選定提案、SBTM セッションログの後処理・デブリーフ支援。**探索の実行そのものは人間が行う**という役割境界を厳守する。
+- **目的**: 50チャーター（C01–C50）からの選定提案、SBTM セッションログの後処理・デブリーフ支援。**探索の実行主体は AI エージェント（veridia 等の実行系）であり、本スキルはチャーター選定・セッション設計・デブリーフ後処理のブループリントに徹する（実行・証跡収集は実行系、最終判断は人間が担う。[D-012](../../DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)で改訂）**という役割境界を厳守する。
 - **トリガー条件**: 「この機能を探索的にテストするならどのチャーターが向いているか」「セッションログをまとめてほしい」等の依頼。
 - **入力・出力**: 入力＝対象機能、リスク傾向。出力＝推奨チャーターリスト（[チャーターカタログ](../exploratory-testing/exploratory-testing-charter-catalog-by-tour.md)の `C01`〜`C50`。トレースID としては本設計が導入する `CHT-` プレフィックス付き表記、例: `CHT-C07`）＋セッションデブリーフ要約。
 - **依存ナレッジ・技法**: [exploratory-testing/](../exploratory-testing/exploratory-testing-concepts-and-practice.md) 全4ファイル（概念、ツアー検証、観点ライブラリ、チャーターカタログ）。4象限：テスト技法（重、ET固有）／ドメイン（中）／ITスキル（軽）／コミュニケーション（デブリーフ支援、重）。
