@@ -123,7 +123,9 @@ UX 質問紙（SUS/CSAT）の運用は
    `gate_status` は、分析目的が読み取れない場合のみ `blocked`、枠組み
    提示モード・分析設計モード（データ不足）または交絡未記録のまま
    所見を出した場合は `passed-with-risks`、両系列データ・交絡記録付きで
-   設計と所見まで揃った場合は `passed` とする。
+   設計と所見まで揃った場合は `passed` とする。両系列が揃っていても、
+   選定指標の一部で所見を保留・部分的とした場合（測定条件の分断・
+   層別未実施等のデータ品質の制約）は `passed-with-risks` とする。
 
 ## 最小入力契約
 
@@ -192,6 +194,10 @@ UX 質問紙（SUS/CSAT）の運用は
             "qc_refs": [],
             "gaming_risk": "救済オファーによる引き留めが残存率を粉飾しうるため、救済オファー適用顧客を除外した系列を対で集計する"
           }
+        ],
+        "required_data": [
+          "障害遭遇顧客フラグ（SLO 違反時間帯のアクティブ利用）の顧客単位抽出",
+          "解約理由自由記述の VOC ニーズカテゴリ整備（未整備の間は品質起因構成比の所見を出さない）"
         ]
       }
     },
@@ -249,7 +255,10 @@ UX 質問紙（SUS/CSAT）の運用は
 `proposed_metrics` の各項目は
 [quality-knowledge-schema.md の MET ノード属性](../../docs/quality-models/quality-knowledge-schema.md)
 （`id`/`name`/`definition`/`unit`/`target`/`collection_point`/`qc_refs`/
-`gaming_risk`）に従い、`gaming_risk` を必ず埋める。
+`gaming_risk`）に従い、`gaming_risk` を必ず埋める。不足データの一覧
+（枠組み提示モード・分析設計モードの主出力、相関所見モードでも所見の
+前提となる未取得データ）は `GqmStructure` の `content.required_data`
+に列挙する。
 `CorrelationFindings.findings[].causal_claim` は常に `false` とし、因果に
 関する内容は `intervention_proposal`（介入設計の提案）へ分離する。
 数値例・顧客データは出力例に含めない（動的ナレッジの排除。P5）。
@@ -261,5 +270,5 @@ UX 質問紙（SUS/CSAT）の運用は
 
 - [business-quality-metrics-methods.md](../../docs/quality-management/business-quality-metrics-methods.md) — VOC・NPS・チャーン・LTV の手法と相関分析設計の主参照
 - [quality-metrics-pitfalls.md](../../docs/quality-management/quality-metrics-pitfalls.md) — ゲーミング耐性・カウンターメトリクスの正典
-- [software-quality-management-practical-reference.md](../../docs/quality-management/software-quality-management-practical-reference.md) — GQM の品質管理文脈・COQ
+- [software-quality-management-practical-reference.md](../../docs/quality-management/software-quality-management-practical-reference.md) — 観察用／制御用の指標区分・経営指標との接続（「品質指標と測定設計」節）
 - [accessibility-ux-human-centered-quality.md](../../docs/human-centered-quality/accessibility-ux-human-centered-quality.md) — SUS/NPS/CSAT の質問紙運用・運用シグナル還流
