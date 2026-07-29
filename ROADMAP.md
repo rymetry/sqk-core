@@ -56,3 +56,5 @@ defer 項目のベースを依存の軽い順にウェーブで作成し、各�
 ### 6. Phase 3 素材
 
 Phase 3 相当の export、platform 展開などは素材のみ保持する。着手判断は Phase 2 の実装と実測が終わった後に行う。
+
+**実施注記（2026-07-29）**: 5節の全ウェーブ完了を受け、veridia 取り込みの sqk-core 側インターフェース（取り込み単位・取り込み面・実行境界・フィードバック経路）を [platforms/veridia/README.md](./platforms/veridia/README.md) に文書化した（[D-013](./DECISIONS.md#d-013-実行系veridia取り込みインターフェースの文書化)）。GPTs エクスポートビルドスクリプト等その他の Phase 3 素材は引き続き素材のみ保持する。
