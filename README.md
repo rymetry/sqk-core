@@ -50,7 +50,7 @@ canonical docs へ昇格する前に、次を確認する。
 
 ## veridia との関係
 
-veridia は将来の runtime consumer である。本リポジトリは、veridia が将来 import しうる stable knowledge、blueprint、taxonomy、schema を提供しうるが、runtime artifacts への mapping は veridia 側で扱う。
+veridia は将来の runtime consumer である。本リポジトリは、veridia が将来 import しうる stable knowledge、blueprint、taxonomy、schema を提供しうるが、runtime artifacts への mapping は veridia 側で扱う。取り込み単位・取り込み面・フィードバック経路の sqk-core 側インターフェースは [platforms/veridia/README.md](./platforms/veridia/README.md) に定める。
 
 ## ガードレール
 
