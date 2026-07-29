@@ -48,8 +48,8 @@ defer 項目のベースを依存の軽い順にウェーブで作成し、各�
 
 1. **ウェーブ1（依存が軽い4スキル）**: `test-execution-log` schema（RUN）→ #7 test-execution-support、#11 nfr-review、`sli-slo-definition` schema（MON）+ #12 sre-quality-ops、#13 ai-system-quality-eval
 2. **ウェーブ2（ナレッジ文書が先行する2スキル + 既存チェーン補強）**: `code-review-techniques.md` → #9 code-review、`defect-taxonomy-odc.md` → #10 defect-analysis-rca、`japanese-test-design-methods.md` + #1/#3 の knowledge_refs 再配線
-3. **ウェーブ3（正典の前提変更を伴う2件）**: exploratory 知識文書の AI 実行境界改訂 → #8 exploratory-testing-support（探索実行主体 = AI エージェント。実行系は veridia 側）、VOC・NPS・チャーン・LTV 相関の新規文書 → #15 business-quality-metrics（P3 据え置き解除）
-4. **ウェーブ4（実行と再評価）**: 各ベース作成後の dry-run、ウェーブ1完了時点で TRA→TAD→TDD/TI→TE の統合試行（ロールプレイ + サンプルログ。#14 ゲート委譲の実地検証を兼ねる）。実実行ベースの評価は veridia がスキルを取り込んだ後のフィードバックで行う。**実施済み（2026-07-28）**: 統合試行1本+単体 dry-run 6本（#7/#9/#10/#11/#12/#13）を完了し、全ベース keep・drop なしと再評価した。結果と修正方針は [D-012 ウェーブ4追記](./DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)を参照（修正は小 PR 群で反映。ウェーブ3は未着手のまま残る）
+3. **ウェーブ3（正典の前提変更を伴う2件）**: exploratory 知識文書の AI 実行境界改訂 → #8 exploratory-testing-support（探索実行主体 = AI エージェント。実行系は veridia 側）、VOC・NPS・チャーン・LTV 相関の新規文書 → #15 business-quality-metrics（P3 据え置き解除）。**実施済み（2026-07-28）**: ベース作成（正典改訂・新規ナレッジ文書・スキル2本）に続き、ウェーブ4と同方式の単体 dry-run 2本（#8/#15）で再評価し、いずれも keep・drop なし。結果と修正方針は [D-012 ウェーブ3追記](./DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)を参照（修正は小 PR 群で反映。これで本節の全ウェーブが完了）
+4. **ウェーブ4（実行と再評価）**: 各ベース作成後の dry-run、ウェーブ1完了時点で TRA→TAD→TDD/TI→TE の統合試行（ロールプレイ + サンプルログ。#14 ゲート委譲の実地検証を兼ねる）。実実行ベースの評価は veridia がスキルを取り込んだ後のフィードバックで行う。**実施済み（2026-07-28）**: 統合試行1本+単体 dry-run 6本（#7/#9/#10/#11/#12/#13）を完了し、全ベース keep・drop なしと再評価した。結果と修正方針は [D-012 ウェーブ4追記](./DECISIONS.md#d-012-土台先行のベース作成と再評価ループ)を参照（修正は小 PR 群で反映。ウェーブ3は本注記の時点では未着手で、その後実施済み——上記ウェーブ3の注記を参照）
 
 ナレッジ文書は上記と独立に、[ハブ §1 不足領域リスト](./docs/agent-ecosystem/skill-ecosystem-design-plan.md#不足領域リスト)等のキーワードを起点とした先行文書化を随時行ってよい（`docs/_research/` の昇格手続きに従う）。
 
