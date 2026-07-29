@@ -117,7 +117,7 @@ test-design-implementation、実行結果ログの体系的なトリアージ
      使う（[ハブ §3 #8](../../docs/agent-ecosystem/skill-ecosystem-design-plan.md#3-スキル定義一覧)）。
 4. **セッション設計（SBTM）**: 選定チャーターごとに、
    [SBTM の基本プロセス](../../docs/exploratory-testing/exploratory-testing-concepts-and-practice.md#sbtmと運営実務)
-   と AI 支援セッション用チャーターテンプレートに従い、次を設計する。
+   と [AI 支援セッション用チャーターテンプレート](../../docs/exploratory-testing/exploratory-testing-concepts-and-practice.md#テンプレート集)に従い、次を設計する。
    - チャーター本文（`EXPLORE / WITH / TO DISCOVER` 構文）
    - 時間枠（標準 40〜90 分。`time_budget` があればそれに従う）
    - 実行主体（AI エージェント／人間。既定は AI エージェント）と
@@ -125,8 +125,11 @@ test-design-implementation、実行結果ログの体系的なトリアージ
    - 記録項目（セッションノート・TBS・異常候補・証跡参照）。実行系が
      何を証跡として残すべきかを指定するのは本スキルの責務だが、
      収集そのものは実行系が行う
-   - チャーターに情報を入れ過ぎない（詰め込みは探索空間を狭める。
-     [同文書のチャーター設計の注意](../../docs/exploratory-testing/exploratory-testing-concepts-and-practice.md#探索的テストの基礎)）
+   - チャーターに情報を入れ過ぎない（詰め込みは探索を再びスクリプト型へ
+     押し戻す。
+     [同文書のテンプレート運用上のコツ](../../docs/exploratory-testing/exploratory-testing-concepts-and-practice.md#テンプレート運用上のコツ)
+     「目的と境界は明示、具体手順は固定しすぎない」「ログは濃く、
+     チャーターは薄く」）
 5. **デブリーフ後処理**（デブリーフモードの場合）: `session_log_ref` の
    ログを読み、次を要約する。
    - チャーター達成度（何を探索し、何を探索しなかったか）
@@ -262,13 +265,20 @@ test-design-implementation、実行結果ログの体系的なトリアージ
 デブリーフモードでは `DebriefSummary`（`schema_ref` は本 SKILL.md）を
 artifacts に追加し、チャーター達成度・観察事項・異常候補（重大度候補
 まで。確定はしない）・次チャーター提案・下流へ渡す欠陥候補を `content`
-に記録する。`charter_id` は必ず `CHT-Cnn` 表記とし、
+に記録する（フィールド名の例: `charter_achievement` /
+`anomaly_candidates` / `next_charter_proposals` /
+`handoff_to_downstream`。実行のたびの命名の発散を避けるため、特段の
+理由がなければこの命名に揃える）。`charter_id` は必ず `CHT-Cnn` 表記とし、
 [チャーターカタログ](../../docs/exploratory-testing/exploratory-testing-charter-catalog-by-tour.md)
 に実在する C01〜C50 のみを参照する（独自チャーターを追加する場合は
 `charter_id` を付けず、カタログ外である旨を明記する）。`trace_ids` には
 推奨した CHT- と、入力に含まれる既存 ID（RISK-・REQ- 等）を列挙する。
 `role_boundary` は毎回のエンベロープに必須とする（phase2 ガイドの #8
-受入観点）。`gate_status` は `passed` / `passed-with-risks` / `blocked`
+受入観点）。置き場所は `CharterRecommendationList` の `content` とし、
+デブリーフ単独モードで `CharterRecommendationList` を出力しない場合は
+`DebriefSummary` の `content` に置く（エンベロープのトップレベルには
+置けない。[handoff-envelope schema](../../schemas/handoff-envelope.schema.json)
+が追加プロパティを許容しないため）。`gate_status` は `passed` / `passed-with-risks` / `blocked`
 の3値のいずれかをとる（判定規則は手順6）。
 
 ## 関連ドキュメント
