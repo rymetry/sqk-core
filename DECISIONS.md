@@ -113,3 +113,5 @@
 配置を `check.py` にしたのは、CI（[.github/workflows/check.yml](./.github/workflows/check.yml)）が実行するのは `check.py` と pytest の2つであり、`npx ajv-cli` に依存する `validate-schemas.sh` は CI に含めていないためである。検証層を `validate-schemas.sh` に置くと CI で発火せず、「再発を防ぐ」という本決定の目的を満たさない。`validate-schemas.sh` を CI に足す案は、このリポジトリを Node プロジェクト化しない方針（`package.json`・lockfile・`node_modules` を置かない）と、実行ごとの npx 取得に依存する不安定さから採らない。`check.py` は既に `jsonschema` に依存しており、CHECK4 で SKILL.md frontmatter の参照解決を検証しているため、宣言と実体の一致を見る検査群として一貫する。
 
 検証対象に SKILL.md の出力例を含めたのは、consumer が実際に契約として読むのは fixture ではなく SKILL.md の出力例だからである（Issue #48 の影響範囲）。導入時点で SKILL.md 側の例31件はすべて適合しており、遡及的な修正は生じていない。散文の `schema_ref`（17件）を許容するのは、成果物種別によっては JSON Schema が未定義で、正典文書を出典として指しているためである。
+
+**モジュール分割追記（2026-08-02）**: CHECK6 の追加で `scripts/check.py` が856行になり、1ファイルの目安（800行）を超えたため、振る舞いを変えずに3分割した。`scripts/check_common.py`（結果型・ツリー走査・Markdown 解析）、`scripts/check_envelopes.py`（CHECK6 本体）、`scripts/check.py`（CHECK1〜CHECK5・`run_checks`・CLI）。入口は `uv run scripts/check.py` のままで、CI・実行方法は変わらない。分割後の出力は分割前と一致する（CHECK1 の検査対象数のみ、新規2ファイル分だけ増える）。

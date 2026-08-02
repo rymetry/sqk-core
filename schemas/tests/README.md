@@ -38,7 +38,7 @@ invalid fixture のファイル名には、`id-pattern-violation.json` のよう
 | 層 | 対象 | 担当 |
 | --- | --- | --- |
 | transport 構造 | `handoff-envelope.schema.json` への適合 | `scripts/validate-schemas.sh` |
-| payload 契約 | `artifacts[].items[]` / `artifacts[].content` の、`artifacts[].schema_ref` が指すスキーマへの適合 | `scripts/check.py` の CHECK6 |
+| payload 契約 | `artifacts[].items[]` / `artifacts[].content` の、`artifacts[].schema_ref` が指すスキーマへの適合 | `scripts/check.py` の CHECK6（実装は `scripts/check_envelopes.py`） |
 
 envelope schema の `artifacts[].items` は制約のない array であるため、transport 層の
 検証だけでは宣言（`schema_ref`）と実体（payload）の不一致を検出できない。CHECK6 は
