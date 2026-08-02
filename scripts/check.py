@@ -9,6 +9,11 @@
 
 検査は CHECK1〜CHECK5 をここに、CHECK6（エンベロープ内包 payload）を
 `check_envelopes.py` に置く。共有部品は `check_common.py`。
+
+入口はスクリプトの直接実行（`uv run scripts/check.py`）のみをサポートする。
+この経路では Python が `scripts/` を `sys.path[0]` に置くため、同階層の
+`check_common` / `check_envelopes` が解決できる。`python -m scripts.check`
+はこの前提が成り立たないためサポートしない。
 """
 
 from __future__ import annotations
