@@ -30,3 +30,26 @@ AJV_STRICT_WARNINGS=fail bash scripts/validate-schemas.sh
 ```
 
 invalid fixture のファイル名には、`id-pattern-violation.json` のように違反内容を表す名前を付ける。
+
+## エンベロープ内包 payload の検証
+
+`handoff-envelope` は2層の契約を持ち、層ごとに検証ハーネスが分かれている。
+
+| 層 | 対象 | 担当 |
+| --- | --- | --- |
+| transport 構造 | `handoff-envelope.schema.json` への適合 | `scripts/validate-schemas.sh` |
+| payload 契約 | `artifacts[].items[]` / `artifacts[].content` の、`artifacts[].schema_ref` が指すスキーマへの適合 | `scripts/check.py` の CHECK6 |
+
+envelope schema の `artifacts[].items` は制約のない array であるため、transport 層の
+検証だけでは宣言（`schema_ref`）と実体（payload）の不一致を検出できない。CHECK6 は
+この継ぎ目を検証し、`fixtures/handoff-envelope/valid/*.json` に加えて Markdown 中の
+json コードブロックに書かれたエンベロープ例（SKILL.md の出力例等）も対象にする。
+エンベロープとみなす条件は、文字列の `source_skill` と配列の `artifacts` を持つ
+JSON オブジェクトであることとする。
+
+- `schema_ref` の参照先が存在しない場合はエラーにする。宣言だけあって実体が無い状態を防ぐ。
+- `schema_ref` が `*.schema.json` 以外（散文の出典）を指す場合は、参照の解決のみを
+  保証し、payload の構造検証は行わない。JSON Schema が未定義の成果物種別を許容するため。
+
+CHECK6 を `validate-schemas.sh` ではなく `check.py` に置く理由は
+[D-014](../../DECISIONS.md#d-014-エンベロープ内包-payload-の検証層)に記す。

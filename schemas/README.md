@@ -54,3 +54,5 @@
 ## 検証ハーネス
 
 リポジトリルートで `bash scripts/validate-schemas.sh` を実行する。fixture の構成と strict 警告ポリシーは [tests/README.md](tests/README.md) を参照する。
+
+エンベロープが `artifacts[].schema_ref` で宣言した内包 payload の検証は `uv run scripts/check.py` の CHECK6 が担う。層の分担は [tests/README.md](tests/README.md) の「エンベロープ内包 payload の検証」を参照する。
