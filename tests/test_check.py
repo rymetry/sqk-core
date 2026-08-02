@@ -150,6 +150,66 @@ def test_check5_symlinks_fail(check_module) -> None:
     assert result.issues[0].path == "broken-link"
 
 
+def test_check6_envelope_payloads_pass(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_pass"
+    )
+
+    assert result.check_number == 6
+    assert result.checked == 2
+    assert result.issues == ()
+
+
+def test_check6_envelope_fixture_payload_violation_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    fixture_issues = [
+        issue for issue in result.issues if issue.path.endswith("missing-required.json")
+    ]
+    assert len(fixture_issues) == 1
+    assert "artifacts[0].items[0]" in fixture_issues[0].message
+    assert "'label' is a required property" in fixture_issues[0].message
+    assert "schemas/demo-item.schema.json" in fixture_issues[0].message
+
+
+def test_check6_markdown_envelope_example_violation_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    markdown_issues = [
+        issue
+        for issue in result.issues
+        if issue.path.endswith("SKILL.md") and "does not exist" not in issue.message
+    ]
+    assert len(markdown_issues) == 1
+    assert "artifacts[0].content.id" in markdown_issues[0].message
+
+
+def test_check6_unresolved_schema_ref_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    unresolved = [
+        issue for issue in result.issues if "does not exist" in issue.message
+    ]
+    assert len(unresolved) == 1
+    assert "schemas/ghost.schema.json" in unresolved[0].message
+
+
+def test_check6_reports_every_envelope_problem(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    assert result.check_number == 6
+    assert result.checked == 2
+    assert len(result.issues) == 3
+
+
 def test_repository_check_cli_is_green(check_module) -> None:
     result = subprocess.run(
         [sys.executable, str(CHECK_SCRIPT), "--root", str(REPO_ROOT)],
@@ -159,7 +219,7 @@ def test_repository_check_cli_is_green(check_module) -> None:
     )
 
     assert result.returncode == 0, result.stdout + result.stderr
-    for check_number in range(1, 6):
+    for check_number in range(1, 7):
         assert f"CHECK{check_number} summary:" in result.stdout
 
 

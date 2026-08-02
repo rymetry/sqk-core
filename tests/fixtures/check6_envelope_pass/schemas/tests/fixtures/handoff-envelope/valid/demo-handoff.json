@@ -1,0 +1,27 @@
+{
+  "source_skill": "demo-skill",
+  "phase": "demo",
+  "artifacts": [
+    {
+      "type": "DemoItemList",
+      "schema_ref": "schemas/demo-item.schema.json",
+      "items": [
+        {
+          "id": "DEMO-001",
+          "label": "適合する内包 payload"
+        }
+      ]
+    },
+    {
+      "type": "DemoNote",
+      "schema_ref": "docs/notes.md",
+      "content": {
+        "free_form": "スキーマ未定義の成果物は Markdown を schema_ref に置く"
+      }
+    }
+  ],
+  "trace_ids": ["DEMO-001"],
+  "assumptions": [],
+  "open_questions": [],
+  "gate_status": "passed"
+}
