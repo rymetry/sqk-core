@@ -23,7 +23,7 @@ from urllib.parse import unquote, urlsplit
 
 import yaml
 from jsonschema import Draft202012Validator
-from jsonschema.exceptions import SchemaError
+from jsonschema.exceptions import SchemaError, ValidationError
 
 EXCLUDED_DIRECTORY_NAMES = frozenset(
     {
@@ -35,7 +35,9 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
     }
 )
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)\n]+)\)")
-FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
+FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})\s*([^\s`~]*)")
+ENVELOPE_FIXTURE_GLOB = "schemas/tests/fixtures/handoff-envelope/valid/*.json"
+SCHEMA_FILE_SUFFIX = ".schema.json"
 BACKTICK_RUN_PATTERN = re.compile(r"`+")
 RESEARCH_PATH_PATTERN = re.compile(r"(?:^|/)_research(?:/|$)")
 ATX_HEADING_PATTERN = re.compile(r"^ {0,3}#{1,6}\s+(.+?)\s*#*\s*$")
@@ -123,6 +125,41 @@ def _without_fenced_code(text: str) -> tuple[str, ...]:
         if fence_character is None:
             visible.append(line)
     return tuple(visible)
+
+
+@dataclass(frozen=True, slots=True)
+class FencedBlock:
+    """One fenced code block with its info string and opening line number."""
+
+    language: str
+    line_number: int
+    body: str
+
+
+def _fenced_code_blocks(text: str) -> tuple[FencedBlock, ...]:
+    """Collect fenced blocks from raw text so line numbers stay source-accurate."""
+    blocks: list[FencedBlock] = []
+    fence_character: str | None = None
+    language = ""
+    opening_line = 0
+    body: list[str] = []
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        match = FENCE_PATTERN.match(line)
+        if match:
+            marker_character = match.group(1)[0]
+            if fence_character is None:
+                fence_character = marker_character
+                language = match.group(2).lower()
+                opening_line = line_number
+                body = []
+                continue
+            if marker_character == fence_character:
+                blocks.append(FencedBlock(language, opening_line, "\n".join(body)))
+                fence_character = None
+                continue
+        if fence_character is not None:
+            body.append(line)
+    return tuple(blocks)
 
 
 def _without_inline_code(line: str) -> str:
@@ -462,6 +499,162 @@ def check_symlinks(root: Path) -> CheckResult:
     return CheckResult(5, len(symlinks), tuple(issues))
 
 
+def _is_handoff_envelope(document: object) -> bool:
+    """Detect the envelope shape; conformance itself is the schema's concern."""
+    return (
+        isinstance(document, Mapping)
+        and isinstance(document.get("source_skill"), str)
+        and isinstance(document.get("artifacts"), list)
+    )
+
+
+def _payload_validator(schema_path: Path) -> tuple[Draft202012Validator | None, str]:
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+    except (OSError, UnicodeError, json.JSONDecodeError, SchemaError) as error:
+        return None, str(error)
+    return Draft202012Validator(schema), ""
+
+
+def _artifact_payloads(
+    artifact: Mapping[str, object], location: str
+) -> Iterator[tuple[str, object]]:
+    """Yield both payload shapes the envelope allows: items[] and content."""
+    items = artifact.get("items")
+    if isinstance(items, list):
+        for index, item in enumerate(items):
+            yield f"{location}.items[{index}]", item
+    content = artifact.get("content")
+    if isinstance(content, Mapping):
+        yield f"{location}.content", content
+
+
+def _conformance_message(location: str, error: ValidationError, reference: str) -> str:
+    pointer = ".".join(str(part) for part in error.absolute_path)
+    where = f"{location}.{pointer}" if pointer else location
+    return f"{where}: {error.message} (declared schema_ref: {reference})"
+
+
+def _artifact_payload_issues(
+    root: Path, display: str, location: str, artifact: object
+) -> tuple[Issue, ...]:
+    if not isinstance(artifact, Mapping):
+        return (Issue(display, f"{location} must be an object"),)
+    reference = artifact.get("schema_ref")
+    if not isinstance(reference, str) or not reference:
+        return (Issue(display, f"{location}.schema_ref must be a non-empty string"),)
+
+    target = root / reference.split("#", 1)[0]
+    if not target.is_file():
+        return (
+            Issue(display, f"{location}.schema_ref target does not exist: {reference}"),
+        )
+    if not target.name.endswith(SCHEMA_FILE_SUFFIX):
+        # 成果物種別に JSON Schema が無い場合、schema_ref は散文の出典を指す。
+        # 参照の解決だけを保証し、payload の構造検証は行わない。
+        return ()
+
+    validator, schema_error = _payload_validator(target)
+    if validator is None:
+        return (
+            Issue(
+                display,
+                f"{location}.schema_ref is not a usable schema: {reference}: {schema_error}",
+            ),
+        )
+    return tuple(
+        Issue(display, _conformance_message(payload_location, error, reference))
+        for payload_location, payload in _artifact_payloads(artifact, location)
+        for error in sorted(
+            validator.iter_errors(payload), key=lambda error: list(error.absolute_path)
+        )
+    )
+
+
+def _envelope_payload_issues(
+    root: Path,
+    display: str,
+    document: Mapping[str, object],
+    location_prefix: str = "",
+) -> tuple[Issue, ...]:
+    artifacts = document.get("artifacts")
+    if not isinstance(artifacts, list):
+        return ()
+    return tuple(
+        issue
+        for index, artifact in enumerate(artifacts)
+        for issue in _artifact_payload_issues(
+            root, display, f"{location_prefix}artifacts[{index}]", artifact
+        )
+    )
+
+
+def _fixture_envelope_issues(root: Path) -> tuple[int, tuple[Issue, ...]]:
+    checked = 0
+    issues: list[Issue] = []
+    for path in sorted(root.glob(ENVELOPE_FIXTURE_GLOB)):
+        display = _display_path(path, root)
+        try:
+            document = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            issues.append(Issue(display, f"cannot read envelope fixture: {error}"))
+            continue
+        if not _is_handoff_envelope(document):
+            continue
+        checked += 1
+        issues.extend(_envelope_payload_issues(root, display, document))
+    return checked, tuple(issues)
+
+
+def _markdown_envelope_issues(root: Path) -> tuple[int, tuple[Issue, ...]]:
+    checked = 0
+    issues: list[Issue] = []
+    markdown_paths = (
+        path
+        for path in _walk_paths(root)
+        if path.suffix.lower() == ".md" and path.is_file() and not path.is_symlink()
+    )
+    for path in markdown_paths:
+        display = _display_path(path, root)
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as error:
+            issues.append(Issue(display, f"cannot read file: {error}"))
+            continue
+        for block in _fenced_code_blocks(text):
+            if block.language != "json":
+                continue
+            try:
+                document = json.loads(block.body)
+            except json.JSONDecodeError:
+                # 省略記法を含む例示ブロックは検証対象にしない。
+                continue
+            if not _is_handoff_envelope(document):
+                continue
+            checked += 1
+            issues.extend(
+                _envelope_payload_issues(
+                    root, display, document, f"line {block.line_number} "
+                )
+            )
+    return checked, tuple(issues)
+
+
+def check_envelope_payloads(root: Path) -> CheckResult:
+    """Validate envelope payloads against the schema each artifact declares.
+
+    transport 構造（handoff-envelope.schema.json）と payload 契約
+    （artifacts[].schema_ref が指すスキーマ）の継ぎ目を検証する。
+    envelope fixture と、Markdown 内の JSON エンベロープ例の両方を対象にする。
+    """
+    fixture_checked, fixture_issues = _fixture_envelope_issues(root)
+    markdown_checked, markdown_issues = _markdown_envelope_issues(root)
+    return CheckResult(
+        6, fixture_checked + markdown_checked, fixture_issues + markdown_issues
+    )
+
+
 def run_checks(root: Path) -> tuple[CheckResult, ...]:
     """Run all checks in their documented order."""
     return (
@@ -470,6 +663,7 @@ def run_checks(root: Path) -> tuple[CheckResult, ...]:
         check_research_leaks(root),
         check_skill_references(root),
         check_symlinks(root),
+        check_envelope_payloads(root),
     )
 
 
