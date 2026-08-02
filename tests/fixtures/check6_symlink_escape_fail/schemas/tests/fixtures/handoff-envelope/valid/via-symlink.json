@@ -1,0 +1,20 @@
+{
+  "source_skill": "demo-skill",
+  "phase": "demo",
+  "artifacts": [
+    {
+      "type": "DemoItemList",
+      "schema_ref": "schemas/linked.schema.json",
+      "items": [
+        {
+          "id": "DEMO-001",
+          "label": "symlink の先はルート外にあるため素通りしてはならない"
+        }
+      ]
+    }
+  ],
+  "trace_ids": ["DEMO-001"],
+  "assumptions": [],
+  "open_questions": [],
+  "gate_status": "passed"
+}

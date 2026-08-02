@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HandoffEnvelope",
+  "description": "CHECK6 の transport 検証を確認するための最小版。",
+  "type": "object",
+  "properties": {
+    "source_skill": { "type": "string" },
+    "phase": { "type": "string" },
+    "artifacts": { "type": "array" },
+    "gate_status": {
+      "type": "string",
+      "enum": ["passed", "passed-with-risks", "blocked"]
+    }
+  },
+  "required": ["source_skill", "phase", "artifacts", "gate_status"],
+  "additionalProperties": false
+}
