@@ -103,3 +103,13 @@
 **決定内容**: ROADMAP 5節の全ウェーブ完了（D-012）を受け、runtime consumer（veridia 等の実行系）向けの取り込みインターフェースを [platforms/veridia/README.md](./platforms/veridia/README.md) に文書化する。内容は (1) 取り込み単位（リポジトリ全体 checkout の commit SHA 固定。`knowledge_refs` が `docs/agent-ecosystem/` の設計文書にも及ぶためディレクトリ単位の抜き出しは非推奨）、(2) 取り込み面（skills / schemas / knowledge / domain canon の4種と、実行時読み込み対象外の列挙）、(3) 実行境界の遵守事項（原本を veridia 固有に書き換えず、mapping は veridia 側 adapter で持つ）、(4) 実実行フィードバックの経路と最低限含める内容（skill `name`・`version`・固定 SHA・事象区分・再現材料。product-specific private data は持ち込まない）。runtime artifacts への mapping は従来どおり veridia 側の責務とし、sqk-core に veridia 固有 contracts は持ち込まない。
 
 **理由**: D-012 は「実実行ベースの評価は実行系がスキルを取り込んだ後のフィードバックとして受け取る」と定めたが、取り込みの単位・バージョン固定の方法・フィードバックの受け口が未定義で、ループの入口が閉じていなかった。取り込もうとする consumer（veridia）が現れた実需に基づき、`platforms/` の既存3実行環境（claude-code / codex / gpts）と同じアダプター思想で、sqk-core 側の責務に閉じた導入メモを1枚だけ追加する（再発防止原則3「consumer のいない仕組みを作らない」に整合）。
+
+## D-014: エンベロープ内包 payload の検証層
+
+**決定内容**: `handoff-envelope` が `artifacts[].schema_ref` で宣言した内包 payload を、その宣言先スキーマに対して検証する層を追加する。実装は `scripts/validate-schemas.sh`（[Issue #48](https://github.com/rymetry/sqk-core/issues/48) の提案）ではなく `scripts/check.py` の CHECK6 に置く。対象は `schemas/tests/fixtures/handoff-envelope/valid/*.json` と、Markdown 中の json コードブロックに書かれたエンベロープ例（SKILL.md の出力例等）の両方とする。`schema_ref` の参照先が存在しない場合はエラーとし、参照先が `*.schema.json` 以外（散文の出典）である場合は参照の解決のみを保証して構造検証は行わない。
+
+**理由**: envelope schema の `artifacts[].items` は制約のない array であり、transport 構造の検証（`validate-schemas.sh`）だけでは宣言と実体の不一致が素通りしていた。実際に `risk-analysis-handoff.json` の内包 RiskItem は必須6件のうち4件（`category` / `likelihood` / `impact` / `treatment`）を欠いたまま valid fixture として通っており、consumer（veridia）側の二層検証で初めて発火した。fixture の修正だけでは同じ欠落が再発する。
+
+配置を `check.py` にしたのは、CI（[.github/workflows/check.yml](./.github/workflows/check.yml)）が実行するのは `check.py` と pytest の2つであり、`npx ajv-cli` に依存する `validate-schemas.sh` は CI に含めていないためである。検証層を `validate-schemas.sh` に置くと CI で発火せず、「再発を防ぐ」という本決定の目的を満たさない。`validate-schemas.sh` を CI に足す案は、このリポジトリを Node プロジェクト化しない方針（`package.json`・lockfile・`node_modules` を置かない）と、実行ごとの npx 取得に依存する不安定さから採らない。`check.py` は既に `jsonschema` に依存しており、CHECK4 で SKILL.md frontmatter の参照解決を検証しているため、宣言と実体の一致を見る検査群として一貫する。
+
+検証対象に SKILL.md の出力例を含めたのは、consumer が実際に契約として読むのは fixture ではなく SKILL.md の出力例だからである（Issue #48 の影響範囲）。導入時点で SKILL.md 側の例31件はすべて適合しており、遡及的な修正は生じていない。散文の `schema_ref`（17件）を許容するのは、成果物種別によっては JSON Schema が未定義で、正典文書を出典として指しているためである。

@@ -1,0 +1,19 @@
+{
+  "source_skill": "demo-skill",
+  "phase": "demo",
+  "artifacts": [
+    {
+      "type": "DemoItemList",
+      "schema_ref": "schemas/demo-item.schema.json",
+      "items": [
+        {
+          "id": "DEMO-001"
+        }
+      ]
+    }
+  ],
+  "trace_ids": ["DEMO-001"],
+  "assumptions": [],
+  "open_questions": [],
+  "gate_status": "passed"
+}

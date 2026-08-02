@@ -150,6 +150,188 @@ def test_check5_symlinks_fail(check_module) -> None:
     assert result.issues[0].path == "broken-link"
 
 
+def test_check6_envelope_payloads_pass(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_pass"
+    )
+
+    assert result.check_number == 6
+    assert result.checked == 2
+    assert result.issues == ()
+
+
+def test_check6_envelope_fixture_payload_violation_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    fixture_issues = [
+        issue for issue in result.issues if issue.path.endswith("missing-required.json")
+    ]
+    assert len(fixture_issues) == 1
+    assert "artifacts[0].items[0]" in fixture_issues[0].message
+    assert "'label' is a required property" in fixture_issues[0].message
+    assert "schemas/demo-item.schema.json" in fixture_issues[0].message
+
+
+def test_check6_markdown_envelope_example_violation_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    markdown_issues = [
+        issue
+        for issue in result.issues
+        if issue.path.endswith("SKILL.md") and "does not exist" not in issue.message
+    ]
+    assert len(markdown_issues) == 1
+    assert "artifacts[0].content.id" in markdown_issues[0].message
+
+
+def test_check6_unresolved_schema_ref_fails(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    unresolved = [
+        issue for issue in result.issues if "does not exist" in issue.message
+    ]
+    assert len(unresolved) == 1
+    assert "schemas/ghost.schema.json" in unresolved[0].message
+
+
+def test_check6_parent_escaping_schema_ref_fails(check_module) -> None:
+    """ルート外の実在スキーマを指す schema_ref は解決させない。"""
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_escape_fail"
+    )
+
+    assert result.checked == 1
+    assert len(result.issues) == 1
+    assert "repo-root relative" in result.issues[0].message
+
+
+def test_check6_absolute_schema_ref_fails(check_module) -> None:
+    """絶対パスは root と結合すると root を無視するため、実在しても拒否する。"""
+    artifact = {
+        "type": "DemoItemList",
+        "schema_ref": str(CHECK_SCRIPT),
+        "items": [{"id": "DEMO-001"}],
+    }
+
+    issues = check_module._artifact_payload_issues(
+        REPO_ROOT, "envelope.json", "artifacts[0]", artifact
+    )
+
+    assert len(issues) == 1
+    assert "repo-root relative" in issues[0].message
+
+
+def test_check6_symlinked_schema_ref_outside_root_fails(check_module) -> None:
+    """symlink で root 外へ出る参照も拒否する(実在するため is_file は通る)。"""
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_symlink_escape_fail"
+    )
+
+    assert result.checked == 1
+    assert len(result.issues) == 1
+    assert "outside" in result.issues[0].message
+
+
+def test_check6_schema_fragment_is_rejected(check_module) -> None:
+    """fragment を捨ててルートスキーマで検証すると別契約を検査してしまう。"""
+    issues = check_module._artifact_payload_issues(
+        REPO_ROOT,
+        "envelope.json",
+        "artifacts[0]",
+        {
+            "type": "TraceabilityMatrix",
+            "schema_ref": "schemas/traceability-matrix.schema.json#/$defs/nodeFinding",
+            "items": [{}],
+        },
+    )
+
+    assert len(issues) == 1
+    assert "fragment" in issues[0].message
+
+
+def test_check6_prose_schema_ref_anchor_must_exist(check_module) -> None:
+    issues = check_module._artifact_payload_issues(
+        REPO_ROOT,
+        "envelope.json",
+        "artifacts[0]",
+        {
+            "type": "Prose",
+            "schema_ref": "docs/agent-ecosystem/skill-ecosystem-design-plan.md#no-such-heading",
+            "items": [{}],
+        },
+    )
+
+    assert len(issues) == 1
+    assert "anchor" in issues[0].message
+
+
+def test_check6_prose_schema_ref_with_existing_anchor_passes(check_module) -> None:
+    issues = check_module._artifact_payload_issues(
+        REPO_ROOT,
+        "envelope.json",
+        "artifacts[0]",
+        {
+            "type": "Prose",
+            "schema_ref": (
+                "docs/agent-ecosystem/skill-ecosystem-design-plan.md"
+                "#1-test-requirement-analysis-tra"
+            ),
+            "items": [{}],
+        },
+    )
+
+    assert issues == ()
+
+
+def test_check6_detects_envelope_inside_longer_fence(check_module) -> None:
+    """4本バックティックのブロック内にある json エンベロープを見落とさない。"""
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_nested_fence_fail"
+    )
+
+    assert result.checked == 1
+    assert len(result.issues) == 1
+    assert "artifacts[0].items[0]" in result.issues[0].message
+    assert "'label' is a required property" in result.issues[0].message
+
+
+def test_check6_valid_fixture_that_is_not_an_envelope_is_reported(
+    check_module,
+) -> None:
+    """エンベロープ形状でない valid fixture を黙って読み飛ばさない。"""
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_not_envelope_fail"
+    )
+
+    assert len(result.issues) == 1
+    assert "handoff envelope" in result.issues[0].message
+
+
+def test_check6_markdown_envelope_transport_violation_fails(check_module) -> None:
+    """Markdown のエンベロープ例は transport 構造も検証する(CI で他に見る者がいない)。"""
+    result = check_module.check_envelope_payloads(FIXTURES / "check6_transport_fail")
+
+    assert result.checked == 1
+    assert len(result.issues) == 1
+    assert "gate_status" in result.issues[0].message
+
+
+def test_check6_reports_every_envelope_problem(check_module) -> None:
+    result = check_module.check_envelope_payloads(
+        FIXTURES / "check6_envelope_fail"
+    )
+
+    assert result.check_number == 6
+    assert result.checked == 2
+    assert len(result.issues) == 3
+
+
 def test_repository_check_cli_is_green(check_module) -> None:
     result = subprocess.run(
         [sys.executable, str(CHECK_SCRIPT), "--root", str(REPO_ROOT)],
@@ -159,7 +341,7 @@ def test_repository_check_cli_is_green(check_module) -> None:
     )
 
     assert result.returncode == 0, result.stdout + result.stderr
-    for check_number in range(1, 6):
+    for check_number in range(1, 7):
         assert f"CHECK{check_number} summary:" in result.stdout
 
 

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DemoItem",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^DEMO-[0-9]+$"
+    },
+    "label": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "label"],
+  "additionalProperties": false
+}

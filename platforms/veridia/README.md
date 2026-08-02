@@ -39,6 +39,18 @@ sqk-core はリリースタグを発行していない（`archive-sqkb-v1` は v
 - `scripts/`・`tests/`・`.claude/`・`.github/` — sqk-core ローカルの検証・開発機構
 - `.agent-work/` — dry-run 証跡。そもそもコミットされない（D-003）
 
+### エンベロープの2層契約
+
+`handoff-envelope.schema.json` は transport 構造だけを規定し、`artifacts[].items` /
+`artifacts[].content` の中身は制約しない。内包 payload が従う契約は、各 artifact が
+`artifacts[].schema_ref` で宣言する。consumer はこの宣言を信頼してよい。sqk-core 側は
+`scripts/check.py` の CHECK6 で、fixture と SKILL.md の出力例の両方について宣言と実体の
+一致を CI で検証している（[schemas/tests/README.md](../../schemas/tests/README.md)）。
+
+ただし `schema_ref` が `*.schema.json` 以外（`docs/` や SKILL.md 等の散文）を指す場合、
+その成果物種別には JSON Schema が存在せず構造検証はできない。consumer 側もスキーマ検証を
+スキップし、散文の契約として扱う。
+
 ## 実行境界（取り込み時に守ること）
 
 - sqk-core のスキルは runtime-neutral blueprint であり、テスト実行・探索実行・
