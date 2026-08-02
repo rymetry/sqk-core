@@ -35,8 +35,11 @@ EXCLUDED_DIRECTORY_NAMES = frozenset(
     }
 )
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)\n]+)\)")
-FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})\s*([^\s`~]*)")
+FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
+OPENING_FENCE_PATTERN = re.compile(r"^ {0,3}(`{3,}|~{3,})[ \t]*(\S*)")
 ENVELOPE_FIXTURE_GLOB = "schemas/tests/fixtures/handoff-envelope/valid/*.json"
+HANDOFF_ENVELOPE_SCHEMA = "schemas/handoff-envelope.schema.json"
+MARKDOWN_FENCE_LANGUAGES = frozenset({"markdown", "md"})
 SCHEMA_FILE_SUFFIX = ".schema.json"
 BACKTICK_RUN_PATTERN = re.compile(r"`+")
 RESEARCH_PATH_PATTERN = re.compile(r"(?:^|/)_research(?:/|$)")
@@ -136,29 +139,41 @@ class FencedBlock:
     body: str
 
 
+def _is_closing_fence(line: str, marker: str, marker_length: int) -> bool:
+    """A closer repeats the opener's character at least as many times, nothing else.
+
+    Without the length rule, a ``` inside a ````-fenced block would close it and
+    desynchronise every later block in the file.
+    """
+    if len(line) - len(line.lstrip(" ")) > 3:
+        return False
+    stripped = line.strip()
+    return len(stripped) >= marker_length and set(stripped) == {marker}
+
+
 def _fenced_code_blocks(text: str) -> tuple[FencedBlock, ...]:
     """Collect fenced blocks from raw text so line numbers stay source-accurate."""
     blocks: list[FencedBlock] = []
-    fence_character: str | None = None
+    marker: str | None = None
+    marker_length = 0
     language = ""
     opening_line = 0
     body: list[str] = []
     for line_number, line in enumerate(text.splitlines(), start=1):
-        match = FENCE_PATTERN.match(line)
-        if match:
-            marker_character = match.group(1)[0]
-            if fence_character is None:
-                fence_character = marker_character
+        if marker is None:
+            match = OPENING_FENCE_PATTERN.match(line)
+            if match:
+                marker = match.group(1)[0]
+                marker_length = len(match.group(1))
                 language = match.group(2).lower()
                 opening_line = line_number
                 body = []
-                continue
-            if marker_character == fence_character:
-                blocks.append(FencedBlock(language, opening_line, "\n".join(body)))
-                fence_character = None
-                continue
-        if fence_character is not None:
-            body.append(line)
+            continue
+        if _is_closing_fence(line, marker, marker_length):
+            blocks.append(FencedBlock(language, opening_line, "\n".join(body)))
+            marker = None
+            continue
+        body.append(line)
     return tuple(blocks)
 
 
@@ -536,6 +551,76 @@ def _conformance_message(location: str, error: ValidationError, reference: str) 
     return f"{where}: {error.message} (declared schema_ref: {reference})"
 
 
+def _is_inside(root: Path, target: Path) -> bool:
+    """Reject symlinks that leave the tree; is_file() alone follows them out."""
+    try:
+        target.resolve(strict=True).relative_to(root.resolve(strict=True))
+    except (OSError, ValueError):
+        return False
+    return True
+
+
+def _prose_reference_issues(
+    display: str, location: str, reference: str, target: Path, fragment: str
+) -> tuple[Issue, ...]:
+    """成果物種別に JSON Schema が無い場合、schema_ref は散文の出典を指す。
+
+    payload の構造検証はできないため、参照が解決することだけを保証する。
+    """
+    if not fragment:
+        return ()
+    anchor = unquote(fragment)
+    if target.suffix.lower() != ".md":
+        return (
+            Issue(
+                display,
+                f"{location}.schema_ref cannot resolve anchor #{anchor} "
+                f"in non-Markdown target: {reference}",
+            ),
+        )
+    try:
+        anchors = _heading_anchors(target.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError) as error:
+        return (
+            Issue(display, f"{location}.schema_ref cannot read {reference}: {error}"),
+        )
+    if anchor in anchors:
+        return ()
+    return (
+        Issue(display, f"{location}.schema_ref anchor #{anchor} does not exist"),
+    )
+
+
+def _payload_conformance_issues(
+    validator: Draft202012Validator,
+    artifact: Mapping[str, object],
+    display: str,
+    location: str,
+    reference: str,
+) -> tuple[Issue, ...]:
+    issues: list[Issue] = []
+    for payload_location, payload in _artifact_payloads(artifact, location):
+        try:
+            failures = sorted(
+                validator.iter_errors(payload),
+                key=lambda failure: list(failure.absolute_path),
+            )
+        except Exception as error:  # noqa: BLE001
+            # 解決できない $ref 等でスキーマ1本が壊れても、検査全体を落とさず報告する。
+            issues.append(
+                Issue(
+                    display,
+                    f"{payload_location} cannot be validated against {reference}: {error}",
+                )
+            )
+            continue
+        issues.extend(
+            Issue(display, _conformance_message(payload_location, failure, reference))
+            for failure in failures
+        )
+    return tuple(issues)
+
+
 def _artifact_payload_issues(
     root: Path, display: str, location: str, artifact: object
 ) -> tuple[Issue, ...]:
@@ -545,15 +630,40 @@ def _artifact_payload_issues(
     if not isinstance(reference, str) or not reference:
         return (Issue(display, f"{location}.schema_ref must be a non-empty string"),)
 
-    target = root / reference.split("#", 1)[0]
+    path_text, _, fragment = reference.partition("#")
+    reference_path = Path(path_text)
+    # 絶対パスは root との結合で root 自体が無視され、`..` は root 外へ出る。
+    # どちらも検証対象の外を指すため、解決させずに拒否する（CHECK4 と同じ規約）。
+    if not path_text or reference_path.is_absolute() or ".." in reference_path.parts:
+        return (
+            Issue(
+                display,
+                f"{location}.schema_ref must be a repo-root relative path: {reference}",
+            ),
+        )
+
+    target = root / reference_path
     if not target.is_file():
         return (
             Issue(display, f"{location}.schema_ref target does not exist: {reference}"),
         )
+    if not _is_inside(root, target):
+        return (
+            Issue(
+                display,
+                f"{location}.schema_ref resolves outside the tree: {reference}",
+            ),
+        )
     if not target.name.endswith(SCHEMA_FILE_SUFFIX):
-        # 成果物種別に JSON Schema が無い場合、schema_ref は散文の出典を指す。
-        # 参照の解決だけを保証し、payload の構造検証は行わない。
-        return ()
+        return _prose_reference_issues(display, location, reference, target, fragment)
+    if fragment:
+        # fragment を捨ててルートスキーマで検証すると、宣言とは別の契約を検査してしまう。
+        return (
+            Issue(
+                display,
+                f"{location}.schema_ref JSON Schema fragments are not supported: {reference}",
+            ),
+        )
 
     validator, schema_error = _payload_validator(target)
     if validator is None:
@@ -563,12 +673,8 @@ def _artifact_payload_issues(
                 f"{location}.schema_ref is not a usable schema: {reference}: {schema_error}",
             ),
         )
-    return tuple(
-        Issue(display, _conformance_message(payload_location, error, reference))
-        for payload_location, payload in _artifact_payloads(artifact, location)
-        for error in sorted(
-            validator.iter_errors(payload), key=lambda error: list(error.absolute_path)
-        )
+    return _payload_conformance_issues(
+        validator, artifact, display, location, reference
     )
 
 
@@ -601,10 +707,67 @@ def _fixture_envelope_issues(root: Path) -> tuple[int, tuple[Issue, ...]]:
             issues.append(Issue(display, f"cannot read envelope fixture: {error}"))
             continue
         if not _is_handoff_envelope(document):
+            issues.append(Issue(display, "valid fixture is not a handoff envelope"))
             continue
         checked += 1
         issues.extend(_envelope_payload_issues(root, display, document))
     return checked, tuple(issues)
+
+
+def _envelope_transport_issues(
+    root: Path, display: str, document: Mapping[str, object], location_prefix: str
+) -> tuple[Issue, ...]:
+    """Markdown のエンベロープ例を transport schema 自体にも当てる。
+
+    fixture は validate-schemas.sh が見るが、Markdown の例は CI で他に見る者がいない。
+    """
+    schema_path = root / HANDOFF_ENVELOPE_SCHEMA
+    if not schema_path.is_file():
+        return ()
+    validator, schema_error = _payload_validator(schema_path)
+    if validator is None:
+        return (
+            Issue(
+                display,
+                f"{HANDOFF_ENVELOPE_SCHEMA} is not a usable schema: {schema_error}",
+            ),
+        )
+    return tuple(
+        Issue(
+            display,
+            _conformance_message(
+                f"{location_prefix}envelope", failure, HANDOFF_ENVELOPE_SCHEMA
+            ),
+        )
+        for failure in sorted(
+            validator.iter_errors(document),
+            key=lambda failure: list(failure.absolute_path),
+        )
+    )
+
+
+def _envelope_json_blocks(
+    text: str, line_offset: int = 0
+) -> Iterator[tuple[int, Mapping[str, object]]]:
+    """Yield (line number, envelope) for json blocks, descending into quoted Markdown.
+
+    SKILL.md 全体を ````markdown で引用する書き方（portability-design.md の実装例）が
+    あり、その内側の出力例も consumer が契約として読む。1段の入れ子まで追う。
+    """
+    for block in _fenced_code_blocks(text):
+        line_number = line_offset + block.line_number
+        if block.language in MARKDOWN_FENCE_LANGUAGES:
+            yield from _envelope_json_blocks(block.body, line_number)
+            continue
+        if block.language != "json":
+            continue
+        try:
+            document = json.loads(block.body)
+        except json.JSONDecodeError:
+            # 省略記法を含む例示ブロックは検証対象にしない。
+            continue
+        if _is_handoff_envelope(document):
+            yield line_number, document
 
 
 def _markdown_envelope_issues(root: Path) -> tuple[int, tuple[Issue, ...]]:
@@ -622,21 +785,14 @@ def _markdown_envelope_issues(root: Path) -> tuple[int, tuple[Issue, ...]]:
         except (OSError, UnicodeError) as error:
             issues.append(Issue(display, f"cannot read file: {error}"))
             continue
-        for block in _fenced_code_blocks(text):
-            if block.language != "json":
-                continue
-            try:
-                document = json.loads(block.body)
-            except json.JSONDecodeError:
-                # 省略記法を含む例示ブロックは検証対象にしない。
-                continue
-            if not _is_handoff_envelope(document):
-                continue
+        for line_number, document in _envelope_json_blocks(text):
             checked += 1
+            location_prefix = f"line {line_number} "
             issues.extend(
-                _envelope_payload_issues(
-                    root, display, document, f"line {block.line_number} "
-                )
+                _envelope_transport_issues(root, display, document, location_prefix)
+            )
+            issues.extend(
+                _envelope_payload_issues(root, display, document, location_prefix)
             )
     return checked, tuple(issues)
 
