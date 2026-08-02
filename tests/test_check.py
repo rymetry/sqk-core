@@ -9,21 +9,36 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = Path(__file__).parent / "fixtures"
-CHECK_SCRIPT = REPO_ROOT / "scripts" / "check.py"
+SCRIPTS = REPO_ROOT / "scripts"
+CHECK_SCRIPT = SCRIPTS / "check.py"
+ENVELOPE_SCRIPT = SCRIPTS / "check_envelopes.py"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "check.yml"
 
 
-@pytest.fixture(scope="session")
-def check_module():
-    """未実装時も他モジュールの収集を妨げず、TDD の失敗を明示する。"""
-    assert CHECK_SCRIPT.exists(), "scripts/check.py is not implemented yet"
-    spec = importlib.util.spec_from_file_location("sqk_check", CHECK_SCRIPT)
+def _load(name: str, path: Path):
+    """scripts/ を sys.path に載せて読み込む。CLI 実行時と同じ解決規則にする。"""
+    assert path.exists(), f"{path} is not implemented yet"
+    if str(SCRIPTS) not in sys.path:
+        sys.path.insert(0, str(SCRIPTS))
+    spec = importlib.util.spec_from_file_location(name, path)
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.fixture(scope="session")
+def check_module():
+    """未実装時も他モジュールの収集を妨げず、TDD の失敗を明示する。"""
+    return _load("sqk_check", CHECK_SCRIPT)
+
+
+@pytest.fixture(scope="session")
+def envelope_module():
+    """CHECK6 の内部ヘルパを直接検査するため、所有モジュールを読み込む。"""
+    return _load("sqk_check_envelopes", ENVELOPE_SCRIPT)
 
 
 def messages(result) -> list[str]:
@@ -211,7 +226,7 @@ def test_check6_parent_escaping_schema_ref_fails(check_module) -> None:
     assert "repo-root relative" in result.issues[0].message
 
 
-def test_check6_absolute_schema_ref_fails(check_module) -> None:
+def test_check6_absolute_schema_ref_fails(envelope_module) -> None:
     """絶対パスは root と結合すると root を無視するため、実在しても拒否する。"""
     artifact = {
         "type": "DemoItemList",
@@ -219,7 +234,7 @@ def test_check6_absolute_schema_ref_fails(check_module) -> None:
         "items": [{"id": "DEMO-001"}],
     }
 
-    issues = check_module._artifact_payload_issues(
+    issues = envelope_module._artifact_payload_issues(
         REPO_ROOT, "envelope.json", "artifacts[0]", artifact
     )
 
@@ -238,9 +253,9 @@ def test_check6_symlinked_schema_ref_outside_root_fails(check_module) -> None:
     assert "outside" in result.issues[0].message
 
 
-def test_check6_schema_fragment_is_rejected(check_module) -> None:
+def test_check6_schema_fragment_is_rejected(envelope_module) -> None:
     """fragment を捨ててルートスキーマで検証すると別契約を検査してしまう。"""
-    issues = check_module._artifact_payload_issues(
+    issues = envelope_module._artifact_payload_issues(
         REPO_ROOT,
         "envelope.json",
         "artifacts[0]",
@@ -255,8 +270,8 @@ def test_check6_schema_fragment_is_rejected(check_module) -> None:
     assert "fragment" in issues[0].message
 
 
-def test_check6_prose_schema_ref_anchor_must_exist(check_module) -> None:
-    issues = check_module._artifact_payload_issues(
+def test_check6_prose_schema_ref_anchor_must_exist(envelope_module) -> None:
+    issues = envelope_module._artifact_payload_issues(
         REPO_ROOT,
         "envelope.json",
         "artifacts[0]",
@@ -271,8 +286,8 @@ def test_check6_prose_schema_ref_anchor_must_exist(check_module) -> None:
     assert "anchor" in issues[0].message
 
 
-def test_check6_prose_schema_ref_with_existing_anchor_passes(check_module) -> None:
-    issues = check_module._artifact_payload_issues(
+def test_check6_prose_schema_ref_with_existing_anchor_passes(envelope_module) -> None:
+    issues = envelope_module._artifact_payload_issues(
         REPO_ROOT,
         "envelope.json",
         "artifacts[0]",
